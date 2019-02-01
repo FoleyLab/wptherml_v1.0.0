@@ -34,7 +34,7 @@ def Prad():
 def Patm(lam, theta, T):
     upper = np.amax(lam)
     BB = stpvlib.BB(lam, T)
-    A = TMM.abs()
+    A = tmm.abs()
     TE = A*BB
     trig = np.sin(theta)*np.cos(theta)
     ET = (Ep+Es)/2
@@ -44,7 +44,7 @@ def Patm(lam, theta, T):
 def Psun(lam):
     upper = np.amax(lam)
     AM = datalib.AM(lam)
-    E = TMM.abs()
+    E = tmm.abs()
     numlib.Integrate(AM*E,lam,100e-9, upper)
 
 

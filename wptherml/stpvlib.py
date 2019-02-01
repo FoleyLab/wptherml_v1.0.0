@@ -255,8 +255,8 @@ def absorbed_power_ea(lam, n, d, solarconc):
             for j in range(0,len(d)):
                 nc[j] = n[j][i]
             ### get s and p absorbance at current wavelength
-            As = TMM.Abs(k0, th, 's', nc, d)
-            Ap = TMM.Abs(k0, th, 'p', nc, d)
+            As = tmm.Abs(k0, th, 's', nc, d)
+            Ap = tmm.Abs(k0, th, 'p', nc, d)
             ### add contributions from s- and p-polarization
             isom = isom + 0.5 * As * AM[i] * dl + 0.5 * Ap * AM[i] * dl
             ### Uncomment below for BB absorbed power

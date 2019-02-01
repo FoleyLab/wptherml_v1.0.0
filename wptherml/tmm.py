@@ -60,7 +60,7 @@ def BuildD(nl, ctheta,pol):
 ### 3. Calculate D_L
 ### 4. Multiply all matrices together in order to form M
 ### 5. Return relevant quantity(s)... maybe M itself, maybe 1 - R - T... TBD
-def TMM(k0, theta0, pol, nA, tA):
+def tmm(k0, theta0, pol, nA, tA):
     t1 = np.zeros((2,2),dtype=complex)
     t2 = np.zeros((2,2),dtype=complex)
     Dl = np.zeros((2,2),dtype=complex)
@@ -195,7 +195,7 @@ def Ex(z, k0, theta0, pol, n, d):
     ### complex unit
     ci = 0+1j
     ### Get M dictionary with various TMM outputs
-    M = TMM(k0, theta0, 'p', n, d)
+    M = tmm(k0, theta0, 'p', n, d)
     ### t amplitude 
     t = 1./M['M11']
     ### r amplitude
@@ -265,7 +265,7 @@ def AbsAlongz(z, k0, theta0, pol, n, d):
     
     alpha = np.zeros(len(z),dtype=complex)
     ### Get M dictionary with various TMM outputs
-    M = TMM(k0, theta0, 'p', n, d)
+    M = tmm(k0, theta0, 'p', n, d)
    
     ### Get dictionary aassociated with field amplitudes for v and w vectors
     Ef = Ex(z, k0, theta0, pol, n, d)
@@ -329,7 +329,7 @@ def Trans(k0, theta0, pol, nA, tA):
     L = len(nA)
     nL = nA[L-1]
     ni = nA[0]
-    M = TMM(k0, theta0, pol, nA, tA)
+    M = tmm(k0, theta0, pol, nA, tA)
     t = 1/M["M11"]
     ti = M["theta_i"]
     tL = M["theta_L"]
@@ -338,7 +338,7 @@ def Trans(k0, theta0, pol, nA, tA):
     return T
 
 def Reflect(k0, theta0, pol, nA, tA):
-    M = TMM(k0, theta0, pol, nA, tA)
+    M = tmm(k0, theta0, pol, nA, tA)
     r = M["M21"]/M["M11"]
     R = np.real(r * np.conj(r))
     return R
@@ -347,7 +347,7 @@ def Abs(k0, theta0, pol, nA, tA):
     L = len(nA)
     nL = nA[L-1]
     ni = nA[0]
-    M = TMM(k0, theta0, pol, nA, tA)
+    M = tmm(k0, theta0, pol, nA, tA)
     r = M["M21"]/M["M11"]
     t = 1/M["M11"]
     ti = M["theta_i"]
@@ -361,7 +361,7 @@ def Abs(k0, theta0, pol, nA, tA):
 ### This version of TMM will be used for finding the SPP and PA
 ### modes - the direct input to it is the x-component
 ### of the (complex) incident wavevector
-def TMM_AB(k0, kx, pol, nA, tA):
+def tmm_ab(k0, kx, pol, nA, tA):
     
     ### allocate various arrays
     t1 = np.zeros((2,2),dtype=complex)

@@ -219,7 +219,7 @@ class multilayer:
                 
             k0 = np.pi*2/self.lam[i]
             ### get transfer matrix for this k0, th, pol, nc, and d
-            M = TMM.TMM(k0, self.th, self.pol, nc, self.d)
+            M = tmm.tmm(k0, self.th, self.pol, nc, self.d)
             ### get t amplitude
             t = 1./M["M11"]
             ### get incident/final angle
@@ -248,7 +248,7 @@ class multilayer:
         i=0
         for thetai in self.theta_array:
             ### increment by 1/2 degrees
-            M = TMM.TMM(k0, thetai, self.pol, nc, self.d)
+            M = tmm.tmm(k0, thetai, self.pol, nc, self.d)
             
             t = 1./M["M11"]
             
@@ -276,7 +276,7 @@ class multilayer:
                 nc[j] = self.n[j][i]
                 
             k0 = np.pi*2/self.lam[i]
-            self.Reflectivity[i] = TMM.Reflect(k0, self.th, self.pol, nc, self.d)
+            self.Reflectivity[i] = tmm.Reflect(k0, self.th, self.pol, nc, self.d)
 
         return 1
     ### In case user ONLY wants transmissivity
@@ -287,7 +287,7 @@ class multilayer:
                 nc[j] = self.n[j][i]
                 
             k0 = np.pi*2/self.lam[i]
-            self.Transmissivity[i] = TMM.Trans(k0, self.th, self.pol, nc, self.d)
+            self.Transmissivity[i] = tmm.Trans(k0, self.th, self.pol, nc, self.d)
 
         return 1
     
@@ -308,8 +308,8 @@ class multilayer:
             for j in range(0,len(self.t)):
                 ### for given angle, k0, pol, nc, and d
                 ### compute M
-                Mp = TMM.TMM(k0, self.t[j], 'p', nc, self.d)
-                Ms = TMM.TMM(k0, self.t[j], 's', nc, self.d)
+                Mp = tmm.tmm(k0, self.t[j], 'p', nc, self.d)
+                Ms = tmm.tmm(k0, self.t[j], 's', nc, self.d)
                 ### get amplitudes and related quantities from M dictionaries
                 tp = 1./Mp["M11"]
                 ts = 1./Ms["M11"]
@@ -731,7 +731,7 @@ class multilayer:
            # print(" ")
             for b in beta:
                 kx = b + a*1j
-                rr_temp = TMM.TMM_AB(k0, kx, 'p', nc, self.d)                
+                rr_temp = tmm.tmm_ab(k0, kx, 'p', nc, self.d)                
                 #print(np.real(kx),np.imag(kx), t_temp)
                 #t_array[k] = t_temp
                 #k+=1
@@ -776,7 +776,7 @@ class multilayer:
            # print(" ")
             for b in beta:
                 kx = b + a*1j
-                rr_temp = TMM.TMM_AB(k0, kx, 'p', nc, self.d)                
+                rr_temp = tmm.tmm_ab(k0, kx, 'p', nc, self.d)                
                 #print(np.real(kx),np.imag(kx), t_temp)
                 #t_array[k] = t_temp
                 #k+=1
