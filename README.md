@@ -32,15 +32,5 @@ Pioneering the design of materials for harnessing heat.
 4. From optical quantities, can perform the following analysis:
    * Identify Surface Plasmon Polariton modes
    * Identify Perfectly Absorbing modes
-   
-#TO DO:
-- Upload TMM Module Code to this repository (James)
-- Find a data set for the AM 1.5 spectrum and upload it to this repository (James)
-- Find a data set for the Photopic luminosity function and upload it to this repository (Reem)
-- Identify scipy or numpy cubic spline interpolation functions, provide simple example in this repository (Derek)
-- Find data sets for response functions of the following PV cells: GaSb, InGaSb, InGaAsSb (JJF) 
-- Find data set for transmissivity of atmosphere (Noor)
-- Identify formula to calculate Rate of Cooling of a structure for radiative cooling application (Noor)
-- Create a conceptual roadmap for the software package! (JJF)
-   
+
   
