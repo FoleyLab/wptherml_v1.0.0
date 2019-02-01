@@ -112,10 +112,10 @@ class multilayer:
         ### R, T, or eps vs angle at a specific wavelength
         ### we will allocate three arrays for these cases
         ### with a resolution of 0.5 degrees... i.e. they are small!
-        self.r_vs_theta = np.zeros(179)
-        self.t_vs_theta = np.zeros(179)
-        self.eps_vs_theta = np.zeros(179)
-        self.theta_array = np.linspace(0,np.pi/2., 179)
+        self.r_vs_theta = np.zeros(180)
+        self.t_vs_theta = np.zeros(180)
+        self.eps_vs_theta = np.zeros(180)
+        self.theta_array = np.linspace(0,89*np.pi/180, 180)
         ### If users selects explicit_angle option, we 
         ### need arrays for R, T, and eps as a function of angle
         ### and polarization, as well
