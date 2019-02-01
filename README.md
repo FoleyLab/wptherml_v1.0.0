@@ -1,2 +1,1 @@
-# wptherml
-Pioneering the design of materials to harness heat.
+logos will be placed in this folder

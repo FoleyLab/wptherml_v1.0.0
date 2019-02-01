@@ -1,0 +1,312 @@
+
+
+*******************************************************************************
+Thu Oct  4 16:53:39 2018
+
+
+FIT:    data read from 'photopiclum.txt' u ($1*1e-9):2
+        format = x:z
+        #datapoints = 89
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-555e-9)^2)
+fitted parameters initialized with current variable values
+
+
+
+*******************************************************************************
+Thu Oct  4 16:53:45 2018
+
+
+FIT:    data read from 'photopiclum.txt' u ($1*1e-9):2
+        format = x:z
+        #datapoints = 89
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-555e-9)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b            
+   0 6.0142356314e+01   0.00e+00  7.07e-01    1.000000e+00   1.000000e+00
+   3 1.0616335237e+01  -4.59e-08  7.07e-04    2.540294e-01   1.000000e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 10.6163
+rel. change during last iteration : -4.59469e-13
+
+degrees of freedom    (FIT_NDF)                        : 87
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.349323
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.122027
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.254029         +/- 0.03834      (15.09%)
+b               = 1                +/- 2.66e+12     (2.66e+14%)
+
+correlation matrix of the fit parameters:
+                a      b      
+a               1.000 
+b               0.260  1.000 
+
+
+*******************************************************************************
+Thu Oct  4 16:55:13 2018
+
+
+FIT:    data read from 'photopiclum.txt' u ($1*1e-9):2
+        format = x:z
+        #datapoints = 89
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-555e-9)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b            
+   0 1.0616335237e+01   0.00e+00  1.80e-01    2.540294e-01   1.000000e-07
+BREAK: Singular matrix in Invert_RtR
+
+*******************************************************************************
+Thu Oct  4 16:55:35 2018
+
+
+FIT:    data read from 'photopiclum.txt' u ($1*1e-9):2
+        format = x:z
+        #datapoints = 89
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-555e-9)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b            
+   0 1.6359136054e+01   0.00e+00  7.07e-06    1.000000e-05   1.001000e-07
+BREAK: Singular matrix in Invert_RtR
+
+*******************************************************************************
+Thu Oct  4 16:57:25 2018
+
+
+FIT:    data read from 'photopiclum.txt' u 1:2
+        format = x:z
+        x range restricted to [2.00000e-07 : 8.00000e-07]
+BREAK: No data to fit
+
+*******************************************************************************
+Thu Oct  4 16:58:03 2018
+
+
+FIT:    data read from 'photopiclum.txt' u ($1*1e-9):2
+        format = x:z
+        #datapoints = 89
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-550e-9)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b            
+   0 6.0142321474e+01   0.00e+00  7.07e-01    1.000000e+00   1.000000e+07
+   3 1.0616333123e+01  -4.04e-04  7.07e-04    2.540295e-01   1.020924e+07
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 10.6163
+rel. change during last iteration : -4.03867e-09
+
+degrees of freedom    (FIT_NDF)                        : 87
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.349323
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.122027
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.254029         +/- 0.05087      (20.02%)
+b               = 1.02092e+07      +/- 6.831e+12    (6.691e+07%)
+
+correlation matrix of the fit parameters:
+                a      b      
+a               1.000 
+b               0.686  1.000 
+
+
+*******************************************************************************
+Thu Oct  4 17:01:10 2018
+
+
+FIT:    data read from 'photopiclum.txt' u ($1*1e-9):2
+        format = x:z
+        x range restricted to [2.00000e-07 : 8.00000e-07]
+        #datapoints = 82
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-550e-9)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b            
+   0 3.3797329045e+00   0.00e+00  4.25e-01    1.000000e+00   1.000000e+14
+   5 4.6123901031e-01  -9.98e-03  4.25e-06    9.987013e-01   2.472966e+14
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 0.461239
+rel. change during last iteration : -9.98249e-08
+
+degrees of freedom    (FIT_NDF)                        : 80
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0759308
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.00576549
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.998701         +/- 0.0233       (2.333%)
+b               = 2.47297e+14      +/- 1.333e+13    (5.39%)
+
+correlation matrix of the fit parameters:
+                a      b      
+a               1.000 
+b               0.578  1.000 
+
+
+*******************************************************************************
+Thu Oct  4 17:02:37 2018
+
+
+FIT:    data read from 'photopiclum.txt' u ($1*1e-9):2
+        format = x:z
+        x range restricted to [2.00000e-07 : 8.00000e-07]
+        #datapoints = 82
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 1.4926302746e-01   0.00e+00  2.24e+00    9.987013e-01   2.472966e+14   5.550000e-07
+   4 3.1465390744e-02  -2.56e-03  2.24e-04    1.024334e+00   2.594624e+14   5.601863e-07
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 0.0314654
+rel. change during last iteration : -2.55706e-08
+
+degrees of freedom    (FIT_NDF)                        : 79
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0199574
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000398296
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 1.02433          +/- 0.006197     (0.605%)
+b               = 2.59462e+14      +/- 3.627e+12    (1.398%)
+c               = 5.60186e-07      +/- 3.066e-10    (0.05474%)
+
+correlation matrix of the fit parameters:
+                a      b      c      
+a               1.000 
+b               0.578  1.000 
+c               0.007  0.006  1.000 
+
+
+*******************************************************************************
+Fri Nov  9 15:47:24 2018
+
+
+FIT:    data read from 'photopiclum_2.txt' u ($1*1e-9):2
+        format = x:z
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 3.0195128987e-02   0.00e+00  2.10e+00    1.000000e+00   2.594620e+14   5.600000e-07
+   4 1.9730072391e-02  -5.49e-01  2.10e-04    1.016608e+00   2.846274e+14   5.590771e-07
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 0.0197301
+rel. change during last iteration : -5.48762e-06
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0207103
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000428915
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 1.01661          +/- 0.008509     (0.837%)
+b               = 2.84627e+14      +/- 5.859e+12    (2.058%)
+c               = 5.59077e-07      +/- 4.426e-10    (0.07916%)
+
+correlation matrix of the fit parameters:
+                a      b      c      
+a               1.000 
+b               0.544  1.000 
+c               0.029  0.018  1.000 
+
+
+*******************************************************************************
+Fri Nov  9 15:47:55 2018
+
+
+FIT:    data read from 'photopiclum_2.txt' u ($1*1e-9):2
+        format = x:z
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 1.9949340140e-01   0.00e+00  2.14e+00    1.016608e+00   2.846274e+14   5.500000e-07
+   3 1.9730072415e-02  -4.83e-01  2.14e-03    1.016608e+00   2.846268e+14   5.590766e-07
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 0.0197301
+rel. change during last iteration : -4.83046e-06
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0207103
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000428915
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 1.01661          +/- 0.008509     (0.837%)
+b               = 2.84627e+14      +/- 5.859e+12    (2.058%)
+c               = 5.59077e-07      +/- 4.426e-10    (0.07916%)
+
+correlation matrix of the fit parameters:
+                a      b      c      
+a               1.000 
+b               0.544  1.000 
+c               0.029  0.018  1.000 
+
+
+*******************************************************************************
+Fri Nov  9 15:49:22 2018
+
+
+FIT:    data read from 'photopiclum_2.txt' u ($1*1e-9):2
+        format = x:z
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   b            
+   0 5.7738504169e-02   0.00e+00  1.68e-01    2.850000e+14
+   2 5.7247923852e-02  -2.42e-11  1.68e+02    2.797316e+14
+
+After 2 iterations the fit converged.
+final sum of squares of residuals : 0.0572479
+rel. change during last iteration : -2.42416e-16
+
+degrees of freedom    (FIT_NDF)                        : 48
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.034535
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.00119267
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+b               = 2.79732e+14      +/- 8.155e+12    (2.915%)
