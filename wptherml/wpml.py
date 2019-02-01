@@ -115,7 +115,7 @@ class multilayer:
         self.r_vs_theta = np.zeros(180)
         self.t_vs_theta = np.zeros(180)
         self.eps_vs_theta = np.zeros(180)
-        self.theta_array = np.linspace(0,89*np.pi/180, 180)
+        self.theta_array = np.linspace(0,89.5*np.pi/180, 180)
         ### If users selects explicit_angle option, we 
         ### need arrays for R, T, and eps as a function of angle
         ### and polarization, as well
