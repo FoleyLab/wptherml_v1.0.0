@@ -6,17 +6,23 @@ Created on Thu Oct 11 13:14:46 2018
 """
 
 ###cooling lib
-from wptherml import TMM
+from wptherml import tmm
 from wptherml.datalib import datalib
-from wptherml.tmmcore import tmm_core 
 from wptherml import stpvlib
 import numpy as np
 import matplotlib.pyplot as plt
 from wptherml.numlib import numlib
 
+''' 
+   
+    these lines are outside of all functions
+    and probably should be deleted
 
 Ep= tmm.abs(k0, theta0, P, nA, tA)
 Es=tmm.abs(k0, theta0, s, nA, tA)
+
+'''
+
 def Eatm(T,theta):
     a = 1-T
     b = 1/np.cos(theta)

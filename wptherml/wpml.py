@@ -5,7 +5,7 @@ Created on Sat Nov 10 21:07:22 2018
 
 @author: jay
 """
-from wptherml import TMM
+from wptherml import tmm
 from wptherml import colorlib
 from wptherml import stpvlib
 from wptherml.datalib import datalib

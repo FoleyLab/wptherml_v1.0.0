@@ -1,6 +1,6 @@
 from wptherml.numlib import numlib
 from wptherml.datalib import datalib
-from wptherml import TMM
+from wptherml import tmm
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import integrate
