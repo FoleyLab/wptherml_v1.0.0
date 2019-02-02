@@ -150,7 +150,7 @@ class multilayer:
             self.fresnel_ea()
             ### Get the thermal emission at the angles from the
             ### Gauss-Legendre grid
-            self.ThermalEmission_EA()
+            self.thermal_emission_ea()
         
 
 
@@ -159,7 +159,7 @@ class multilayer:
         if (self.stpv_emitter_calc or self.stpv_absorber_calc or self.cooling_calc or self.lightbulb_calc or self.color_calc):
             ### The ThermalEmission() method automatically calculates the BB spectrum
             ### and stores it to self.BBs
-            self.ThermalEmission()
+            self.thermal_emission()
 
         #self.ThermalColor()
         ### now that default quantitites have been calculated, start
@@ -335,8 +335,7 @@ class multilayer:
         return 1
     
     ### Method to evaluate/update thermal emission spectrum - normal angle only!
-    ''' FLAGGED!  Rename method with accepted convention! '''
-    def ThermalEmission(self):
+    def thermal_emission(self):
         ### Temperature might change, update BB spectrum
         self.BBs = datalib.BB(self.lam, self.T)
         ### Emissivity doesn't change unless structure changes
@@ -344,8 +343,7 @@ class multilayer:
         return 1
     
     ### Method to evaluate/update thermal emission spectrum
-    ''' FLAGGED!  Rename method with accepted convention! '''
-    def ThermalEmission_EA(self):
+    def thermal_emission_ea(self):
         
         ### Temperature might change, update BB spectrum
         self.BBs = datalib.BB(self.lam, self.T)
@@ -465,23 +463,23 @@ class multilayer:
         #if (self.stpv_emitter_calc or self.stpv_absorber_calc or self.cooling_calc or self.lightbulb_calc or self.color_calc):
         #    self.ThermalEmission()
         if self.stpv_emitter_calc:
-            self.ThermalEmission()
+            self.thermal_emission()
             self.stpv_se()
             self.stpv_pd()
             self.stpv_etatpv()
             
             if (self.explicit_angle):
-                self.ThermalEmission_EA()
+                self.thermal_emission_ea()
                 self.stpv_se_ea()
                 self.stpv_pd_ea()
                 ### need to implement eta_tpv_ea method.
                 #self.stpv_etatpv_ea()
             
         if self.stpv_absorber_calc:
-            self.ThermalEmission()
+            self.thermal_emission()
             
             if (self.explicit_angle):
-                self.ThermalEmission_EA()
+                self.thermal_emission_ea()
                 self.stpv_etaabs()
             else:
                 self.stpv_etaabs()
@@ -499,16 +497,14 @@ class multilayer:
     
     ### displays the percieved color of an object at a specific temperature
     ### based only on thermal emission
-    ''' FLAGGED!  Rename method with accepted convention! '''
-    def ThermalColor(self):
+    def thermal_color(self):
         string = "Color at T = " + str(self.T) + " K"
         colorlib.RenderColor(self.thermal_emission_array, self.lam, string)
         return 1
     
     ### Displays the perceived color of an object based only
     ### on reflected light
-    ''' FLAGGED!  Rename method with accepted convention! '''
-    def AmbientColor(self):
+    def ambient_color(self):
         string = "Ambient Color"
         colorlib.RenderColor(self.reflectivity_array, self.lam, string)
         return 1
