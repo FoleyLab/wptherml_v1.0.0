@@ -296,6 +296,7 @@ def PhLum(lam):
 ### will evaluate a Gaussian fit to photopic luminosity function
 ### and return an array of values from that fit.
 def PhLum(lam):
+    ## if changed change light lib functions
 
     ### gaussian parameters determined from fit to Photopic luminosity 
     ### function data, where raw data was accessed from here: 
