@@ -520,13 +520,13 @@ class multilayer:
     
     ### METHODS FOR LIGHTLIB
     ''' FLAGGED!  Rename method with accepted convention! '''
-    def LuminousEfficiency(self):
-        self.eta_lum = lightlib.Lum_efficiency(self.lam, self.thermal_emission_array)
+    def luminous_efficiency(self):
+        self.luminous_efficiency_val = lightlib.Lum_efficiency(self.lam, self.thermal_emission_array)
         #print("just calculated eta_lum and it is ",self.eta_lum)
         return 1
     ''' FLAGGED!  Rename method with accepted convention! '''
-    def LuminousEfficacy(self):
-        self.lum_effic = self.eta_lum * 683
+    def luminous_efficacy(self):
+        self.luminous_efficacy_val = self.eta_lum * 683
         return 1
         
     ### MISCELLANEOUS METHODS TO MANIPULATE THE STRUCTURE
