@@ -28,8 +28,9 @@ def Eatm(T,theta):
     b = 1/np.cos(theta)
     Eatm = a**b
     return Eatm
-
+'finish Prad function to remove error'
 def Prad():
+
     
 def Patm(lam, theta, T):
     upper = np.amax(lam)
@@ -40,12 +41,13 @@ def Patm(lam, theta, T):
     ET = (Ep+Es)/2
     Patm=np.pi*2*numlib*Integrate(trig,theta,0, np.pi/2)*Integrate(TE,lam,100e-9,upper)*ET
     return Patm
-    
+ 'finish Psun funtion'   
 def Psun(lam):
     upper = np.amax(lam)
     AM = datalib.AM(lam)
     E = tmm.abs()
-    numlib.Integrate(AM*E,lam,100e-9, upper)
+    Psun = numlib.Integrate(AM*E,lam,100e-9, upper)
+    return Psun
 
 
 
