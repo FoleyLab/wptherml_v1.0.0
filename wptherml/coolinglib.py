@@ -24,16 +24,17 @@ Es=tmm.abs(k0, theta0, s, nA, tA)
 '''
 
 
-'''
-def E_atm(T,theta):
+
+E_atm(theta, lam):
     ### emissivity starts with 1 - T of atmosphere 
+    T = datalib.ATData(lam)
     a = 1-T
     ### angular part is the emissivity raised to 1/cos(theta)
     b = 1/np.cos(theta)
     Eatm = a**b
     
     return Eatm
-'''
+
 
 'finish Prad function to remove error'
 
@@ -43,18 +44,23 @@ def Prad(TEP, TES, lam, theta, w):
     for i in range(0,len(w)):
         prad_som = 0
         for j in range(0,len(lam)):
-            prad_som = prad_som + ( 0.5*TEP[i][j] + 0.5*TES[i][j])*dlam
+            prad_som = prad_som + (0.5*TEP[i][j] + 0.5*TES[i][j])*dlam
         x = x +prad_som*(np.sin(theta[i])*w[i])
     return x
 
-'''   
-def Patm(lam, theta, T):
+  
+self.atmospheric_power_val = coolibglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
+def Patm(TEP, TES, T, lam, theta, w):
+    
     dlam = np.abs(lam[0] - lam[1])
     x = 0
     for i in range(0,len(w)):
         patm_som = 0
         for j in range(0,len(lam)):
-            patm_som = patm_som + ()
+            patm_som = patm_som + (0.5*TEP[i][j] + 0.5*TES[i][j])*E_atm*dlam
+        x = x +patm_som*(np.sin(theta[i])*w[i])
+    return x
+            
  'finish Psun funtion'   
 def Psun(A, lam, TES, TEP,theta):
     upper = np.amax(lam)
@@ -69,4 +75,3 @@ def Psun(A, lam, TES, TEP,theta):
 def Pwr_cool(lam):
     Pcool = Prad()-Patm(lam, theta, T)-Psun(lam)
     return Pcool
-   ''' 
