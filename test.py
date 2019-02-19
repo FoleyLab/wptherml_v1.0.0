@@ -26,7 +26,7 @@ structure = {
         'Thickness_List': [0, 400e-9, 0],
          ### range of wavelengths optical properties will be calculated for
          ### values are stored in the array self.lam
-        'Lambda_List': [300e-9, 4000e-9, 1000],
+        'Lambda_List': [300e-9, 40000e-9, 1000],
         
         'EXPLICIT_ANGLE': 1,
          ### The folloing entry will tell the computer to use the lightbulb functions to
@@ -39,3 +39,4 @@ structure = {
 w_slab = multilayer(structure)
 w_slab.cooling_power()
 print(w_slab.radiative_power_val)
+print(w_slab.solar_power_val)

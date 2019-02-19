@@ -34,7 +34,10 @@ class multilayer:
         ### different calculations... will check for
         ### user input on these later
         self.pol = 'p'
-        self.th = 0
+        ### default incident angle
+        self.theta = 0
+        ### default solar angle for coolinglib calculations
+        self.theta_sun = 30 * np.pi/180
         ### T_ml is the temperature of the multilayer being modeledd
         self.T_ml = 300
         ### T_amb is the ambient temperature
@@ -192,7 +195,7 @@ class multilayer:
                 
             k0 = np.pi*2/self.lambda_array[i]
             ### get transfer matrix for this k0, th, pol, nc, and d
-            M = tmm.tmm(k0, self.th, self.pol, nc, self.d)
+            M = tmm.tmm(k0, self.theta, self.pol, nc, self.d)
             ### get t amplitude
             t = 1./M["M11"]
             ### get incident/final angle
@@ -249,7 +252,7 @@ class multilayer:
                 nc[j] = self.n[j][i]
                 
             k0 = np.pi*2/self.lambda_array[i]
-            self.reflectivity_array[i] = tmm.Reflect(k0, self.th, self.pol, nc, self.d)
+            self.reflectivity_array[i] = tmm.Reflect(k0, self.theta, self.pol, nc, self.d)
 
         return 1
     ### In case user ONLY wants transmissivity
@@ -260,7 +263,7 @@ class multilayer:
                 nc[j] = self.n[j][i]
                 
             k0 = np.pi*2/self.lambda_array[i]
-            self.transmissivity_array[i] = tmm.Trans(k0, self.th, self.pol, nc, self.d)
+            self.transmissivity_array[i] = tmm.Trans(k0, self.theta, self.pol, nc, self.d)
 
         return 1
     
@@ -365,8 +368,8 @@ class multilayer:
                     P_den_som = P_den_som + 0.5*self.lambda_array[j]/self.lbg*self.thermal_emission_array_p[i][j]*dl 
                     P_den_som = P_den_som + 0.5*self.lambda_array[j]/self.lbg*self.thermal_emission_array_s[i][j]*dl
                 
-            P_den = P_den + self.w[i] * P_den_som
-            P_inc = P_inc + self.w[i] * P_inc_som
+            P_den = P_den + P_den_som * np.sin(self.t[i]) * self.w[i] 
+            P_inc = P_inc + P_inc_som * np.sin(self.t[i]) * self.w[i] 
         
         self.SE = P_den/P_inc
         return 1
@@ -434,7 +437,7 @@ class multilayer:
     def cooling_power(self):
         self.radiative_power_val = coolinglib.Prad(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.t, self.w)
         #self.atmospheric_power_val = coolinglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
-        #self.solar_power_val = coolinglib.Psun(self.theta_sun, self.lambda_array)
+        self.solar_power_val = coolinglib.Psun(self.theta_sun, self.lambda_array, self.n, self.d)
         #self.cooling_power_val = self.radiative_power_val - self.atmospheric_power_val - self.solar_power_val
         return 1
     
