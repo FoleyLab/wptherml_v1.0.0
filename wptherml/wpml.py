@@ -158,34 +158,26 @@ class multilayer:
                 self.stpv_etaabs()
             
         if (self.color_calc):
-            
-            print("color")
-            #self.AmbientColor()
-            #self.ThermalColor()
+
+            self.ambient_color()
+            self.thermal_color()
             
         if (self.lightbulb_calc):
             
             ### Luminous efficiency and efficacy calcs here
-            self.LuminousEfficiency()
-            self.LuminousEfficacy()
-            ### need a method for computing luminous efficacy
+            self.luminous_efficiency()
+            ### need to validate method for computing luminous efficacy
+            #self.luminous_efficacy()
         
         if (self.cooling_calc):
-            print("cooling")
             
-            ### need a method for computing the cooling power
+            ### will compute the following quantites:
+            ### self.radiative_power_val -> at current T_ml, power emitted / unit area
+            ### self.solar_power_val -> power absorbed from sun / unit area
+            ### self.atmospherical_power_val -> power absorbed from atm at T_amb / unit area
+            ### self.cooling_power -> net power flux / unit area from balance of all the above
+            self.cooling_power()
             
-            ### Might want to store the result(s) somehow in something
-            ### other than the attributes... though it seems a little redundant 
-            ### to do so
-            #self.result = {}
-            
-        
-            
-            
-            
-            
-
         
     ### Methods to compute all Fresnel quantities at once!
     ### to compute the emissivity, one needs to compute R and T anyway
