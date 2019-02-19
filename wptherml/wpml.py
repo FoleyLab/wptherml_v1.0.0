@@ -33,9 +33,10 @@ class multilayer:
         ### user input on these later
         self.pol = 'p'
         self.th = 0
-        ### default temperature is 300 K, aka ambient temp
-        ### this is not a relevant temp for STPV applications
-        self.T = 300
+        ### T_ml is the temperature of the multilayer being modeledd
+        self.T_ml = 300
+        ### T_amb is the ambient temperature
+        self.T_amb = 300
         ### default bandgap wavelength is 2254e-9 m, good value for InGaAsSb
         self.lbg = 2254e-9
         ### default PV is InGaAsSb
@@ -74,31 +75,10 @@ class multilayer:
         self.fresnel_calc = 1
         self.explicit_angle = 0
         self.resonance = 0
- 
         
-        ### Three modes currently supported... 
-        ### at the very least after calling the methods
-        ### associated with each mode, a structure will
-        ### be defined (including RI of each layer for a user-specified
-        ### range of wavelengths) and calculation type(s) will be selected
-        
-        ### interactive mode will prompt user for input that
-        ### defines the calculation
-        if self.mode=='Interactive':
-            self.interactive_structure()
-            
-        ### batch mode reads input from a file
-        elif self.mode=='Batch':
-            self.batch_structure(self.inputfile)
-        
-        ### inline mode takes a dictionary (args)
-        ### to define input options
-        elif self.mode=='Inline':
-            self.inline_structure(args)
-            
-        ### Default is interactive mode!
-        else:
-            self.interactive_structure()
+        ### current version only inline_structure method supported
+        ### more modes of operation will come in later versions!
+        self.inline_structure(args)
             
         ### Now that structure is defined and we have the lambda array, 
         ### allocate other arrays!
@@ -210,7 +190,6 @@ class multilayer:
     ### Methods to compute all Fresnel quantities at once!
     ### to compute the emissivity, one needs to compute R and T anyway
     ### so  might as well compute them all at once
-    ''' FLAGGED!  Rename method with accepted convention! '''
     def fresnel(self):
         nc = np.zeros(len(self.d),dtype=complex)
         for i in range(0,len(self.lam)):
@@ -293,7 +272,6 @@ class multilayer:
     
     ### Fresnel methods when explicit angle-averaging is requested...
     ### Need to have FOM methods to accompany this
-    ''' FLAGGED!  Rename method with accepted convention! '''
     def fresnel_ea(self):
         ### The angles come from Gauss-Legendre quadrature
         nc = np.zeros(len(self.d),dtype=complex)
@@ -337,7 +315,7 @@ class multilayer:
     ### Method to evaluate/update thermal emission spectrum - normal angle only!
     def thermal_emission(self):
         ### Temperature might change, update BB spectrum
-        self.BBs = datalib.BB(self.lam, self.T)
+        self.BBs = datalib.BB(self.lam, self.T_ml)
         ### Emissivity doesn't change unless structure changes
         self.thermal_emission_array = self.BBs * self.emissivity_array
         return 1
@@ -346,7 +324,7 @@ class multilayer:
     def thermal_emission_ea(self):
         
         ### Temperature might change, update BB spectrum
-        self.BBs = datalib.BB(self.lam, self.T)
+        self.BBs = datalib.BB(self.lam, self.T_ml)
         #temp = np.zeros(len(self.lam))
         
         for i in range(0,len(self.t)):
@@ -357,7 +335,7 @@ class multilayer:
             
         return 1
     
-    ### METHODS FOR STPVLIB
+    ''' METHODS FOR STPVLIB!!! '''
     
     ### Normal versions first - no explicit dependence on angle
     
@@ -423,6 +401,52 @@ class multilayer:
         self.ETAABS = (alpha - beta)/alpha
         return 1
 
+    
+    ''' METHODS FOR COLORLIB!!! '''
+    
+    ### displays the percieved color of an object at a specific temperature
+    ### based only on thermal emission
+    def thermal_color(self):
+        string = "Color at T = " + str(self.T_ml) + " K"
+        colorlib.RenderColor(self.thermal_emission_array, self.lam, string)
+        return 1
+    
+    ### Displays the perceived color of an object based only
+    ### on reflected light
+    def ambient_color(self):
+        string = "Ambient Color"
+        colorlib.RenderColor(self.reflectivity_array, self.lam, string)
+        return 1
+    
+    ### Displays the percieved color of a narrow bandwidth lightsource
+    def pure_color(self, wl):
+        Spectrum = np.zeros_like(self.lam)
+        for i in range(0,len(Spectrum)):
+            if abs(self.lam[i] - wl)<5e-9:
+                Spectrum[i] = 1
+        colorlib.RenderColor(Spectrum, self.lam, str(wl))
+        return 1
+    
+    ''' METHODS FOR LIGHTLIB '''
+    def luminous_efficiency(self):
+        self.luminous_efficiency_val = lightlib.Lum_efficiency(self.lam, self.thermal_emission_array)
+        return 1
+    
+    def luminous_efficacy(self):
+        self.luminous_efficacy_val = self.eta_lum * 683
+        return 1
+    
+    ''' METHODS FOR COOLINGLIB !!! '''
+    def cooling_power(self):
+        self.radiative_power_val = coolinglib.Prad(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lam, self.t, self.w)
+        self.atmospheric_power_val = coolibglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lam, self.t, self.w)
+        self.solar_power_val = coolinglib.Psun(self.theta_sun, self.lam)
+        self.cooling_power_val = self.radiative_power_val - self.atmospheric_power_val - self.solar_power_val
+        return 1
+    
+    ''' MISCELLANEOUS METHODS TO MANIPULATE THE STRUCTURE
+        OR GATHER DATA ABOUT THE STRUCTURE '''
+    
     ### Method to add a layer to the bottom of the structure
     ### and re-compute desired quantities
     def insert_layer(self, layer_number, material, thickness):
@@ -436,8 +460,7 @@ class multilayer:
         new_m.append(material)
         for i in range(layer_number+1,len(self.matlist)+1):
             new_m.append(self.matlist[i-1])
-            
-        print(new_m)
+
         ### de-allocate memory associated with self.d, self.matlist, self.n arrays
         self.d = None
         self.matlist = None
@@ -483,55 +506,10 @@ class multilayer:
                 self.stpv_etaabs()
             else:
                 self.stpv_etaabs()
-                
-            
         
         
         return 1
 
-
-        
-
-    
-    ### METHODS FOR COLORLIB
-    
-    ### displays the percieved color of an object at a specific temperature
-    ### based only on thermal emission
-    def thermal_color(self):
-        string = "Color at T = " + str(self.T) + " K"
-        colorlib.RenderColor(self.thermal_emission_array, self.lam, string)
-        return 1
-    
-    ### Displays the perceived color of an object based only
-    ### on reflected light
-    def ambient_color(self):
-        string = "Ambient Color"
-        colorlib.RenderColor(self.reflectivity_array, self.lam, string)
-        return 1
-    
-    ### Displays the percieved color of a narrow bandwidth lightsource
-    def pure_color(self, wl):
-        Spectrum = np.zeros_like(self.lam)
-        for i in range(0,len(Spectrum)):
-            if abs(self.lam[i] - wl)<5e-9:
-                Spectrum[i] = 1
-        colorlib.RenderColor(Spectrum, self.lam, str(wl))
-        return 1
-    
-    ### METHODS FOR LIGHTLIB
-    ''' FLAGGED!  Rename method with accepted convention! '''
-    def luminous_efficiency(self):
-        self.luminous_efficiency_val = lightlib.Lum_efficiency(self.lam, self.thermal_emission_array)
-        #print("just calculated eta_lum and it is ",self.eta_lum)
-        return 1
-    ''' FLAGGED!  Rename method with accepted convention! '''
-    def luminous_efficacy(self):
-        self.luminous_efficacy_val = self.eta_lum * 683
-        return 1
-        
-    ### MISCELLANEOUS METHODS TO MANIPULATE THE STRUCTURE
-    ### OR GATHER DATA ABOUT THE STRUCTURE
-    
     ### Get the RI of a particular layer (at each wavelength specified by user)
     def layer_ri(self, layer):
         RI = np.zeros(len(self.lam),dtype=complex)
@@ -603,63 +581,10 @@ class multilayer:
     
     #### Sets the refractive index for a specified layer
     #### to a single specified refractive index value
-    ''' FLAGGED!  Rename method with accepted convention! '''
-    def LayerStaticRI(self, layer, RI):
+    def layer_static_ri(self, layer, RI):
         for i in range(0,len(self.lam)):
             self.n[layer][i] = RI
             
-        return 1
-    
-    ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    ### THIS METHOD IS HIGHLY SPECIFIC FOR A PARTICULAR USE CASE AND SHOULD
-    ### NOT BE INCLUDED IN THE PUBLIC RELEASE!!!!!
-    def fitness(self):
-        h=6.626e-34 #Js
-        k=1.38064852e-23 #mmKg/ssK
-        c=299792458 #m/s
-        q = 1.60217662e-19 # Coulombs
-        T_cell = 293.15+60
-        ### bunch of parameters specific to the system
-        lbg = 2254e-9
-        ebg = h*c/lbg
-        J0 = 1.5e5 * np.exp(-ebg/(k*T_cell))
-        #EQE = 1.0
-        EQE = 0.82
-        FF = 0.55
-        F = 0.85
-        f = 1./2.
-        beta  = 0.96
-        sumN = 0.
-        sumD = 0.
-        Jsc = 0.
-        
-        ### here we have a linear lambda array
-        dlambda = abs(self.lam[1]-self.lam[0])
-        for i in range(0,len(self.lam)-1): #len(lam)-1):
-            l = self.lam[i]
-            ### note the factor of pi... this assumes emissivity does not depend on angle
-            sumD = sumD + np.pi*self.thermal_emission_array[i] * dlambda
-            ### accumulate sum for numerator if lambda<lambda_b
-            if l<=lbg:
-                sumN = sumN + l/lbg * np.pi*self.thermal_emission_array[i] * dlambda
-                ### accumulate Jsc sum if lambda is within the bandwidth
-                ### suggested by Qiu et al.
-                if l>=(lbg/2.5):
-                    Jsc = Jsc + F * np.pi*self.thermal_emission_array[i] * (EQE * q * l/(h*c)) * dlambda
-                    
-        if (Jsc>J0):
-            Voc = k*T_cell * np.log(Jsc/J0) / q
-            red_v = q*Voc/(k*T_cell)
-            FF = beta * (red_v - np.log(red_v + 0.72))/(red_v + 1)
-            eta_tpv = (Voc * Jsc * FF)/sumD
-            
-        else:
-            eta_tpv = 0.
-            
-        eta_s = sumN / sumD
-        self.SE = eta_s
-        self.PD = sumN
-        self.ETATPV = eta_tpv
         return 1
 
     
@@ -668,7 +593,7 @@ class multilayer:
     ### Plot thermal emission
     def plot_te(self):
         plt.plot(self.lam*1e9, self.thermal_emission_array, 'red')
-        string = "Thermal Emission at " + str(self.T) + " K"
+        string = "Thermal Emission at " + str(self.T_ml) + " K"
         plt.legend(string)
         plt.show()
         return 1
@@ -784,91 +709,6 @@ class multilayer:
         self.PA_Resonance = b_spp+a_spp*1j
         return 1
 
-
-    ### The goal of this method is to allow the user to interactively
-    ### specify the structure as painlessly as possible.
-    ### They will supply an array of thicnesses
-    ### then an array of materials (we should tell them which are supported!)
-    ### and then they will specify the range of wavelengths they 
-    ### wish to consider
-    ### The result will be an array of wavelengths, an array of thicknesses
-    ### that define the geometry, and array of RI values at each wavelegnth
-    ### that defines the structure
-    def interactive_structure(self):
-        print(" Enter list of thicknesses for structure ")
-        self.d = [float(x) for x in input().split()]
-        print(" Enter list of materials for each layer ")
-        self.matlist = [str(x) for x in input().split()]
-        print(" Enter range of wavelength in the following order: ")
-        print(" starting_wl  ending_wl  number_of_wl ")
-        ### I don't think lamlist needs to be an attribute
-        lamlist = [float(x) for x in input().split()]
-        self.lam = np.linspace(lamlist[0],lamlist[1],int(lamlist[2]))
-        self.n = np.zeros((len(self.d),len(self.lam)),dtype=complex)
-        for i in range(0,len(self.matlist)):
-            self.n[:][i] = datalib.Material_RI(self.lam, self.matlist[i])
-        print(" Enter temperature of your structure")
-        self.T = float(input())
-        print(" The next questions relate to the quantities you would like to compute ")
-        print(" By default, the far-field transmission, reflection, and absorption/emissivity")
-        print(" spectra will be computed... all other quantities must be selected")
-        print(" To compute STPV-related quantities, type 'Y'")
-        choice = input()
-        if choice=='Y' or choice=='y' or choice=='Yes' or choice=='yes' or choice=='YES':
-            self.stpv_calc = 1
-        print(" To compute Cooling-related quantities, type 'Y'")
-        choice = input()
-        if choice=='Y' or choice=='y' or choice=='Yes' or choice=='yes' or choice=='YES':
-            self.cooling_calc = 1
-        print(" To compute Lightbulb-related quantities, type 'Y'")
-        choice = input()
-        if choice=='Y' or choice=='y' or choice=='Yes' or choice=='yes' or choice=='YES':
-            self.lightbulb_calc = 1
-        print(" To compute color-related quantities, type 'Y'")
-        choice = input()
-        if choice=='Y' or choice=='y' or choice=='Yes' or choice=='yes' or choice=='YES':
-            self.color_calc = 1
-     
-        return 1
-    
-    ### The goal of this method is to allow the user to run a calculation 
-    ### using an input file
-    def batch_structure(self,inputfile):
-        ### set default values for attributes:
-        self.d = [0, 100e-9, 0]
-        self.matlist = ['Air', 'W', 'Air']
-        self.lamlist = [400e-9, 800e-9, 200]
-        self.T = 300
-        ### now read input file and replace defaults if specified
-        with open(inputfile,"r") as f:
-            data = f.readlines()
-            
-            for line in data:
-                words = line.split()
-                if (words[0]=='Thickness_List'):
-                    self.d = [float(words[1]), float(words[2]), float(words[3])]
-                if (words[0]=='Material_List'):
-                    self.matlist = [words[1], words[2], words[3]]
-                if (words[0]=='Lambda_List'):
-                    self.lamlist = [float(words[1]), float(words[2]), float(words[3])]
-                if (words[0]=='Temperature'):
-                    self.T = float(words[1])
-                if (words[0]=='STPV'):
-                    self.stpv_calc = 1
-                if (words[0]=='COOLING'):
-                    self.cooling_calc = 1
-                if (words[0]=='LIGHTBULB'):
-                    self.lighbulb_calc = 1
-                if (words[0]=='COLOR'):
-                    self.color_calc = 1
-                
-                self.lam = np.linspace(self.lamlist[0],self.lamlist[1],int(self.lamlist[2]))
-                self.n = np.zeros((len(self.d),len(self.lam)),dtype=complex)
-                for i in range(0,len(self.matlist)):
-                    self.n[:][i] = datalib.Material_RI(self.lam, self.matlist[i])
-                
-
-        return 1
     
     def inline_structure(self, args):
         if 'Lambda_List' in args:
@@ -907,12 +747,21 @@ class multilayer:
             for i in range(0,len(self.matlist)):
                     self.n[:][i] = datalib.Material_RI(self.lam, self.matlist[i])
 
+        ### Temperature arguments!
         if 'Temperature' in args:
-            self.T = args['Temperature']
+            self.T_ml = args['Temperature']
         else:
             print(" Temperature not specified!")
-            print(" Proceeding with default T = 1200 K")
-            self.T = 1200
+            print(" Proceeding with default T = 300 K")
+            self.T_ml = 300
+        if 'PV_Temperature' in args:
+            self.T_cell = args['PV_Temperature']
+        else:
+            self.T_cell = 298
+        if 'Ambient_Temperature' in args:
+            self.T_amb = args['Ambient_Temperature']
+        else:
+            self.T_amb = 300
         
         ### Check to see what calculations should be done!
         if 'STPV_EMIT' in args:

@@ -23,11 +23,16 @@ Es=tmm.abs(k0, theta0, s, nA, tA)
 
 '''
 
-def Eatm(T,theta):
+def E_atm(T,theta):
+    ### emissivity starts with 1 - T of atmosphere 
     a = 1-T
+    ### angular part is the emissivity raised to 1/cos(theta)
     b = 1/np.cos(theta)
     Eatm = a**b
+    
     return Eatm
+
+
 'finish Prad function to remove error'
 def Prad():
 
