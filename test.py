@@ -17,7 +17,7 @@ structure = {
         'mode': 'Inline',
         ### temperature of the structure - relevant for all thermal applications
         ### value is stored in attribute self.T
-        'Temperature': 2400,
+        'Temperature': 300,
         ### actual materials the structure is made from
         ### values are stored in the attribute self.n
         'Material_List': ['Air', 'W', 'Air'],
@@ -27,6 +27,8 @@ structure = {
          ### range of wavelengths optical properties will be calculated for
          ### values are stored in the array self.lam
         'Lambda_List': [300e-9, 4000e-9, 1000],
+        
+        'EXPLICIT_ANGLE': 1,
          ### The folloing entry will tell the computer to use the lightbulb functions to
          ### compute properties needed to characterize an incandescent source
          'LIGHTBULB': 1
@@ -35,3 +37,5 @@ structure = {
 
 ### create the instance called glass_slab
 w_slab = multilayer(structure)
+w_slab.cooling_power()
+print(w_slab.radiative_power_val)

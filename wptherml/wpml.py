@@ -7,6 +7,7 @@ Created on Sat Nov 10 21:07:22 2018
 """
 from wptherml import tmm
 from wptherml import colorlib
+from wptherml import coolinglib
 from wptherml import stpvlib
 from wptherml import lightlib
 from wptherml.datalib import datalib
@@ -354,7 +355,15 @@ class multilayer:
         P_den = 0.
         P_inc = 0.
         dl = abs(self.lambda_array[1] - self.lambda_array[0])
-
+        for i in range(0,len(self.w)):
+            P_den_som = 0.
+            P_inc_som = 0.
+            for j in range(0,len(self.lambda_array)):
+                P_inc_som = P_inc_som + 0.5*self.thermal_emission_array_p[i][j]*dl
+                P_inc_som = P_inc_som + 0.5*self.thermal_emission_array_s[i][j]*dl
+                if self.lambda_array[j]>=self.lbg:
+                    P_den_som = P_den_som + 0.5*self.lambda_array[j]/self.lbg*self.thermal_emission_array_p[i][j]*dl 
+                    P_den_som = P_den_som + 0.5*self.lambda_array[j]/self.lbg*self.thermal_emission_array_s[i][j]*dl
                 
             P_den = P_den + self.w[i] * P_den_som
             P_inc = P_inc + self.w[i] * P_inc_som
@@ -424,9 +433,9 @@ class multilayer:
     ''' METHODS FOR COOLINGLIB !!! '''
     def cooling_power(self):
         self.radiative_power_val = coolinglib.Prad(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.t, self.w)
-        self.atmospheric_power_val = coolibglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
-        self.solar_power_val = coolinglib.Psun(self.theta_sun, self.lambda_array)
-        self.cooling_power_val = self.radiative_power_val - self.atmospheric_power_val - self.solar_power_val
+        #self.atmospheric_power_val = coolinglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
+        #self.solar_power_val = coolinglib.Psun(self.theta_sun, self.lambda_array)
+        #self.cooling_power_val = self.radiative_power_val - self.atmospheric_power_val - self.solar_power_val
         return 1
     
     ''' MISCELLANEOUS METHODS TO MANIPULATE THE STRUCTURE
