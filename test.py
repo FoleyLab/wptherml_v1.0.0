@@ -35,3 +35,4 @@ structure = {
 
 ### create the instance called glass_slab
 w_slab = multilayer(structure)
+w_slab.cooling_power()
