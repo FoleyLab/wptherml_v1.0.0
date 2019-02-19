@@ -354,15 +354,7 @@ class multilayer:
         P_den = 0.
         P_inc = 0.
         dl = abs(self.lambda_array[1] - self.lambda_array[0])
-        for i in range(0,len(self.w)):
-            P_den_som = 0.
-            P_inc_som = 0.
-            for j in range(0,len(self.lambda_array)):
-                P_inc_som = P_inc_som + 0.5*self.thermal_emission_array_p[i][j]*dl
-                P_inc_som = P_inc_som + 0.5*self.thermal_emission_array_s[i][j]*dl
-                if self.lambda_array[j]>=self.lbg:
-                    P_den_som = P_den_som + 0.5*self.lambda_array[j]/self.lbg*self.thermal_emission_array_p[i][j]*dl 
-                    P_den_som = P_den_som + 0.5*self.lambda_array[j]/self.lbg*self.thermal_emission_array_s[i][j]*dl
+
                 
             P_den = P_den + self.w[i] * P_den_som
             P_inc = P_inc + self.w[i] * P_inc_som
