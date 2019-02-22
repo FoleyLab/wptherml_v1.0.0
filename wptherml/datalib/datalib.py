@@ -89,7 +89,7 @@ def Read_RI_from_File(lam, matname):
     elif (matname=='Rh'):
         a = np.loadtxt('wptherml/datalib/Rh_Palik_RI_f.txt')
     elif (matname=='Ag'):
-        a = np.loadtxt('wptherml/datalib/Ag_JC_RI_f.txt')
+        a = np.loadtxt('wptherml/datalib/Ag_Yang.txt')
     elif (matname=='Au'):
         a = np.loadtxt('wptherml/datalib/Au_JC_RI_f.txt')
     elif (matname=='Pd'):

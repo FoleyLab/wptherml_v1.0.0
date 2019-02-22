@@ -47,11 +47,11 @@ plt.xlim(0.3,2.5)
 plt.show()
 
 ### Create figure that resembles Figure 2b in Fan et al passive cooling paper: 
-T_atm = datalib.ATData(w_slab.lambda_array)
-plt.plot(w_slab.lambda_array*1e6, w_slab.emissivity_array, 'red')
-plt.plot(w_slab.lambda_array*1e6, T_atm, 'blue')
-plt.xlim(2.5,20)
-plt.show()
+#T_atm = datalib.ATData(w_slab.lambda_array)
+#plt.plot(w_slab.lambda_array*1e6, w_slab.emissivity_array, 'red')
+#plt.plot(w_slab.lambda_array*1e6, T_atm, 'blue')
+#plt.xlim(2.5,20)
+#plt.show()
 
 
 '''
