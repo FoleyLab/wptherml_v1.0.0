@@ -48,20 +48,27 @@ def Prad(TEP, TES, lam, theta, w):
         x = x +prad_som*(np.sin(theta[i])*w[i])
     return x
 
-  
+#coolinglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w) 
 #self.atmospheric_power_val = coolibglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
-'''
-def Patm(TEP, TES, T, lam, theta, w):
+def Patm(EPS_P, EPS_S, T_amb, lam, theta, w):
+    
+    ### get transmissivity of atmosphere
+    atm_trans = datalib.ATData(lam)
+    ### get normal emissivity of atmosphere
+    E_atm = 1 - atm_trans
+    ### Bet blackbody spectrum at ambient temprature
+    BBs = datalib.BB(lam, T_amb)
     
     dlam = np.abs(lam[0] - lam[1])
     x = 0
     for i in range(0,len(w)):
         patm_som = 0
+        angular_mod = 1./np.cos(theta[i])
         for j in range(0,len(lam)):
-            patm_som = patm_som + (0.5*TEP[i][j] + 0.5*TES[i][j])*E_atm*dlam
-        x = x +patm_som*(np.sin(theta[i])*w[i])
+            patm_som = patm_som + (0.5*EPS_P[i][j] + 0.5*EPS_S[i][j])*(E_atm[j]**angular_mod) * BBs[j] * dlam
+        x = x + patm_som * np.sin(theta[i]) * w[i]
     return x
-   '''         
+       
 #oolinglib.Psun(self.theta_sun, self.lambda_array) 
 def Psun(theta_sun, lam, n, d):
     ### length of arrays 
