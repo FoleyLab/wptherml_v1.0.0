@@ -51,8 +51,8 @@ def Patm(TEP, TES, T, lam, theta, w):
             patm_som = patm_som + (0.5*TEP[i][j] + 0.5*TES[i][j])*E_atm(theta, lam)*dlam
         x = x +patm_som*(np.sin(theta[i])*w[i])
     return x
-'''         
-#oolinglib.Psun(self.theta_sun, self.lambda_array) 
+
+### P sun!
 def Psun(theta_sun, lam, n, d):
     ### length of arrays 
     n_lam = len(lam)
@@ -105,15 +105,6 @@ def Psun(theta_sun, lam, n, d):
         P_sun_sum = P_sun_sum + 0.5*(emissivity_p + emissivity_s) * AM[i] * dl
     
     return P_sun_sum
-
-
-    
-    for i in range(0,len(lam)):
-        k0 = np.pi*2/lam[i]
-        
-    Psun = numlib.Integrate(AM*E,lam,100e-9, upper)
-    return Psun
-'''
 
 
 
