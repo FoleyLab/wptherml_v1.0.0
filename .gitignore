@@ -1,0 +1,4 @@
+*.pyc
+wptherml/*.pyc
+wptherml/datalib/*.pyc
+wptherml/numlib/*.pyc
