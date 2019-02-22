@@ -19,9 +19,9 @@ from wptherml.numlib import numlib
 def E_atm(theta, lam):
     ### emissivity starts with 1 - T of atmosphere 
     T = datalib.ATData(lam)
-    ### angular part is the emissivity raised to 1/cos(theta)
-    for k in range(0,len(theta)):
-        Eatm = 1-(T**(1/np.cos(theta)))
+    ### angular part is the emissivity raised to 1/cos(theta):
+    b = 1./np.cos(theta)
+    Eatm = (1-T)**b
     return Eatm
 
 
@@ -41,15 +41,23 @@ def Prad(TEP, TES, lam, theta, w):
   
 #self.atmospheric_power_val = coolibglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
 
-def Patm(TEP, TES, T, lam, theta, w):
+def Patm(EPS_P, EPS_S, T_amb, lam, theta, w):
     
     dlam = np.abs(lam[0] - lam[1])
+    ### Get normal atmospheric transmissivity
+    atm_T = datalib.ATData(lam)
+    ### Get normal atomosphereic emissivity
+    atm_eps = 1 - atm_T
+    ### Get BB spectrum associated with ambient temperature
+    BBs = datalib.BB(lam, T_amb)
+    
     x = 0
     for i in range(0,len(w)):
         patm_som = 0
+        angular_mod = 1./np.cos(theta[i])
         for j in range(0,len(lam)):
-            patm_som = patm_som + (0.5*TEP[i][j] + 0.5*TES[i][j])*E_atm(theta, lam)*dlam
-        x = x +patm_som*(np.sin(theta[i])*w[i])
+            patm_som = patm_som + (0.5*EPS_P[i][j] + 0.5*EPS_S[i][j]) * BBs[j] * atm_eps[j]**angular_mod * dlam
+        x = x + patm_som * np.sin(theta[i]) * w[i]
     return x
 
 ### P sun!
