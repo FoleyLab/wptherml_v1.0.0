@@ -436,7 +436,7 @@ class multilayer:
     ''' METHODS FOR COOLINGLIB !!! '''
     def cooling_power(self):
         self.radiative_power_val = coolinglib.Prad(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.t, self.w)
-        self.atmospheric_power_val = coolinglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
+        #self.atmospheric_power_val = coolinglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
         self.solar_power_val = coolinglib.Psun(self.theta_sun, self.lambda_array, self.n, self.d)
         #self.cooling_power_val = self.radiative_power_val - self.atmospheric_power_val - self.solar_power_val
         return 1
