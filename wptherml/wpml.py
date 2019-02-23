@@ -748,6 +748,8 @@ class multilayer:
         ### Temperature arguments!
         if 'Temperature' in args:
             self.T_ml = args['Temperature']
+        elif 'Structure_Temperature' in args:
+            self.T_ml = args['Structure_Temperature']
         else:
             print(" Temperature not specified!")
             print(" Proceeding with default T = 300 K")
