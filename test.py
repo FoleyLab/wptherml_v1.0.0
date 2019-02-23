@@ -18,7 +18,7 @@ structure = {
         'mode': 'Inline',
         ### temperature of the structure - relevant for all thermal applications
         ### value is stored in attribute self.T
-        'Temperature': 300,
+        'Temperature': 315,
         ### actual materials the structure is made from
         ### values are stored in the attribute self.n
         'Material_List': ['Air', 'SiO2', 'HfO2', 'SiO2', 'HfO2', 'SiO2', 'HfO2', 'SiO2', 'Ag', 'Air'],
@@ -27,7 +27,7 @@ structure = {
         'Thickness_List': [0, 230e-9, 485e-9, 688e-9, 13e-9, 73e-9, 34e-9, 54e-9, 200e-9, 0],
          ### range of wavelengths optical properties will be calculated for
          ### values are stored in the array self.lam
-        'Lambda_List': [300e-9, 20000e-9, 1000],
+        'Lambda_List': [300e-9, 20000e-9, 5000],
         
         'EXPLICIT_ANGLE': 1,
          ### The folloing entry will tell the computer to use the lightbulb functions to
@@ -54,10 +54,10 @@ plt.show()
 #plt.show()
 
 
-'''
+
 w_slab.cooling_power()
 
 print(w_slab.radiative_power_val)
 print(w_slab.solar_power_val)
 print(w_slab.atmospheric_power_val)
-'''
+print(w_slab.cooling_power_val)

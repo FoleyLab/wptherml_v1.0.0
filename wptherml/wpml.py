@@ -41,7 +41,7 @@ class multilayer:
         ### T_ml is the temperature of the multilayer being modeledd
         self.T_ml = 300
         ### T_amb is the ambient temperature
-        self.T_amb = 300
+        self.T_amb = 273
         ### default bandgap wavelength is 2254e-9 m, good value for InGaAsSb
         self.lbg = 2254e-9
         ### default PV is InGaAsSb
@@ -438,7 +438,7 @@ class multilayer:
         self.radiative_power_val = coolinglib.Prad(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.t, self.w)
         self.atmospheric_power_val = coolinglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
         self.solar_power_val = coolinglib.Psun(self.theta_sun, self.lambda_array, self.n, self.d)
-        #self.cooling_power_val = self.radiative_power_val - self.atmospheric_power_val - self.solar_power_val
+        self.cooling_power_val = self.radiative_power_val - self.atmospheric_power_val - self.solar_power_val
         return 1
     
     ''' MISCELLANEOUS METHODS TO MANIPULATE THE STRUCTURE
