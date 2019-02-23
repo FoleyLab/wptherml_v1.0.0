@@ -41,7 +41,7 @@ class multilayer:
         ### T_ml is the temperature of the multilayer being modeledd
         self.T_ml = 300
         ### T_amb is the ambient temperature
-        self.T_amb = 273
+        self.T_amb = 300
         ### default bandgap wavelength is 2254e-9 m, good value for InGaAsSb
         self.lbg = 2254e-9
         ### default PV is InGaAsSb

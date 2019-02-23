@@ -36,7 +36,7 @@ def Prad(TEP, TES, lam, theta, w):
         for j in range(0,len(lam)):
             prad_som = prad_som + (0.5*TEP[i][j] + 0.5*TES[i][j])*dlam
         x = x +prad_som*(np.sin(theta[i])*w[i])
-    return x
+    return 2*np.pi*x
 
   
 #self.atmospheric_power_val = coolibglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
@@ -46,8 +46,6 @@ def Patm(EPS_P, EPS_S, T_amb, lam, theta, w):
     dlam = np.abs(lam[0] - lam[1])
     ### Get normal atmospheric transmissivity
     atm_T = datalib.ATData(lam)
-    ### Get normal atomosphereic emissivity
-    atm_eps = 1 - atm_T
     ### Get BB spectrum associated with ambient temperature
     BBs = datalib.BB(lam, T_amb)
     
@@ -56,9 +54,9 @@ def Patm(EPS_P, EPS_S, T_amb, lam, theta, w):
         patm_som = 0
         angular_mod = 1./np.cos(theta[i])
         for j in range(0,len(lam)):
-            patm_som = patm_som + (0.5*EPS_P[i][j] + 0.5*EPS_S[i][j]) * BBs[j] * atm_eps[j]**angular_mod * dlam
+            patm_som = patm_som + (0.5*EPS_P[i][j] + 0.5*EPS_S[i][j]) * BBs[j] * np.cos(theta[i]) * (1 - atm_T[j]**angular_mod) * dlam
         x = x + patm_som * np.sin(theta[i]) * w[i]
-    return x
+    return 2*np.pi*x
 
 ### P sun!
 def Psun(theta_sun, lam, n, d):

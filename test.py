@@ -18,7 +18,7 @@ structure = {
         'mode': 'Inline',
         ### temperature of the structure - relevant for all thermal applications
         ### value is stored in attribute self.T
-        'Temperature': 315,
+        'Temperature': 300,
         ### actual materials the structure is made from
         ### values are stored in the attribute self.n
         'Material_List': ['Air', 'SiO2', 'HfO2', 'SiO2', 'HfO2', 'SiO2', 'HfO2', 'SiO2', 'Ag', 'Air'],
