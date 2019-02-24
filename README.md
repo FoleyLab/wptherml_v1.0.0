@@ -23,7 +23,7 @@ The calculations of the quantities above are facilitated by a class called $mult
 structural data like the material and thicknesses that comprise the multi-layer structure being modeled, the types of applications one wants to
 consider the multi-layer structure for.  The following is the complete list of dictionary keys the multilayer class will recognize, along with
 the data the user can supply in association with each key:
-'''python
+```python
 'Lambda_List' # a list of three floats that includes in order (i) shortest wavelength in meters, (ii) longest wavelength in meters, and (iii) total number of wavelengths where you would like the optical quantities to be evaluated.  (Default is [400e-9,6000e-9,1000])
 
 'Thickness_List' # a list of floats that specify the thickness in meters of each layer.  Note that the terminal layers (first and last) must have thickness of 0. (Default is [0, 900e-9, 0].)
@@ -63,10 +63,12 @@ The following strings are currently recognized for the following supported mater
 
 'DEG' # an int that specifies the number of different angles that will be considered 
 in the calculation of optical and thermal emission properties as a function of angle. (Default is 7, which has been observed to give reasonably good accuracy when all angular integrals are performed using Gauss-Legendre quadrature).
+```
 
 ## Method and attribute list for multilayer class
 Given the input parameters specified above, the multilayer class uses different methods to compute properties relevant for thermal applications, and those properties are store attributes
 of the multilayer object.  The following is a list of methods of the multilayer class and their related attributes:
+
 
 ```python
 	def inline_structure(structure):
