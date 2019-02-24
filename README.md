@@ -89,4 +89,48 @@ of the multilayer object.  The following is a list of methods of the multilayer 
 	self.color_calc 	# the flag that determines if colors will be rendered
 	self.explicit_angle 	# the flag that determines if explicit angle-dependence of optical properties will be considered
 	self.deg		# the number of different angles that will be computed for angle-dependent optical properties
-  ```  
+  ```
+In addition to the attributes that are explicitly set by parsing user input, several more attributes that are arrays will be 
+allocated based on attributes defined by inline_structure:
+```python
+	### The following are always created
+	self.reflectivity_array 	# initialized as an array of zeros the same length as self.lambda_array
+	self.transmissivity_array	# initialized as an array of zeros the same length as self.lambda_array
+	self.emissivity_array		# initialized as an array of zeros the same length as self.lambda_array
+	self.thermal_emission_array	# initialized as an array of zeros the same length as self.lambda_array
+
+	### The following are created if self.explicit_angle == 1
+	self.x				# points from Gauss-Legendre grid of degree self.deg from 0 to 1
+	self.t				# self.deg angles on Gauss-Legendre grid transformed to be between 0 and pi/2
+	self.w				# self.deg weights from Gauss-Legendre grid transformed to be between 0 and pi/2
+
+	self.reflectivity_array_p       # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
+        self.reflectivity_array_s       # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
+        self.transmissivity_array_p     # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
+        self.transmissivity_array_s     # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
+        self.emissivity_array_p         # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
+        self.emissivity_array_s         # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
+        self.thermal_emission_array_p   # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
+        self.thermal_emission_array_s   # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
+```
+
+```python
+        def inline_structure(structure):
+        ### a method to parse input parameters from a dictionary (here called structure, all currently-supported dictionary
+        ### keys are defined above.  This method is called by the __init__ and defines the following attributes:
+
+        self.lambda_array       # the list of wavelengths in meters that will be used to evaluate optical and thermal spectra
+        self.d                  # the list of thicknesses that define the geometry of the multilayer
+        self.matlist            # the list of strings that specify the materials
+        self.n                  # the 2D arrays of refractive index values for each material for each wavelength (inner index specifies material, outter index wavelength)
+        self.T_ml               # the temperature of the multi-layer in Kelvin
+        self.T_cell             # the temperature of the PV cell in Kelvin
+        self.T_amb              # the ambient temperature in Kelvin
+        self.stpv_emitter_calc  # the flag that determines if (S)TPV emitter properties will be computed
+        self.stpv_absorber_calc # the flag that determines if (S)TPV absorber properties will be computed
+        self.cooling_calc       # the flag that determines if radiative cooling properties will be computed
+        self.lightbulb_calc     # the flag that determines if incandescent properties will be computed
+        self.color_calc         # the flag that determines if colors will be rendered
+        self.explicit_angle     # the flag that determines if explicit angle-dependence of optical properties will be considered
+      
+  
