@@ -55,4 +55,6 @@ in the calculation of optical and thermal emission properties as a function of a
 Given the input parameters specified above, the multilayer class uses different methods to compute properties relevant for thermal applications, and those properties are store attributes
 of the multilayer object.  The following is a list of methods of the multilayer class and their related attributes:
 
-1.  
+1. ```python
+	def inline_structure(structure):
+   ```  
