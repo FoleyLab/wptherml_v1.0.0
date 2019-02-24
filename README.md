@@ -38,4 +38,7 @@ the data the user can supply in association with each key:
    * Pd - Palladium
    * Pt - Platinum
    * W - Tungsten
-  
+4.  Key: Temperature - Data: a float specifying the temperature of the multi-layer structure in Kelvin
+5.  Key: PV_Temperature - Data: a float specifying the temperature of a PV cell in a (S)TPV device in Kelvin
+6.  Key: Ambient_Temperature - Data: a float specifying the ambient temperature in Kelvin for radiative cooling applications
+7.  Key: STPV_EMIT - Data: an int where '1' means compute properties associated with (S)TPV emitters and any other 
