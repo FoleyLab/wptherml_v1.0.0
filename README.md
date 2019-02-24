@@ -45,11 +45,14 @@ The following strings are currently recognized for the following supported mater
 7.  Key: STPV_EMIT - Data: an int where '1' means compute properties associated with (S)TPV emitters. (Default is 0, do not compute these quantities).
 8.  Key: STPV_ABS - Data: an int where '1' means compute properties associated with STPV/Concentrated Solar absorbers. (Default is 0).
 9.  Key: COOLING - Data: an int where '1' means compute properties associated with radiative cooling. (Default is 0).
-10:  Key: LIGHTBULB - Data: an int where '1' means compute properties associated with incandescent sources. (Default is 0).
-11:  Key: COLOR - Data: an int where '1' means compute and display the ambient and thermal color of a structure. (Default is 0).
-12:  Key: EXPLICIT_ANGLE - Data: an int where '1' means compute the optical properties and thermal emission at a range of angles and, when applicable, compute performance properties with explicit angular dependence.  (Default is 0, meaning most quantities will be computed assuming the emissivity does not depend upon angle.)
-13:  Key: DEG - Data: an int that specifies the number of different angles that will be considered 
+10.  Key: LIGHTBULB - Data: an int where '1' means compute properties associated with incandescent sources. (Default is 0).
+11.  Key: COLOR - Data: an int where '1' means compute and display the ambient and thermal color of a structure. (Default is 0).
+12.  Key: EXPLICIT_ANGLE - Data: an int where '1' means compute the optical properties and thermal emission at a range of angles and, when applicable, compute performance properties with explicit angular dependence.  (Default is 0, meaning most quantities will be computed assuming the emissivity does not depend upon angle.)
+13.  Key: DEG - Data: an int that specifies the number of different angles that will be considered 
 in the calculation of optical and thermal emission properties as a function of angle. (Default is 7, which has been observed to give reasonably good accuracy when all angular integrals are performed using Gauss-Legendre quadrature).
 
 ## Method and attribute list for multilayer class
-Given the input parameters specified above
+Given the input parameters specified above, the multilayer class uses different methods to compute properties relevant for thermal applications, and those properties are store attributes
+of the multilayer object.  The following is a list of methods of the multilayer class and their related attributes:
+
+1.  
