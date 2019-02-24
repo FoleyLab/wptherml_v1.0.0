@@ -19,7 +19,8 @@ Pioneering the design of materials for harnessing heat.
    * Identify Perfectly Absorbing modes
    * Rendering of color of a multi-layer at cool temperatures and at elevated temperatures
 
-The calculations of the quantities above are facilitated by a class called $multilayer$.  The multilayer class parses a dictionary for key 
+## Input Keyword List
+The calculations of the quantities above are facilitated by a class called "multilayer".  The multilayer class parses a dictionary for key 
 structural data like the material and thicknesses that comprise the multi-layer structure being modeled, the types of applications one wants to
 consider the multi-layer structure for.  The following is the complete list of dictionary keys the multilayer class will recognize, along with
 the data the user can supply in association with each key:
