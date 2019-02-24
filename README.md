@@ -1,6 +1,18 @@
 <img src="Logo/WPtherml.png" alt="drawing" width="200"/> 
 Pioneering the design of materials for harnessing heat.
 
+## Overview
+WPTherml stands for **W**illiam **P**aterson University's tool for **Th**ermal **E**nergy and **R**adiation management with **M**ulti **L**ayer nanostructures.
+The vision of this software package is to provide an easy-to-use platform for the design of materials with tailored optical and thermal properties for
+the vast number of energy applications where the control of absorption and emission of radiation, or conversion of heat to radiation or vice versa, is paramount.
+The optical properties are treated within classical electrodynamics, and the current version uses the Transfer Matrix Method to rigorously solve Maxwell's equations
+for layered isotropic media.  More details of the Transfer Matrix equations, along will the full mathematical formulation currently implemented in WPTherml, can be found in
+the [documentation](https://github.com/FoleyLab/wptherml/blob/master/documentation/Equations.pdf).
+
+## Quick Start
+- WPTherml is written in Python3 and requires the numpy, scipy, and matplotlib packages.  Current installation of the Anaconda Python 3 package should provide all you need 
+on Windows, Mac, or Linux platforms
+- To get started      
 
 ## Features List
 1. Computes Reflectivity, Transmissivity, and Absorptivity/Emissivity spectrum of arbitrary multi-layered planar structures using the Transfer Matrix Method
