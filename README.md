@@ -55,6 +55,23 @@ in the calculation of optical and thermal emission properties as a function of a
 Given the input parameters specified above, the multilayer class uses different methods to compute properties relevant for thermal applications, and those properties are store attributes
 of the multilayer object.  The following is a list of methods of the multilayer class and their related attributes:
 
-1. ```python
+```python
 	def inline_structure(structure):
-   ```  
+       	### a method to parse input parameters from a dictionary (here called structure, all currently-supported dictionary 
+       	### keys are defined above.  This method is called by the __init__ and defines the following attributes:
+
+	self.lambda_array 	# the list of wavelengths in meters that will be used to evaluate optical and thermal spectra
+	self.d		  	# the list of thicknesses that define the geometry of the multilayer
+	self.matlist      	# the list of strings that specify the materials
+	self.n		  	# the 2D arrays of refractive index values for each material for each wavelength (inner index specifies material, outter index wavelength)
+	self.T_ml         	# the temperature of the multi-layer in Kelvin
+	self.T_cell       	# the temperature of the PV cell in Kelvin
+	self.T_amb      	# the ambient temperature in Kelvin
+	self.stpv_emitter_calc  # the flag that determines if (S)TPV emitter properties will be computed
+	self.stpv_absorber_calc # the flag that determines if (S)TPV absorber properties will be computed
+	self.cooling_calc    	# the flag that determines if radiative cooling properties will be computed
+	self.lightbulb_calc     # the flag that determines if incandescent properties will be computed
+	self.color_calc 	# the flag that determines if colors will be rendered
+	self.explicit_angle 	# the flag that determines if explicit angle-dependence of optical properties will be considered
+	self.deg		# the number of different angles that will be computed for angle-dependent optical properties
+  ```  
