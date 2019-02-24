@@ -757,7 +757,7 @@ class multilayer:
         if 'PV_Temperature' in args:
             self.T_cell = args['PV_Temperature']
         else:
-            self.T_cell = 298
+            self.T_cell = 300
         if 'Ambient_Temperature' in args:
             self.T_amb = args['Ambient_Temperature']
         else:
