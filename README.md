@@ -13,7 +13,11 @@ the [documentation](https://github.com/FoleyLab/wptherml/blob/master/documentati
 - WPTherml is written in Python3 and requires the numpy, scipy, and matplotlib packages.  Current installation of the Anaconda Python 3 package should provide all you need 
 on Windows, Mac, or Linux platforms
 - To get started, clone or download this repository to your computer
-- Open a new .py file in your favorite text editor or IDE.  The capabilities of this package are contained within a class called multilayer.  A basic example 
+- Open a new .py file in your favorite text editor or IDE, e.g.
+
+`vim test.py`
+
+The capabilities of this package are contained within a class called multilayer.  A basic example 
 of a script that imports the multilayer class, computes the reflectivity of an optically-thick Tungsten slab, and plots
 it using pyplot follows:
 ```python
@@ -44,10 +48,18 @@ plt.show()
 ```
 
 - Save this script and run it either in the terminal as
-`python test.py`
-where test.py is the name of the file you created, or execute it within your IDE.
 
-There are illustrative features of using the features of the multilayer class contained in Jupyter notebooks within this repository; more
+`python test.py`
+
+where test.py is the name of the file you created, or if you were doing this in an IDE, execute it within your IDE!
+
+There are illustrative features of using the features of the multilayer class contained in Jupyter notebooks within this repository, including:
+
+- [Basic Optical Properties](https://github.com/FoleyLab/wptherml/blob/master/Example1.ipynb)
+
+- [Validation of Optical Properties](https://github.com/FoleyLab/wptherml/blob/master/Validate_Fresnel.ipynb)
+
+more
 will be added in the near future!
 
 ## Features List
