@@ -55,12 +55,15 @@ where test.py is the name of the file you created, or if you were doing this in 
 
 There are illustrative features of using the features of the multilayer class contained in Jupyter notebooks within this repository, including:
 
+- [Validation of Basic Optical Properties](https://github.com/FoleyLab/wptherml/blob/master/Validate_Fresnel.ipynb)
+
 - [Basic Optical Properties](https://github.com/FoleyLab/wptherml/blob/master/Example1.ipynb)
 
-- [Validation of Optical Properties](https://github.com/FoleyLab/wptherml/blob/master/Validate_Fresnel.ipynb)
+- [Modeling Incandescent Sources](https://github.com/FoleyLab/wptherml/blob/master/Example2.ipynb)
 
-more
-will be added in the near future!
+- [Modeling Radiative Cooling Surface](https://github.com/FoleyLab/wptherml/blob/master/Validate_Cooling.ipynb)
+
+more will be added in the near future!
 
 ## Features List
 1. Computes Reflectivity, Transmissivity, and Absorptivity/Emissivity spectrum of arbitrary multi-layered planar structures using the Transfer Matrix Method
