@@ -179,14 +179,51 @@ allocated based on attributes defined by inline_structure:
 
 ```python
 ''' Method to compute optical properties of reflectivity, transmissivity, and 
-emissivity of structure as a function of wavelength at a single angle '''
+emissivity of structure as a function of wavelength assuming normal incidence '''
 def fresnel()
 
-### Upon execution, the following arrays are filled with their respective values:
+### Upon execution, the following arrays are filled with their respective values
+### for every wavelength in self.lambda_array
 self.reflectivity_array
 self.transmissivity_array
 self.emissivity_array
 ```
 
+```python
+''' Method to compute optical properties of reflectivity, transmissivity, and 
+emissivity of structure as a function of wavelength and angle, both p- and s-polarizations
+are considered '''
+def fresnel_ea()
 
+### Upon execution, the following arrays are filled with their respective values
+### for every wavelength in self.lambda_array and every angle in self.t
+self.reflectivity_array_p
+self.reflectivity_array_s
+self.transmissivity_array_p
+self.transmissivity_array_s
+self.emissivity_array_p
+self.emissivity_array_s
+```
+
+```python
+''' Method to compute thermal emission spectrum of a structure at a given temperature;
+note temperature specified by self.T_ml '''
+def thermal_emission()
+
+### Upon execution, the following arrays are computed for every wavelength in self.lambda_array
+### for temperature given by self.T_ml
+self.BBs   # Blackbody spectrum
+self.thermal_emission_array ## thermal emission of structure defined as Blackbody * emissivity
+```
+
+
+```python
+''' Method to compute thermal emission spectrum of a structure at a given temperature for a range of angles '''
+def thermal_emission()
+
+### Upon execution, the following arrays are computed for every wavelength in self.lambda_array
+### and every angle in self.t for temperature given by self.T_ml
+self.thermal_emission_array_p ## thermal emission of structure defined as Blackbody * p-polarized emissivity
+self.thermal_emission_array_s ## thermal emission of structure defined as Blackbody * s-polarized emissivity
+```
   
