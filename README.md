@@ -12,7 +12,40 @@ the [documentation](https://github.com/FoleyLab/wptherml/blob/master/documentati
 ## Quick Start
 - WPTherml is written in Python3 and requires the numpy, scipy, and matplotlib packages.  Current installation of the Anaconda Python 3 package should provide all you need 
 on Windows, Mac, or Linux platforms
-- To get started      
+- To get started, clone or download this repository to your computer
+- Open a new .py file in your favorite text editor or IDE.  The capabilities of this package are contained within a class called multilayer.  A basic example 
+of a script that imports the multilayer class, computes the reflectivity of an optically-thick Tungsten slab, and plots
+it using pyplot follows:
+```python
+from wptherml.wpml import multilayer
+from matplotlib import pyplot as plt
+
+### dictionary that stores basic properties 
+### of the multilayer structure you want to simulate
+structure = {
+        ### actual materials the structure is made from... note terminal layers are air and
+   	### central layer is tungsten (W)
+        ### values are stored in the attribute self.n
+        'Material_List': ['Air', 'W', 'Air'],
+        ### thickness of each layer... terminal layers must be set to zero
+        ### values are stored in attribute self.d
+        'Thickness_List': [0, 400e-9, 0],
+         ### range of wavelengths optical properties will be calculated for
+         ### values are stored in the array self.lam
+        'Lambda_List': [400e-9, 800e-9, 1000]
+        }
+
+### create the instance called glass_slab
+tungsten_slab = multilayer(structure)
+
+### create a plot of the reflectivity of the tungsten slab
+plt.plot(tungsten_slab.lambda_array, tungsten_slab.reflectivity_array, 'red')
+plt.show()
+```
+
+- Save this script and run it either in the terminal as
+`python test.py`
+where test.py is the name of the file you created, or execute it within your IDE.
 
 ## Features List
 1. Computes Reflectivity, Transmissivity, and Absorptivity/Emissivity spectrum of arbitrary multi-layered planar structures using the Transfer Matrix Method
