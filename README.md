@@ -177,5 +177,16 @@ allocated based on attributes defined by inline_structure:
         self.thermal_emission_array_s   # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
 ```
 
+```python
+''' Method to compute optical properties of reflectivity, transmissivity, and 
+emissivity of structure as a function of wavelength at a single angle '''
+def fresnel()
+
+### Upon execution, the following arrays are filled with their respective values:
+self.reflectivity_array
+self.transmissivity_array
+self.emissivity_array
+```
+
 
   
