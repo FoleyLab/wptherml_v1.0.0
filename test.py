@@ -5,6 +5,32 @@ Created on Mon Feb 18 20:35:19 2019
 
 @author: jay
 """
+from wptherml.wpml import multilayer
+from matplotlib import pyplot as plt
+
+### dictionary that stores basic properties 
+### of the multilayer structure you want to simulate
+structure = {
+        ### actual materials the structure is made from... note terminal layers are air and
+   	### central layer is tungsten (W)
+        ### values are stored in the attribute self.n
+        'Material_List': ['Air', 'W', 'Air'],
+        ### thickness of each layer... terminal layers must be set to zero
+        ### values are stored in attribute self.d
+        'Thickness_List': [0, 400e-9, 0],
+         ### range of wavelengths optical properties will be calculated for
+         ### values are stored in the array self.lam
+        'Lambda_List': [400e-9, 800e-9, 1000]
+        }
+
+### create the instance called glass_slab
+tungsten_slab = multilayer(structure)
+
+### create a plot of the reflectivity of the tungsten slab
+plt.plot(tungsten_slab.lambda_array, tungsten_slab.reflectivity_array, 'red')
+plt.show()
+
+'''
 
 from wptherml.wpml import multilayer
 from matplotlib import pyplot as plt
@@ -61,3 +87,4 @@ print(w_slab.radiative_power_val)
 print(w_slab.solar_power_val)
 print(w_slab.atmospheric_power_val)
 print(w_slab.cooling_power_val)
+'''

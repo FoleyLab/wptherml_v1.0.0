@@ -47,6 +47,9 @@ plt.show()
 `python test.py`
 where test.py is the name of the file you created, or execute it within your IDE.
 
+There are illustrative features of using the features of the multilayer class contained in Jupyter notebooks within this repository; more
+will be added in the near future!
+
 ## Features List
 1. Computes Reflectivity, Transmissivity, and Absorptivity/Emissivity spectrum of arbitrary multi-layered planar structures using the Transfer Matrix Method
 2. Computes Thermal Emission spectrum at a given temperature of multi-layer structure as emissivity * Blackbody spectrum 
