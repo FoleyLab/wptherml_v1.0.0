@@ -218,8 +218,13 @@ class multilayer:
         ### desired wavelength
         nc = np.zeros(len(self.d),dtype=complex)
         ### get RI for each layer and store it in nc array
+        #for i in range(0,len(self.matlist)):
+        #    nc[i] = datalib.Material_RI(lambda_0, self.matlist[i])
+        idx, = np.where(self.lambda_array <= lambda_0)
+        idx_val = idx[len(idx)-1]
         for i in range(0,len(self.matlist)):
-            nc[i] = datalib.Material_RI(lambda_0, self.matlist[i])
+            nc[i] = self.n[i][idx_val]
+            
         k0 = np.pi*2/lambda_0
         i=0
         for thetai in self.theta_array:
