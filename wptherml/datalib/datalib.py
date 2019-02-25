@@ -27,12 +27,13 @@ def Material_RI(lam, arg):
         C = 0.0173801
         D = 1.69999
         n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
-    #elif (arg=='SiO2'):
-    #    A = 187178
-    #    B = 9993.46
-    #    C = 0.0173801
-    #    D = 1.45
-    #    n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
+    ### This model works well for glass into near IR
+    elif (arg=='SiO2' and lam[len(lam)-1]<5000e-9):
+        A = 187178
+        B = 9993.46
+        C = 0.0173801
+        D = 1.45
+        n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
     elif (arg=='TiO2'):
         A = 187178
         B = 9993.46
