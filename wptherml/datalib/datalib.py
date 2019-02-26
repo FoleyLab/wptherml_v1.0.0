@@ -91,10 +91,14 @@ def Read_RI_from_File(lam, matname):
         a = np.loadtxt('wptherml/datalib/Ru_Palik_RI_f.txt')
     elif (matname=='Rh'):
         a = np.loadtxt('wptherml/datalib/Rh_Palik_RI_f.txt')
-    elif (matname=='Ag'):
+    elif (matname=='Ag' and lam[len(lam)-1]<=1000e-9):
+        a = np.loadtxt('wptherml/datalib/Ag_JC_RI_f.txt')
+     elif (matname=='Ag' and lam[len(lam)-1]>1000e-9):
         a = np.loadtxt('wptherml/datalib/Ag_Yang.txt')
-    elif (matname=='Au'):
+    elif (matname=='Au' and lam[len(lam)-1]<=1000e-9):
         a = np.loadtxt('wptherml/datalib/Au_JC_RI_f.txt')
+    elif (matname=='Au' and lam[len(lam)-1]>1000e-9):
+        a = np.loadtxt('wptherml/datalib/Au_IR.txt')
     elif (matname=='Pd'):
         a = np.loadtxt('wptherml/datalib/Pd_Palik_RI_f.txt')
     elif (matname=='Pt'):
