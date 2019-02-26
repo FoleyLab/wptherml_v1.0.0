@@ -343,55 +343,37 @@ class multilayer:
     
     ### Spectral Efficiency - see Eq. 4 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
     def stpv_se(self):
-        self.SE = stpvlib.SpectralEfficiency(self.thermal_emission_array, self.lambda_array, self.lbg)
+        self.spectral_efficiency_val = stpvlib.SpectralEfficiency(self.thermal_emission_array, self.lambda_array, self.lbg)
         return 1
     
     ### Power density - see Eq. 3 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
     def stpv_pd(self):
-        self.PD = stpvlib.Pwr_den(self.thermal_emission_array, self.lambda_array, self.lbg)
+        self.power_density_val = stpvlib.Pwr_den(self.thermal_emission_array, self.lambda_array, self.lbg)
         return 1
     
     ### TPV Efficiency, see Eq. S20-S26 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
     def stpv_etatpv(self):
-        self.ETATPV = stpvlib.Eta_TPV(self.thermal_emission_array, self.lambda_array, self.PV, self.T_cell)
+        self.tpv_efficiency_val = stpvlib.Eta_TPV(self.thermal_emission_array, self.lambda_array, self.PV, self.T_cell)
         return 1
     
     ### Explicit Angle versions of methods for STPV quantities
     def stpv_se_ea(self):
-        self.SE = stpvlib.SpectralEfficiency_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.lbg, self.t, self.w)
-    
-        P_den = 0.
-        P_inc = 0.
-        dl = abs(self.lambda_array[1] - self.lambda_array[0])
-        for i in range(0,len(self.w)):
-            P_den_som = 0.
-            P_inc_som = 0.
-            for j in range(0,len(self.lambda_array)):
-                P_inc_som = P_inc_som + 0.5*self.thermal_emission_array_p[i][j]*dl
-                P_inc_som = P_inc_som + 0.5*self.thermal_emission_array_s[i][j]*dl
-                if self.lambda_array[j]>=self.lbg:
-                    P_den_som = P_den_som + 0.5*self.lambda_array[j]/self.lbg*self.thermal_emission_array_p[i][j]*dl 
-                    P_den_som = P_den_som + 0.5*self.lambda_array[j]/self.lbg*self.thermal_emission_array_s[i][j]*dl
-                
-            P_den = P_den + P_den_som * np.sin(self.t[i]) * self.w[i] 
-            P_inc = P_inc + P_inc_som * np.sin(self.t[i]) * self.w[i] 
-        
-        self.SE = P_den/P_inc
-        return 1
-        
+        self.spectral_efficiency_val = stpvlib.SpectralEfficiency_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.lbg, self.t, self.w)
+
         
     def stpv_pd_ea(self):
-        self.PD = stpvlib.Pwr_den_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.lbg, self.t, self.w)
+        self.power_density_val = stpvlib.Pwr_den_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.lbg, self.t, self.w)
         return 1
     
-    ''' FLAGGED! Need stpv_etatpv_ea method!!! '''
+    def stpv_etatpv_ea(self):
+        self.tpv_efficiency_val = stpvlib.Eta_TPV_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.PV, self.T_cell, self.t, self.w)
     
     
     ### Absorber Efficiency - see 
     def stpv_etaabs(self):
         alpha = stpvlib.absorbed_power_ea(self.lambda_array, self.n, self.d, self.solarconc)
         beta = stpvlib.p_in(self.thermal_emission_array, self.lambda_array)
-        self.ETAABS = (alpha - beta)/alpha
+        self.absorber_efficiency_val = (alpha - beta)/alpha
         return 1
         
     def stpv_etaabs_ea(self):
@@ -400,7 +382,7 @@ class multilayer:
         ### will depend on the solar concentration
         alpha = stpvlib.absorbed_power_ea(self.lambda_array, self.n, self.d, self.solarconc)
         beta = stpvlib.p_in_ea(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.t, self.w )
-        self.ETAABS = (alpha - beta)/alpha
+        self.absorber_efficiency_val = (alpha - beta)/alpha
         return 1
 
     
