@@ -239,8 +239,52 @@ self.eps_vs_theta # emissivity
 
 ```python
 ''' The following three methods compute figures of merit relevant for STPV emitters for a given
-    temperature self.T_ml, PV type self.PV and bandgap self.lbg, and PV temperature self.T_cell'''
+    temperature self.T_ml, PV type self.PV and bandgap self.lbg, and PV temperature self.T_cell.
+    These methods assume the emissivity does not change with angle, and perform an analytic
+    integration over solid angles that make the computations much quicker, though also less realistic.'''
 self.stpv_se() # compute the spectral efficiency and stores it in the attribute self.spectral_efficiency_val
 self.stpv_pd() # computes the useful power density and stores it in the attribute self.power_density_val
 self.stpv_etatpv() # computes the TPV emitter efficiency and stores it in the attribute self.tpv_efficiency_val
 ```
+
+```python
+''' The following methods compute figures of merit relevant for STPV emitters for a given
+    temperature self.T_ml, PV type self.PV and bandgap self.lbg, and PV temperature self.T_cell.
+    These methods explicitly account for the angular dependence of the emissivity, making these calculations
+    more realistic but also more time consuming. '''
+self.stpv_se_ea() # compute the spectral efficiency and stores it in the attribute self.spectral_efficiency_val
+self.stpv_pd_ea() # computes the useful power density and stores it in the attribute self.power_density_val
+self.stpv_etatpv_ea() # computes the TPV emitter efficiency and stores it in the attribute self.tpv_efficiency_val
+```
+```python
+''' The following methods compute the absorber efficiency of a STPV or concentrated solar absorber at a 
+    given temperature self.T_ml '''
+def stpv_etaabs_ea() # computes absorber efficiency and stores it in the attribute self.absorber_efficiency_val
+```
+```python
+''' method to render color of a structure from its thermal emission at a given temperature self.T_ml '''
+def thermal_color()
+''' method to render color of a structure from its reflection spectrum '''
+def ambient_color()
+''' method to render color in a +/- 5nm band around the wavelength lambda '''
+def pure_color(lambda)
+```
+
+```python
+def luminous_efficiency()
+
+def cooling_power()
+
+def insert_layer()
+
+def layer_ri()
+
+def layer_alloy()
+
+def layer_static_ri()
+
+def find_spp()
+
+def find_pa()
+```
+
