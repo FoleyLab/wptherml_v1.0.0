@@ -645,7 +645,7 @@ class multilayer:
                     a_spp = a
                     b_spp = b
 
-        self.SPP_Resonance = b_spp+a_spp*1j
+        self.spp_resonance_val = b_spp+a_spp*1j
         return 1
 
     def find_pa(self, idx):
@@ -690,7 +690,7 @@ class multilayer:
                     a_spp = a
                     b_spp = b
 
-        self.PA_Resonance = b_spp+a_spp*1j
+        self.pa_resonance_val = b_spp+a_spp*1j
         return 1
 
     
