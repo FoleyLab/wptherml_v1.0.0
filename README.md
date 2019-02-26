@@ -279,20 +279,49 @@ def pure_color(lambda)
 ```
 
 ```python
+''' Method to compute the luminous efficiency of a structure at temperature self.T_ml.
+    Stores value to self.luminous_efficiency_val '''
 def luminous_efficiency()
 
+''' Method to compute the radiative cooling power of a structure at temperature self.T_ml in ambient
+    temperature self.T_amb while being illuminated by the AM1.5 spectrum.  Upon execution, the relevant
+    values are stored to the attributes self.radiative_power_val (this is the flux that cools the structure),
+    self.atmospheric_power_val (part of flux that warms the structure) and self.solar_power_val (part of the flux 
+    that warms the structure).'''
 def cooling_power()
 
-def insert_layer()
 
-def layer_ri()
+''' Method  to add a layer to the structure; material of the layer to be added will be specified by 'material' argument
+    and thickness of the layer will be specified by the 'thickness' argument.  The layer will be inserted after
+    the 'layer_number' layer.  The method will also update spectral and performance quantities after the layer is
+    added; the instance name will be preserved after execution, so this is like a mutation operation.'''
+def insert_layer(layer_number, material, thickness)
 
-def layer_alloy()
+''' Method to extract the array of refractive index values associated with a specific layer; the method returns 
+    this array.  '''
+def layer_ri(layer_number)
 
-def layer_static_ri()
+''' Method to define the refractive index of an existing layer (specified by layer_number) as an alloy
+    of material_1 and material_2 with a specified volume_fraction of material_1 in material_2 according
+    to either the Maxwell-Garnett or the Bruggeman effective medium theory.  Using 'Bruggeman' as the
+    argument for model will use Bruggeman's effective medium theory, while any other string will default
+    to Maxwell-Garnett theory. Optical properties and performance figures are NOT updated upon execution of this method.'''
+def layer_alloy(layer_number, volume_fraction, material_1, material_2, model)
 
-def find_spp()
+''' Method to define the refractive index of an existing layer (specified by layer number) as a single
+    complex number (specified by refractive_index_value) for all wavelengths.  Optical properties and performance figures are NOT updated upon execution of this method.'''
+def layer_static_ri(layer_number, refractive_index_value)
 
+''' Method to compute complex wavevector magnitude associated with the surface plasmon polariton mode on a given multi-layer
+    structure at a wavelength specified by the int wavelength_index, where self.lambda_array[wavelength_index] returns
+    the wavelength you are interested in in meters.  Upon completion, the spp wavevector is stored in
+    self.spp_resonance_val '''
+def find_spp(wavelength_index)
+
+''' Method to compute complex wavevector magnitude associated with the perfectly absorbing mode on a given multi-layer
+    structure at a wavelength specified by the int wavelength_index, where self.lambda_array[wavelength_index] returns
+    the wavelength you are interested in in meters.  Upon completion, the pa wavevector is stored in
+    self.pa_resonance_val '''
 def find_pa()
 ```
 
