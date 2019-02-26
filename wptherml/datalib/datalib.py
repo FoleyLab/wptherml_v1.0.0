@@ -40,7 +40,7 @@ def Material_RI(lam, arg):
         C = 0.0173801
         D = 2.4
         n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
-    elif (arg=='AlN'):
+    elif (arg=='AlN' and lam[len(lam)-1]<5000e-9):
         A = 1.859
         B = 0.3401
         n = A + B/(lmic*lmic) + 0j/lmic
@@ -52,6 +52,8 @@ def Material_RI(lam, arg):
     elif (arg=='W' or arg=='HfN' or arg=='Re' or arg=='Rh' or arg=='Ru'):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt' or arg=='SiO2'):
+        n = Read_RI_from_File(lam, arg)
+    elif (arg=='AlN'):
         n = Read_RI_from_File(lam, arg)
     ### default is air    
     else:
@@ -99,6 +101,8 @@ def Read_RI_from_File(lam, matname):
         a = np.loadtxt('wptherml/datalib/Pt_Palik_RI_f.txt')
     elif (matname=='SiO2'):
         a = np.loadtxt('wptherml/datalib/SiO2_IR.txt')
+    elif (matname=='AlN'):
+        a = np.loadtxt('wptherml/datalib/AlN_IR.txt')
     else:
         a = np.loadtxt('wptherml/datalib/W_Palik_RI_f.txt')
     ### now that we have read in the text, interpolate/extrapolate RI
