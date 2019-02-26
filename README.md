@@ -4,13 +4,13 @@ Pioneering the design of materials for harnessing heat.
 ## Overview
 WPTherml stands for **W**illiam **P**aterson University's tool for **Th**ermal **E**nergy and **R**adiation management with **M**ulti **L**ayer nanostructures.
 The vision of this software package is to provide an easy-to-use platform for the design of materials with tailored optical and thermal properties for
-the vast number of energy applications where the control of absorption and emission of radiation, or conversion of heat to radiation or vice versa, is paramount.
+the vast number of energy applications where control of absorption and emission of radiation, or conversion of heat to radiation or vice versa, is paramount.
 The optical properties are treated within classical electrodynamics, and the current version uses the Transfer Matrix Method to rigorously solve Maxwell's equations
 for layered isotropic media.  More details of the Transfer Matrix equations, along will the full mathematical formulation currently implemented in WPTherml, can be found in
 the [documentation](https://github.com/FoleyLab/wptherml/blob/master/documentation/Equations.pdf).
 
 ## Quick Start
-- WPTherml is written in Python3 and requires the numpy, scipy, and matplotlib packages.  Current installation of the Anaconda Python 3 package should provide all you need 
+- WPTherml is written in Python 3 and requires the numpy, scipy, and matplotlib packages.  Current installation of the Anaconda Python 3 package should provide all you need 
 on Windows, Mac, or Linux platforms
 - To get started, clone or download this repository to your computer
 - Open a new .py file in your favorite text editor or IDE, e.g.
@@ -226,4 +226,21 @@ def thermal_emission()
 self.thermal_emission_array_p ## thermal emission of structure defined as Blackbody * p-polarized emissivity
 self.thermal_emission_array_s ## thermal emission of structure defined as Blackbody * s-polarized emissivity
 ```
-  
+```python
+''' Method to compute optical properties of reflectivity, transmissivity, 
+and emissivity as a function of angle for a given polarization self.pol and wavelength lambda_0 '''
+def angular_fresnel(self, lambda_0)
+
+### Upon execution, the following arrays are computed for 180 angles between 0 and pi/2
+self.r_vs_theta # reflectivity
+self.t_vs_theta # transmissivity
+self.eps_vs_theta # emissivity
+```
+
+```python
+''' The following three methods compute figures of merit relevant for STPV emitters for a given
+    temperature self.T_ml, PV type self.PV and bandgap self.lbg, and PV temperature self.T_cell'''
+self.stpv_se() # compute the spectral efficiency and stores it in the attribute self.spectral_efficiency_val
+self.stpv_pd() # computes the useful power density and stores it in the attribute self.power_density_val
+self.stpv_etatpv() # computes the TPV emitter efficiency and stores it in the attribute self.tpv_efficiency_val
+```
