@@ -18,7 +18,8 @@ on Windows, Mac, or Linux platforms
 `vim test.py`
 
 The capabilities of this package are contained within a class called multilayer.  A basic example 
-of a script that imports the multilayer class, computes the reflectivity of an optically-thick Tungsten slab, and plots
+of a script that imports the multilayer class, computes the reflectivity of 20 nm gold film coated with 50 nm of 
+TiO2 and 100 nm SiO2, and plots
 it using pyplot follows:
 ```python
 from wptherml.wpml import multilayer
@@ -30,10 +31,10 @@ structure = {
         ### actual materials the structure is made from... note terminal layers are air and
    	### central layer is tungsten (W)
         ### values are stored in the attribute self.n
-        'Material_List': ['Air', 'W', 'Air'],
+        'Material_List': ['Air', 'SiO2', 'TiO2', 'Au', 'Air'],
         ### thickness of each layer... terminal layers must be set to zero
         ### values are stored in attribute self.d
-        'Thickness_List': [0, 400e-9, 0],
+        'Thickness_List': [0, 100e-9, 50e-9, 20e-9,  0],
          ### range of wavelengths optical properties will be calculated for
          ### values are stored in the array self.lam
         'Lambda_List': [400e-9, 800e-9, 1000]
@@ -52,6 +53,12 @@ plt.show()
 `python test.py`
 
 where test.py is the name of the file you created, or if you were doing this in an IDE, execute it within your IDE!
+
+The schematic that illustrates the above example is shown in the figure below. Note the ordering of the 
+layers in the picture and how they are specified through Material_List and Thickness_List relative to 
+the incident, reflected, transmitted, and thermally-emitted light.
+<img src="documentation/Convention.png" alt="drawing" width="500"/>
+
 
 There are illustrative features of using the features of the multilayer class contained in Jupyter notebooks within this repository, including:
 
