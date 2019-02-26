@@ -57,6 +57,7 @@ where test.py is the name of the file you created, or if you were doing this in 
 The schematic that illustrates the above example is shown in the figure below. Note the ordering of the 
 layers in the picture and how they are specified through Material_List and Thickness_List relative to 
 the incident, reflected, transmitted, and thermally-emitted light.
+
 <img src="documentation/Convention.png" alt="drawing" width="500"/>
 
 
