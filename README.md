@@ -61,15 +61,15 @@ the incident, reflected, transmitted, and thermally-emitted light.
 <img src="documentation/Convention.png" alt="drawing" width="500"/>
 
 
-There are illustrative features of using the features of the multilayer class contained in Jupyter notebooks within this repository, including:
+There are illustrative examples of using the features of the multilayer class contained in Jupyter notebooks within this repository, including:
 
 - [Validation of Basic Optical Properties](https://github.com/FoleyLab/wptherml/blob/master/Validate_Fresnel.ipynb)
 
-- [Basic Optical Properties](https://github.com/FoleyLab/wptherml/blob/master/Example1.ipynb)
+- [Examples of Computing Basic Optical Properties](https://github.com/FoleyLab/wptherml/blob/master/Example1.ipynb)
 
 - [Modeling Incandescent Sources](https://github.com/FoleyLab/wptherml/blob/master/Example2.ipynb)
 
-- [Modeling Radiative Cooling Surface](https://github.com/FoleyLab/wptherml/blob/master/Validate_Cooling.ipynb)
+- [Modeling Radiative Cooling Surfaces](https://github.com/FoleyLab/wptherml/blob/master/Validate_Cooling.ipynb)
 
 more will be added in the near future!
 
@@ -227,7 +227,7 @@ self.thermal_emission_array ## thermal emission of structure defined as Blackbod
 
 ```python
 ''' Method to compute thermal emission spectrum of a structure at a given temperature for a range of angles '''
-def thermal_emission()
+def thermal_emission_ea()
 
 ### Upon execution, the following arrays are computed for every wavelength in self.lambda_array
 ### and every angle in self.t for temperature given by self.T_ml
