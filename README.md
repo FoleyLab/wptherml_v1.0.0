@@ -40,11 +40,11 @@ structure = {
         'Lambda_List': [400e-9, 800e-9, 1000]
         }
 
-### create the instance called glass_slab
-tungsten_slab = multilayer(structure)
+### create the instance called coated_au_film
+coated_au_film = multilayer(structure)
 
-### create a plot of the reflectivity of the tungsten slab
-plt.plot(tungsten_slab.lambda_array, tungsten_slab.reflectivity_array, 'red')
+### create a plot of the reflectivity of the coated au film - use red lines
+plt.plot(coated_au_film.lambda_array, coated_au_film.reflectivity_array, 'red')
 plt.show()
 ```
 
