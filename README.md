@@ -29,8 +29,8 @@ from matplotlib import pyplot as plt
 ### of the multilayer structure you want to simulate
 structure = {
         ### actual materials the structure is made from... note terminal layers are air and
-   	### central layer is tungsten (W)
-        ### values are stored in the attribute self.n
+   	### top-side layer (layer upon which light is incident) is SiO2.
+        ### Refractive index values are stored in the attribute self.n
         'Material_List': ['Air', 'SiO2', 'TiO2', 'Au', 'Air'],
         ### thickness of each layer... terminal layers must be set to zero
         ### values are stored in attribute self.d
@@ -44,7 +44,9 @@ structure = {
 coated_au_film = multilayer(structure)
 
 ### create a plot of the reflectivity of the coated au film - use red lines
-plt.plot(coated_au_film.lambda_array, coated_au_film.reflectivity_array, 'red')
+### the wavelengths are stored in SI units so we will multiply by 1e9 to 
+### plot them in nanometers
+plt.plot(1e9*coated_au_film.lambda_array, coated_au_film.reflectivity_array, 'red')
 plt.show()
 ```
 
