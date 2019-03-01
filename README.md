@@ -75,6 +75,10 @@ There are illustrative examples of using the features of the multilayer class co
 
 more will be added in the near future!
 
+## Playlist
+The developers of WPTherml compiled the following a thermal-themed [Spotify Playlist called "Everything Thermal"](https://open.spotify.com/playlist/1Vb7MV4WwjOMMHLbrX4TNN); we hope it will inspire you to imagine new possibilities for 
+harnessing heat and thermal energy!
+
 ## Features List
 1. Computes Reflectivity, Transmissivity, and Absorptivity/Emissivity spectrum of arbitrary multi-layered planar structures using the Transfer Matrix Method
 2. Computes Thermal Emission spectrum at a given temperature of multi-layer structure as emissivity * Blackbody spectrum 
