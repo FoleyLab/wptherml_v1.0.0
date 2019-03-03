@@ -571,7 +571,14 @@ class multilayer:
             
         return 1
 
-    
+    def layer_lorentz(self, layer, omega_p, omega_0, gamma):
+        c = 299792458.
+        ci = 0+1j
+        for i in range(0,len(self.lambda_array)):
+            omega = 2*np.pi*c/self.lambda_array[i]
+            eps_lr = 1 + omega_p**2/(omega_0**2 - omega**2 - ci*omega*gamma)
+            self.n[layer][i] = np.sqrt(eps_lr)
+        return 1
     ### METHODS FOR PLOTTING DATA!
     
     ### Plot thermal emission
