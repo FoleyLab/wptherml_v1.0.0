@@ -1,4 +1,8 @@
 *.pyc
+test*.py
+test*.ipynb
+TEST*.py
+TEST*.ipynb
 wptherml/*.pyc
 wptherml/datalib/*.pyc
 wptherml/numlib/*.pyc
