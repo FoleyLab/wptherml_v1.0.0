@@ -84,7 +84,7 @@ and for s-polarized light:
 \end{pmatrix}
 \end{equation}
 where $\theta_l$ is the refraction angle into the $l^{th}$ layer that satisfies Snell's 
-la: $\theta_l = {\rm arcsin}(n_1/n_l \: {\rm sin}(\theta_1))$.
+law~\cite{Yeh}: $\theta_l = {\rm arcsin}(n_1/n_l \: {\rm sin}(\theta_1))$.
 
 From the elements of the Transfer Matrix, the reflection and transmission amplitudes
 can be computed as follows:
@@ -102,11 +102,11 @@ incident/refraction angles as
 T = t t^* \: \frac{n_L \: {\rm cos}(\theta_L)}{n_1 \: {\rm cos}(\theta_1)}
 \end{equation}
 where $r^*$ and $t^*$ are the complex conjugates of $r$ and $t$, respectively.
-The Absorptivity and Emissivity of a structure can be computed as
+The absorptivity and emissivity of a structure can be computed as
 \begin{equation}
 A \equiv \epsilon = 1 - R - T,
 \end{equation}
-where $A$ indicates the Absorptivity and $\epsilon$ is the emissivity, which are taken
+where $A$ indicates the absorptivity and $\epsilon$ is the emissivity, which are taken
 to be equivalent by Kirchoff's theorem.
 
 The Thermal Emission of a given structure is simply the emissivity multiplied
@@ -156,7 +156,7 @@ of the emissivity functions (7 for each polariation) as opposed to a single
 evaluation of the emissivity function when angular dependence is neglected.
 
 With the Transfer Matrix Equations in hand, and their relation to the thermal
-emission of a multi-layer structure established, we will now provide a brief overvie of the 
+emission of a multi-layer structure established, we will now provide a brief overview of the 
 central equations used for the figures of merit for the various applications wptherml
 can be used for.
 
@@ -223,7 +223,7 @@ the solar concentration as $\theta_C = {\rm arcsin}(C \cdot 68.5 \cdot 10^{-6} /
 
 The explicit angle dependence is always included for the total absorbed power in the absorber efficiency 
 calculation, and by the user's option, can be included in all other STPV figures of merit by performing
-the integration over the full angle-dependent thernal emission as defined in Eq. (14).  As in the 
+the integration over the full angle-dependent thermal emission as defined in Eq. (14).  As in the 
 total absorbed power, the explicit angle dependence of the p- and s-polarized emissivities must be accounted
 for in explicit integration over $\theta$; the range of $\theta$ will be from $0$ to $2\pi$ for all applications
 except the total absorbed solar power, where the $\theta$ range depends upon the solar concentration as discussed above.
