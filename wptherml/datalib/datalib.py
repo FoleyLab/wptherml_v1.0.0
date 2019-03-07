@@ -53,7 +53,7 @@ def Material_RI(lam, arg):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt' or arg=='SiO2'):
         n = Read_RI_from_File(lam, arg)
-    elif (arg=='AlN'):
+    elif (arg=='AlN' or arg=='Si'):
         n = Read_RI_from_File(lam, arg)
     ### default is air    
     else:
@@ -107,6 +107,8 @@ def Read_RI_from_File(lam, matname):
         a = np.loadtxt('wptherml/datalib/SiO2_IR.txt')
     elif (matname=='AlN'):
         a = np.loadtxt('wptherml/datalib/AlN_IR.txt')
+    elif (matname=='Si'):
+	a = np.loadtxt('wptherml/datalib/Si_Schinke.txt')
     else:
         a = np.loadtxt('wptherml/datalib/W_Palik_RI_f.txt')
     ### now that we have read in the text, interpolate/extrapolate RI
