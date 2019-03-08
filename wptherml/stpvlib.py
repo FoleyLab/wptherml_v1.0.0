@@ -96,6 +96,18 @@ def p_in_ea(TE_p, TE_s, lam, t, w):
         pin = pin + w[i] * isom * np.sin(t[i])
     return pin * 2 * np.pi
 
+### ideal estimate of short circuit current of PV in sun based on 
+### its emissivity * AM1.5... should be updated with SR of PV data
+def ambient_jsc(eps, lam, lbg):
+    upper = lbg
+    AM = datalib.AM(lam)
+    jsc = 0.
+    dl = np.abs(lam[1]-lam[0])
+    for i in range(0,len(lam)):
+        jsc = jsc + AM[i]*eps[i]*lam[i]/lbg*dl
+    return jsc
+        
+    
 ### reasonable approximation for Jsc given 
 ### you accept the view factor of 0.85... ignores 
 ### explicit angle dependence of emissivity
