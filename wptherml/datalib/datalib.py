@@ -136,7 +136,7 @@ def Read_RI_from_File(lam, matname):
 
 ### returns interpolated/extrapolated EQE of monocrystaline silicon PV cells
 ### given an input array of wavelengths
-def EQE_Si(lam):
+def SR_Si(lam):
     ### values of lambda along which EQE is experimeintally known
     datlam = np.linspace(260e-9, 1310e-9, 22)
     ### experimental values of EQE for monocrystaline Si... 

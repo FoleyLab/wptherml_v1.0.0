@@ -99,12 +99,17 @@ def p_in_ea(TE_p, TE_s, lam, t, w):
 ### ideal estimate of short circuit current of PV in sun based on 
 ### its emissivity * AM1.5... should be updated with SR of PV data
 def ambient_jsc(eps, lam, lbg):
-    upper = lbg
+    ### get upper bound of integral
+    upper = np.amax(lam)
+    ### get AM1.5 spectrum
     AM = datalib.AM(lam)
-    jsc = 0.
-    dl = np.abs(lam[1]-lam[0])
-    for i in range(0,len(lam)):
-        jsc = jsc + AM[i]*eps[i]*lam[i]/lbg*dl
+    ### get spectral response function (currently only Si supported for 
+    ### traditional PV... more to come soon)
+    SR = datalib.SR_Si(lam)
+    ### jsc integrand
+    integrand = AM*SR*eps*np.pi
+    ### integrate it!
+    jsc = numlib.Integrate(integrand, lam, 1e-9, upper)
     return jsc
         
     
@@ -116,16 +121,16 @@ def JSC(TE, lam, PV):
     F = 0.85
     ### get spectral response function for appropriate PV material
     if (PV=='InGaAsSb'):
-        SP = datalib.SR_InGaAsSb(lam)
+        SR = datalib.SR_InGaAsSb(lam)
     elif (PV=='GaSb'):
-        SP = datalib.SR_GaSb(lam)
+        SR = datalib.SR_GaSb(lam)
     else:
-        SP = datalib.SR_InGaAsSb(lam)
+        SR = datalib.SR_InGaAsSb(lam)
     ### get upper limit of lambda array... will integrate over entire
     ### range, in principle spectral response function will vanish at the
     ### appropriate boundaries of lambda
     upper = np.amax(lam)
-    integrand = TE*SP*F*np.pi
+    integrand = TE*SR*F*np.pi
     jshc = numlib.Integrate(integrand, lam, 1e-9, upper)
     return jshc
 
