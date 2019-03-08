@@ -134,6 +134,23 @@ def Read_RI_from_File(lam, matname):
     n = yn + 1j*yk
     return n
 
+### returns interpolated/extrapolated EQE of monocrystaline silicon PV cells
+### given an input array of wavelengths
+def EQE_Si(lam):
+    ### values of lambda along which EQE is experimeintally known
+    datlam = np.linspace(260e-9, 1310e-9, 22)
+    ### experimental values of EQE for monocrystaline Si... 
+    dateqe = 0.01*np.array([0., 0., 11.5, 23., 33., 37., 41., 45., 49., 52., 56., 60., 64., 62.5, 51., 35., 27.5, 20., 12.5, 7.5, 0., 0.])
+    ### order of the spline
+    order = 1
+    ### form the interpolator/extrapolator object
+    s = InterpolatedUnivariateSpline(datlam, dateqe, k=order)
+    ### compute the interpolated/extrapolated values
+    y = s(lam)
+    
+    return y
+    
+
 
 ### returns interpolated/extrapolated EQE of InGaAsSb PV cells given an input
 ### array of wavelengths
