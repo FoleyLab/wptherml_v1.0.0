@@ -384,6 +384,13 @@ class multilayer:
         beta = stpvlib.p_in_ea(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.t, self.w )
         self.absorber_efficiency_val = (alpha - beta)/alpha
         return 1
+    
+    def pv_conversion_efficiency(self):
+        self.short_circuit_current_val = stpvlib.ambient_jsc(self.emissivity_array, self.lambda_array, self.lbg)
+        self.open_circuit_voltage_val = stpvlib.Voc(self.short_circuit_current_val, self.T_cell)
+        self.fill_factor_val = stpvlib.FF(self.open_circuit_voltage_val, self.T_cell)
+        self.conversion_efficiency_val = self.short_circuit_current_val*self.open_circuit_voltage_val*self.fill_factor_val
+        return 1        
 
     
     ''' METHODS FOR COLORLIB!!! '''
