@@ -107,7 +107,7 @@ def ambient_jsc(eps, lam, lbg):
     ### traditional PV... more to come soon)
     SR = datalib.SR_Si(lam)
     ### jsc integrand
-    integrand = AM*SR*eps*np.pi
+    integrand = AM*SR
     ### integrate it!
     jsc = numlib.Integrate(integrand, lam, 1e-9, upper)
     return jsc
@@ -203,6 +203,13 @@ def Eta_TPV_EA(TE_p, TE_s, lam, PV, T_cell, t, w):
     pin = p_in_ea(TE_p, TE_s, lam, t, w)
     eta = jsc*voc*ff/pin
     return eta
+
+def integrated_solar_power(lam):
+    AM = datalib.AM(lam)
+    upper = np.amax(lam)
+    
+    p_in = numlib.Integrate(AM, lam, 1e-9, upper)
+    return p_in
 
 ### The absorbed power has some angle dependence in the case
 ### of concentrated solar - 

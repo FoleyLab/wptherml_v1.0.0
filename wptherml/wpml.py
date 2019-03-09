@@ -80,6 +80,8 @@ class multilayer:
         self.fresnel_calc = 1
         self.explicit_angle = 0
         self.resonance = 0
+        self.reflective_rgb = np.zeros(3)
+        self.thermal_rgb = np.zeros(3)
         
         ### current version only inline_structure method supported
         ### more modes of operation will come in later versions!
@@ -389,10 +391,45 @@ class multilayer:
         self.short_circuit_current_val = stpvlib.ambient_jsc(self.emissivity_array, self.lambda_array, self.lbg)
         self.open_circuit_voltage_val = stpvlib.Voc(self.short_circuit_current_val, self.T_cell)
         self.fill_factor_val = stpvlib.FF(self.open_circuit_voltage_val, self.T_cell)
-        self.conversion_efficiency_val = self.short_circuit_current_val*self.open_circuit_voltage_val*self.fill_factor_val
+        self.incident_power =  stpvlib.integrated_solar_power(self.lambda_array)
+        self.conversion_efficiency_val = self.short_circuit_current_val * 0.828 * 0.706
+        #self.conversion_efficiency_val = self.conversion_efficiency_val*self.open_circuit_voltage_val
+        #self.conversion_efficiency_val = self.conversion_efficiency_val*self.fill_factor_val
+        self.conversion_efficiency_val = self.conversion_efficiency_val / self.incident_power
+
         return 1        
 
+    def step_emissivity(self, lambda_0, delta_lambda):
+        idx = 0
+        for lam in self.lambda_array:
+            if (lam > (lambda_0 - delta_lambda/2) and lam < (lambda_0 + delta_lambda/2)):
+                self.emissivity_array[idx] = 1.
+                self.transmissivity_array[idx] = 0.
+                self.reflectivity_array[idx] = 0.
+                idx = idx + 1
+            else:
+                self.emissivity_array[idx] = 0.
+                self.transmissivity_array[idx] = 0.
+                self.reflectivity_array[idx] = 1.
+                idx = idx + 1
+        return 1
     
+    def step_reflectivity(self, lambda_0, delta_lambda):
+        idx = 0
+        for lam in self.lambda_array:
+            if (lam > (lambda_0 - delta_lambda/2) and lam < (lambda_0 + delta_lambda/2)):
+                self.emissivity_array[idx] = 0.
+                self.transmissivity_array[idx] = 0.
+                self.reflectivity_array[idx] = 1.
+                idx = idx + 1
+            else:
+                self.emissivity_array[idx] = 1.
+                self.transmissivity_array[idx] = 0.
+                self.reflectivity_array[idx] = 0.
+                idx = idx + 1
+        return 1
+    
+                
     ''' METHODS FOR COLORLIB!!! '''
     
     ### displays the percieved color of an object at a specific temperature
@@ -400,6 +437,7 @@ class multilayer:
     def thermal_color(self):
         string = "Color at T = " + str(self.T_ml) + " K"
         colorlib.RenderColor(self.thermal_emission_array, self.lambda_array, string)
+        self.thermal_rgb = colorlib.RGB_FromSpec(self.thermal_emission_array, self.lambda_array)
         return 1
     
     ### Displays the perceived color of an object based only
@@ -407,6 +445,7 @@ class multilayer:
     def ambient_color(self):
         string = "Ambient Color"
         colorlib.RenderColor(self.reflectivity_array, self.lambda_array, string)
+        self.reflective_rgb = colorlib.RGB_FromSpec(self.reflectivity_array, self.lambda_array)
         return 1
     
     ### Displays the percieved color of a narrow bandwidth lightsource
