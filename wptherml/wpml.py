@@ -82,6 +82,7 @@ class multilayer:
         self.resonance = 0
         self.reflective_rgb = np.zeros(3)
         self.thermal_rgb = np.zeros(3)
+        self.color_name = 'None'
         
         ### current version only inline_structure method supported
         ### more modes of operation will come in later versions!
@@ -387,10 +388,13 @@ class multilayer:
         self.absorber_efficiency_val = (alpha - beta)/alpha
         return 1
     
+    ### Currently using optimistic values for Voc (0.706 mV) and FF (0.828) reported
+    ### in Nanoscale Research Letters, (2016) vol 11 pg 453, L.-X. Wang, Z.-Q. Zhou, T.-N. Zhang, X. Chen
+    ### and M. Lu
     def pv_conversion_efficiency(self):
         self.short_circuit_current_val = stpvlib.ambient_jsc(self.emissivity_array, self.lambda_array, self.lbg)
-        self.open_circuit_voltage_val = stpvlib.Voc(self.short_circuit_current_val, self.T_cell)
-        self.fill_factor_val = stpvlib.FF(self.open_circuit_voltage_val, self.T_cell)
+        #self.open_circuit_voltage_val = stpvlib.Voc(self.short_circuit_current_val, self.T_cell)
+        #self.fill_factor_val = stpvlib.FF(self.open_circuit_voltage_val, self.T_cell)
         self.incident_power =  stpvlib.integrated_solar_power(self.lambda_array)
         self.conversion_efficiency_val = self.short_circuit_current_val * 0.828 * 0.706
         #self.conversion_efficiency_val = self.conversion_efficiency_val*self.open_circuit_voltage_val
@@ -456,6 +460,9 @@ class multilayer:
                 Spectrum[i] = 1
         colorlib.RenderColor(Spectrum, self.lambda_array, str(wl))
         return 1
+    
+    def classify_color(self):
+        self.color_name = colorlib.classify_color(self.reflectivity_array, self.lambda_array)
     
     ''' METHODS FOR LIGHTLIB '''
     def luminous_efficiency(self):

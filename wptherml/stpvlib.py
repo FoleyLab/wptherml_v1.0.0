@@ -107,7 +107,7 @@ def ambient_jsc(eps, lam, lbg):
     ### traditional PV... more to come soon)
     SR = datalib.SR_Si(lam)
     ### jsc integrand
-    integrand = AM*SR
+    integrand = AM*SR*eps
     ### integrate it!
     jsc = numlib.Integrate(integrand, lam, 1e-9, upper)
     return jsc

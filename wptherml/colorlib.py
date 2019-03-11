@@ -6,6 +6,43 @@ import numpy as np
 import matplotlib.colors as colors
 import matplotlib.cm as cmx
 
+### Given incident spectrum, will
+### classify a color as either being
+### red, orange, yellow, green, blue, indigo, violet
+### based on "distance" in actual RGB value from the 
+### accepted "RGB" values of these colors
+def classify_color(spec, lam):
+    ### difference vector for each color
+    ### define basis vectors for each color!
+    colors = {
+            ### these values coming ~ from https://www.rapidtables.com/web/color/RGB_Color.html
+            'red': [255/255., 0, 0],
+            'orange': [255/255., 128/255., 0],
+            'yellow': [255/255., 255/255., 0],
+            'green':  [0, 255/255., 0],
+            'blue': [0, 0, 255/255.],
+            'indigo': [75/255., 0, 130/255.],
+            'violet': [255/255., 0, 255/255.]
+    }
+    ### this list can access the colors dictionary keys
+    color_keys = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet']
+    ### get RGB vector for current spectrum
+    rgb = RGB_FromSpec(spec, lam)
+    ### distance list
+    distance_list = np.zeros(len(color_keys))
+    for i in range(0, len(distance_list)):
+        temp = colors[color_keys[i]]
+        distance = np.sqrt((rgb[0]-temp[0])**2 + (rgb[1]-temp[1])**2 + (rgb[2]-temp[2])**2)
+        distance_list[i] = distance
+    color = color_keys[np.argmin(distance_list)]
+    return color
+    
+    
+    
+    
+    
+    
+
 def RGB_FromSpec(TE, lam):
 
     ### get color response functions 
