@@ -40,7 +40,7 @@ def Material_RI(lam, arg):
         C = 0.0173801
         D = 2.4
         n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
-    elif (arg=='AlN' and lam[len(lam)-1]<5000e-9):
+    elif (arg=='AlN' and lam[len(lam)-1]<10000e-9):
         A = 1.859
         B = 0.3401
         n = A + B/(lmic*lmic) + 0j/lmic

@@ -112,7 +112,7 @@ the data the user can supply in association with each key:
 The following strings are currently recognized for the following supported materials:
    * 'Air' - keyword for Air
    * 'SiO2' - keyword for Glass
-   * 'HfO2' - keyword for Halfnium Oxide
+   * 'HfO2' - keyword for Hafnium Oxide
    * 'Al2O3' - keyword for Aluminum Oxide
    * 'TiO2' - keyword for Titanium Oxide
    * 'AlN'  - keyword for Aluminum Nitride
