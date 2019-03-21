@@ -53,8 +53,8 @@ def Material_RI(lam, arg):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt' or arg=='SiO2'):
         n = Read_RI_from_File(lam, arg)
-    elif (arg=='AlN' or arg=='Si' or arg=='W_Al2O3_Alloy'):
-        n = Read_RI_from_File(lam, arg)
+    #elif (arg=='AlN' or arg=='Si' or arg=='W_Al2O3_Alloy'):
+    #    n = Read_RI_from_File(lam, arg)
     ### default is air    
     else:
         A = 0.

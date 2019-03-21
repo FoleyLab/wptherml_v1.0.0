@@ -152,7 +152,14 @@ class multilayer:
         #self.ThermalColor()
         ### now that default quantitites have been calculated, start
         ### looking at optional quantities
-        if (self.stpv_emitter_calc):
+        ### want to compute stpv quantities with explicit angle dependence?
+        if (self.stpv_emitter_calc and self.explicit_angle):
+            
+            self.stpv_se_ea()
+            self.stpv_pd_ea()
+            self.stpv_etatpv_ea()
+        ### want no explicit angle dependence?
+        elif (self.stpv_emitter_calc):
             
             self.stpv_se()
             self.stpv_pd()

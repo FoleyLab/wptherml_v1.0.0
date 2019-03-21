@@ -118,7 +118,7 @@ def ambient_jsc(eps, lam, lbg):
 ### explicit angle dependence of emissivity
 def JSC(TE, lam, PV):
     ### hard-coding view factor for now!
-    F = 0.85
+    F = 0.84
     ### get spectral response function for appropriate PV material
     if (PV=='InGaAsSb'):
         SR = datalib.SR_InGaAsSb(lam)
@@ -139,7 +139,7 @@ def JSC(TE, lam, PV):
 ### explicit angle dependence of emissivity
 def JSC_EA(TE_p, TE_s, lam, PV, t, w):
     ### hard-coding view factor for now!
-    F = 0.85
+    F = 0.84
     ### get spectral response function for appropriate PV material
     if (PV=='InGaAsSb'):
         SP = datalib.SR_InGaAsSb(lam)
@@ -157,7 +157,7 @@ def JSC_EA(TE_p, TE_s, lam, PV, t, w):
             isom = isom + 0.5 * TE_s[i][j] * SP[j] * F * dl
         jsch = jsch + w[i] * isom * np.sin(t[i])
 
-    return jshc * 2 * np.pi
+    return jsch * 2 * np.pi
 
 ### Function to compute Voc given 
 ### a particular Jsc and T_cell
