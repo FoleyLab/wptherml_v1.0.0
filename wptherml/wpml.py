@@ -34,7 +34,10 @@ class multilayer:
         ### different calculations... will check for
         ### user input on these later
         self.pol = 'p'
-        self.th = 0
+        ### default incident angle
+        self.theta = 0
+        ### default solar angle for coolinglib calculations
+        self.theta_sun = 30 * np.pi/180
         ### T_ml is the temperature of the multilayer being modeledd
         self.T_ml = 300
         ### T_amb is the ambient temperature
@@ -77,6 +80,9 @@ class multilayer:
         self.fresnel_calc = 1
         self.explicit_angle = 0
         self.resonance = 0
+        self.reflective_rgb = np.zeros(3)
+        self.thermal_rgb = np.zeros(3)
+        self.color_name = 'None'
         
         ### current version only inline_structure method supported
         ### more modes of operation will come in later versions!
@@ -146,7 +152,14 @@ class multilayer:
         #self.ThermalColor()
         ### now that default quantitites have been calculated, start
         ### looking at optional quantities
-        if (self.stpv_emitter_calc):
+        ### want to compute stpv quantities with explicit angle dependence?
+        if (self.stpv_emitter_calc and self.explicit_angle):
+            
+            self.stpv_se_ea()
+            self.stpv_pd_ea()
+            self.stpv_etatpv_ea()
+        ### want no explicit angle dependence?
+        elif (self.stpv_emitter_calc):
             
             self.stpv_se()
             self.stpv_pd()
@@ -192,7 +205,7 @@ class multilayer:
                 
             k0 = np.pi*2/self.lambda_array[i]
             ### get transfer matrix for this k0, th, pol, nc, and d
-            M = tmm.tmm(k0, self.th, self.pol, nc, self.d)
+            M = tmm.tmm(k0, self.theta, self.pol, nc, self.d)
             ### get t amplitude
             t = 1./M["M11"]
             ### get incident/final angle
@@ -215,8 +228,13 @@ class multilayer:
         ### desired wavelength
         nc = np.zeros(len(self.d),dtype=complex)
         ### get RI for each layer and store it in nc array
+        #for i in range(0,len(self.matlist)):
+        #    nc[i] = datalib.Material_RI(lambda_0, self.matlist[i])
+        idx, = np.where(self.lambda_array <= lambda_0)
+        idx_val = idx[len(idx)-1]
         for i in range(0,len(self.matlist)):
-            nc[i] = datalib.Material_RI(lambda_0, self.matlist[i])
+            nc[i] = self.n[i][idx_val]
+            
         k0 = np.pi*2/lambda_0
         i=0
         for thetai in self.theta_array:
@@ -249,7 +267,7 @@ class multilayer:
                 nc[j] = self.n[j][i]
                 
             k0 = np.pi*2/self.lambda_array[i]
-            self.reflectivity_array[i] = tmm.Reflect(k0, self.th, self.pol, nc, self.d)
+            self.reflectivity_array[i] = tmm.Reflect(k0, self.theta, self.pol, nc, self.d)
 
         return 1
     ### In case user ONLY wants transmissivity
@@ -260,7 +278,7 @@ class multilayer:
                 nc[j] = self.n[j][i]
                 
             k0 = np.pi*2/self.lambda_array[i]
-            self.transmissivity_array[i] = tmm.Trans(k0, self.th, self.pol, nc, self.d)
+            self.transmissivity_array[i] = tmm.Trans(k0, self.theta, self.pol, nc, self.d)
 
         return 1
     
@@ -335,55 +353,37 @@ class multilayer:
     
     ### Spectral Efficiency - see Eq. 4 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
     def stpv_se(self):
-        self.SE = stpvlib.SpectralEfficiency(self.thermal_emission_array, self.lambda_array, self.lbg)
+        self.spectral_efficiency_val = stpvlib.SpectralEfficiency(self.thermal_emission_array, self.lambda_array, self.lbg)
         return 1
     
     ### Power density - see Eq. 3 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
     def stpv_pd(self):
-        self.PD = stpvlib.Pwr_den(self.thermal_emission_array, self.lambda_array, self.lbg)
+        self.power_density_val = stpvlib.Pwr_den(self.thermal_emission_array, self.lambda_array, self.lbg)
         return 1
     
     ### TPV Efficiency, see Eq. S20-S26 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
     def stpv_etatpv(self):
-        self.ETATPV = stpvlib.Eta_TPV(self.thermal_emission_array, self.lambda_array, self.PV, self.T_cell)
+        self.tpv_efficiency_val = stpvlib.Eta_TPV(self.thermal_emission_array, self.lambda_array, self.PV, self.T_cell)
         return 1
     
     ### Explicit Angle versions of methods for STPV quantities
     def stpv_se_ea(self):
-        self.SE = stpvlib.SpectralEfficiency_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.lbg, self.t, self.w)
-    
-        P_den = 0.
-        P_inc = 0.
-        dl = abs(self.lambda_array[1] - self.lambda_array[0])
-        for i in range(0,len(self.w)):
-            P_den_som = 0.
-            P_inc_som = 0.
-            for j in range(0,len(self.lambda_array)):
-                P_inc_som = P_inc_som + 0.5*self.thermal_emission_array_p[i][j]*dl
-                P_inc_som = P_inc_som + 0.5*self.thermal_emission_array_s[i][j]*dl
-                if self.lambda_array[j]>=self.lbg:
-                    P_den_som = P_den_som + 0.5*self.lambda_array[j]/self.lbg*self.thermal_emission_array_p[i][j]*dl 
-                    P_den_som = P_den_som + 0.5*self.lambda_array[j]/self.lbg*self.thermal_emission_array_s[i][j]*dl
-                
-            P_den = P_den + self.w[i] * P_den_som
-            P_inc = P_inc + self.w[i] * P_inc_som
-        
-        self.SE = P_den/P_inc
-        return 1
-        
+        self.spectral_efficiency_val = stpvlib.SpectralEfficiency_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.lbg, self.t, self.w)
+
         
     def stpv_pd_ea(self):
-        self.PD = stpvlib.Pwr_den_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.lbg, self.t, self.w)
+        self.power_density_val = stpvlib.Pwr_den_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.lbg, self.t, self.w)
         return 1
     
-    ''' FLAGGED! Need stpv_etatpv_ea method!!! '''
+    def stpv_etatpv_ea(self):
+        self.tpv_efficiency_val = stpvlib.Eta_TPV_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.PV, self.T_cell, self.t, self.w)
     
     
     ### Absorber Efficiency - see 
     def stpv_etaabs(self):
         alpha = stpvlib.absorbed_power_ea(self.lambda_array, self.n, self.d, self.solarconc)
         beta = stpvlib.p_in(self.thermal_emission_array, self.lambda_array)
-        self.ETAABS = (alpha - beta)/alpha
+        self.absorber_efficiency_val = (alpha - beta)/alpha
         return 1
         
     def stpv_etaabs_ea(self):
@@ -392,10 +392,55 @@ class multilayer:
         ### will depend on the solar concentration
         alpha = stpvlib.absorbed_power_ea(self.lambda_array, self.n, self.d, self.solarconc)
         beta = stpvlib.p_in_ea(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.t, self.w )
-        self.ETAABS = (alpha - beta)/alpha
+        self.absorber_efficiency_val = (alpha - beta)/alpha
         return 1
-
     
+    ### Currently using optimistic values for Voc (0.706 mV) and FF (0.828) reported
+    ### in Nanoscale Research Letters, (2016) vol 11 pg 453, L.-X. Wang, Z.-Q. Zhou, T.-N. Zhang, X. Chen
+    ### and M. Lu
+    def pv_conversion_efficiency(self):
+        self.short_circuit_current_val = stpvlib.ambient_jsc(self.emissivity_array, self.lambda_array, self.lbg)
+        #self.open_circuit_voltage_val = stpvlib.Voc(self.short_circuit_current_val, self.T_cell)
+        #self.fill_factor_val = stpvlib.FF(self.open_circuit_voltage_val, self.T_cell)
+        self.incident_power =  stpvlib.integrated_solar_power(self.lambda_array)
+        self.conversion_efficiency_val = self.short_circuit_current_val * 0.828 * 0.706
+        #self.conversion_efficiency_val = self.conversion_efficiency_val*self.open_circuit_voltage_val
+        #self.conversion_efficiency_val = self.conversion_efficiency_val*self.fill_factor_val
+        self.conversion_efficiency_val = self.conversion_efficiency_val / self.incident_power
+
+        return 1        
+
+    def step_emissivity(self, lambda_0, delta_lambda):
+        idx = 0
+        for lam in self.lambda_array:
+            if (lam > (lambda_0 - delta_lambda/2) and lam < (lambda_0 + delta_lambda/2)):
+                self.emissivity_array[idx] = 1.
+                self.transmissivity_array[idx] = 0.
+                self.reflectivity_array[idx] = 0.
+                idx = idx + 1
+            else:
+                self.emissivity_array[idx] = 0.
+                self.transmissivity_array[idx] = 0.
+                self.reflectivity_array[idx] = 1.
+                idx = idx + 1
+        return 1
+    
+    def step_reflectivity(self, lambda_0, delta_lambda):
+        idx = 0
+        for lam in self.lambda_array:
+            if (lam > (lambda_0 - delta_lambda/2) and lam < (lambda_0 + delta_lambda/2)):
+                self.emissivity_array[idx] = 0.
+                self.transmissivity_array[idx] = 0.
+                self.reflectivity_array[idx] = 1.
+                idx = idx + 1
+            else:
+                self.emissivity_array[idx] = 1.
+                self.transmissivity_array[idx] = 0.
+                self.reflectivity_array[idx] = 0.
+                idx = idx + 1
+        return 1
+    
+                
     ''' METHODS FOR COLORLIB!!! '''
     
     ### displays the percieved color of an object at a specific temperature
@@ -403,6 +448,7 @@ class multilayer:
     def thermal_color(self):
         string = "Color at T = " + str(self.T_ml) + " K"
         colorlib.RenderColor(self.thermal_emission_array, self.lambda_array, string)
+        self.thermal_rgb = colorlib.RGB_FromSpec(self.thermal_emission_array, self.lambda_array)
         return 1
     
     ### Displays the perceived color of an object based only
@@ -410,6 +456,7 @@ class multilayer:
     def ambient_color(self):
         string = "Ambient Color"
         colorlib.RenderColor(self.reflectivity_array, self.lambda_array, string)
+        self.reflective_rgb = colorlib.RGB_FromSpec(self.reflectivity_array, self.lambda_array)
         return 1
     
     ### Displays the percieved color of a narrow bandwidth lightsource
@@ -420,6 +467,9 @@ class multilayer:
                 Spectrum[i] = 1
         colorlib.RenderColor(Spectrum, self.lambda_array, str(wl))
         return 1
+    
+    def classify_color(self):
+        self.color_name = colorlib.classify_color(self.reflectivity_array, self.lambda_array)
     
     ''' METHODS FOR LIGHTLIB '''
     def luminous_efficiency(self):
@@ -433,9 +483,9 @@ class multilayer:
     ''' METHODS FOR COOLINGLIB !!! '''
     def cooling_power(self):
         self.radiative_power_val = coolinglib.Prad(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.t, self.w)
-        #self.atmospheric_power_val = coolinglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
-        #self.solar_power_val = coolinglib.Psun(self.theta_sun, self.lambda_array)
-        #self.cooling_power_val = self.radiative_power_val - self.atmospheric_power_val - self.solar_power_val
+        self.atmospheric_power_val = coolinglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
+        self.solar_power_val = coolinglib.Psun(self.theta_sun, self.lambda_array, self.n, self.d)
+        self.cooling_power_val = self.radiative_power_val - self.atmospheric_power_val - self.solar_power_val
         return 1
     
     ''' MISCELLANEOUS METHODS TO MANIPULATE THE STRUCTURE
@@ -581,7 +631,14 @@ class multilayer:
             
         return 1
 
-    
+    def layer_lorentz(self, layer, omega_p, omega_0, gamma):
+        c = 299792458.
+        ci = 0+1j
+        for i in range(0,len(self.lambda_array)):
+            omega = 2*np.pi*c/self.lambda_array[i]
+            eps_lr = 1 + omega_p**2/(omega_0**2 - omega**2 - ci*omega*gamma)
+            self.n[layer][i] = np.sqrt(eps_lr)
+        return 1
     ### METHODS FOR PLOTTING DATA!
     
     ### Plot thermal emission
@@ -655,7 +712,7 @@ class multilayer:
                     a_spp = a
                     b_spp = b
 
-        self.SPP_Resonance = b_spp+a_spp*1j
+        self.spp_resonance_val = b_spp+a_spp*1j
         return 1
 
     def find_pa(self, idx):
@@ -700,7 +757,7 @@ class multilayer:
                     a_spp = a
                     b_spp = b
 
-        self.PA_Resonance = b_spp+a_spp*1j
+        self.pa_resonance_val = b_spp+a_spp*1j
         return 1
 
     
@@ -745,6 +802,8 @@ class multilayer:
         ### Temperature arguments!
         if 'Temperature' in args:
             self.T_ml = args['Temperature']
+        elif 'Structure_Temperature' in args:
+            self.T_ml = args['Structure_Temperature']
         else:
             print(" Temperature not specified!")
             print(" Proceeding with default T = 300 K")
@@ -752,7 +811,7 @@ class multilayer:
         if 'PV_Temperature' in args:
             self.T_cell = args['PV_Temperature']
         else:
-            self.T_cell = 298
+            self.T_cell = 300
         if 'Ambient_Temperature' in args:
             self.T_amb = args['Ambient_Temperature']
         else:

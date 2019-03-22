@@ -96,24 +96,41 @@ def p_in_ea(TE_p, TE_s, lam, t, w):
         pin = pin + w[i] * isom * np.sin(t[i])
     return pin * 2 * np.pi
 
+### ideal estimate of short circuit current of PV in sun based on 
+### its emissivity * AM1.5... should be updated with SR of PV data
+def ambient_jsc(eps, lam, lbg):
+    ### get upper bound of integral
+    upper = np.amax(lam)
+    ### get AM1.5 spectrum
+    AM = datalib.AM(lam)
+    ### get spectral response function (currently only Si supported for 
+    ### traditional PV... more to come soon)
+    SR = datalib.SR_Si(lam)
+    ### jsc integrand
+    integrand = AM*SR*eps
+    ### integrate it!
+    jsc = numlib.Integrate(integrand, lam, 1e-9, upper)
+    return jsc
+        
+    
 ### reasonable approximation for Jsc given 
 ### you accept the view factor of 0.85... ignores 
 ### explicit angle dependence of emissivity
 def JSC(TE, lam, PV):
     ### hard-coding view factor for now!
-    F = 0.85
+    F = 0.84
     ### get spectral response function for appropriate PV material
     if (PV=='InGaAsSb'):
-        SP = datalib.SR_InGaAsSb(lam)
+        SR = datalib.SR_InGaAsSb(lam)
     elif (PV=='GaSb'):
-        SP = datalib.SR_GaSb(lam)
+        SR = datalib.SR_GaSb(lam)
     else:
-        SP = datalib.SR_InGaAsSb(lam)
+        SR = datalib.SR_InGaAsSb(lam)
     ### get upper limit of lambda array... will integrate over entire
     ### range, in principle spectral response function will vanish at the
     ### appropriate boundaries of lambda
     upper = np.amax(lam)
-    integrand = TE*SP*F*np.pi
+    integrand = TE*SR*F*np.pi
     jshc = numlib.Integrate(integrand, lam, 1e-9, upper)
     return jshc
 
@@ -122,7 +139,7 @@ def JSC(TE, lam, PV):
 ### explicit angle dependence of emissivity
 def JSC_EA(TE_p, TE_s, lam, PV, t, w):
     ### hard-coding view factor for now!
-    F = 0.85
+    F = 0.84
     ### get spectral response function for appropriate PV material
     if (PV=='InGaAsSb'):
         SP = datalib.SR_InGaAsSb(lam)
@@ -140,7 +157,7 @@ def JSC_EA(TE_p, TE_s, lam, PV, t, w):
             isom = isom + 0.5 * TE_s[i][j] * SP[j] * F * dl
         jsch = jsch + w[i] * isom * np.sin(t[i])
 
-    return jshc * 2 * np.pi
+    return jsch * 2 * np.pi
 
 ### Function to compute Voc given 
 ### a particular Jsc and T_cell
@@ -186,6 +203,13 @@ def Eta_TPV_EA(TE_p, TE_s, lam, PV, T_cell, t, w):
     pin = p_in_ea(TE_p, TE_s, lam, t, w)
     eta = jsc*voc*ff/pin
     return eta
+
+def integrated_solar_power(lam):
+    AM = datalib.AM(lam)
+    upper = np.amax(lam)
+    
+    p_in = numlib.Integrate(AM, lam, 1e-9, upper)
+    return p_in
 
 ### The absorbed power has some angle dependence in the case
 ### of concentrated solar - 

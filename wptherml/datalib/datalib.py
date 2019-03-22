@@ -27,7 +27,8 @@ def Material_RI(lam, arg):
         C = 0.0173801
         D = 1.69999
         n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
-    elif (arg=='SiO2'):
+    ### This model works well for glass into near IR
+    elif (arg=='SiO2' and lam[len(lam)-1]<5000e-9):
         A = 187178
         B = 9993.46
         C = 0.0173801
@@ -39,7 +40,7 @@ def Material_RI(lam, arg):
         C = 0.0173801
         D = 2.4
         n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
-    elif (arg=='AlN'):
+    elif (arg=='AlN' and lam[len(lam)-1]<10000e-9):
         A = 1.859
         B = 0.3401
         n = A + B/(lmic*lmic) + 0j/lmic
@@ -50,8 +51,10 @@ def Material_RI(lam, arg):
         n = TiN_Drude_Lorentz(lam)
     elif (arg=='W' or arg=='HfN' or arg=='Re' or arg=='Rh' or arg=='Ru'):
         n = Read_RI_from_File(lam, arg)
-    elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt'):
+    elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt' or arg=='SiO2'):
         n = Read_RI_from_File(lam, arg)
+    #elif (arg=='AlN' or arg=='Si' or arg=='W_Al2O3_Alloy'):
+    #    n = Read_RI_from_File(lam, arg)
     ### default is air    
     else:
         A = 0.
@@ -88,14 +91,26 @@ def Read_RI_from_File(lam, matname):
         a = np.loadtxt('wptherml/datalib/Ru_Palik_RI_f.txt')
     elif (matname=='Rh'):
         a = np.loadtxt('wptherml/datalib/Rh_Palik_RI_f.txt')
-    elif (matname=='Ag'):
+    elif (matname=='Ag' and lam[len(lam)-1]<=1000e-9):
         a = np.loadtxt('wptherml/datalib/Ag_JC_RI_f.txt')
-    elif (matname=='Au'):
+    elif (matname=='Ag' and lam[len(lam)-1]>1000e-9):
+        a = np.loadtxt('wptherml/datalib/Ag_Yang.txt')
+    elif (matname=='Au' and lam[len(lam)-1]<=1000e-9):
         a = np.loadtxt('wptherml/datalib/Au_JC_RI_f.txt')
+    elif (matname=='Au' and lam[len(lam)-1]>1000e-9):
+        a = np.loadtxt('wptherml/datalib/Au_IR.txt')
     elif (matname=='Pd'):
         a = np.loadtxt('wptherml/datalib/Pd_Palik_RI_f.txt')
     elif (matname=='Pt'):
         a = np.loadtxt('wptherml/datalib/Pt_Palik_RI_f.txt')
+    elif (matname=='SiO2'):
+        a = np.loadtxt('wptherml/datalib/SiO2_IR.txt')
+    elif (matname=='AlN'):
+        a = np.loadtxt('wptherml/datalib/AlN_IR.txt')
+    elif (matname=='Si'):
+        a = np.loadtxt('wptherml/datalib/Si_Schinke.txt')
+    elif (matname=='W_Al2O3_Alloy'):
+        a = np.loadtxt('wptherml/datalib/W_Al2O3_Alloy.txt')
     else:
         a = np.loadtxt('wptherml/datalib/W_Palik_RI_f.txt')
     ### now that we have read in the text, interpolate/extrapolate RI
@@ -120,6 +135,23 @@ def Read_RI_from_File(lam, matname):
     ### for complex RI array for each value of lambda
     n = yn + 1j*yk
     return n
+
+### returns interpolated/extrapolated EQE of monocrystaline silicon PV cells
+### given an input array of wavelengths
+def SR_Si(lam):
+    ### values of lambda along which EQE is experimeintally known
+    datlam = np.linspace(260e-9, 1310e-9, 22)
+    ### experimental values of EQE for monocrystaline Si... 
+    dateqe = 0.01*np.array([0., 0., 11.5, 23., 33., 37., 41., 45., 49., 52., 56., 60., 64., 62.5, 51., 35., 27.5, 20., 12.5, 7.5, 0., 0.])
+    ### order of the spline
+    order = 1
+    ### form the interpolator/extrapolator object
+    s = InterpolatedUnivariateSpline(datlam, dateqe, k=order)
+    ### compute the interpolated/extrapolated values
+    y = s(lam)
+    
+    return y
+    
 
 
 ### returns interpolated/extrapolated EQE of InGaAsSb PV cells given an input
