@@ -34,7 +34,7 @@ def Material_RI(lam, arg):
         C = 0.0173801
         D = 1.45
         n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
-    elif (arg=='TiO2'):
+    elif (arg=='TiO2') and lam[len(lam)-1]<5000e-9:
         A = 187178
         B = 9993.46
         C = 0.0173801
@@ -53,8 +53,8 @@ def Material_RI(lam, arg):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt' or arg=='SiO2'):
         n = Read_RI_from_File(lam, arg)
-    #elif (arg=='AlN' or arg=='Si' or arg=='W_Al2O3_Alloy'):
-    #    n = Read_RI_from_File(lam, arg)
+    elif (arg=='AlN' or arg=='Si' or arg=='TiO2'):
+        n = Read_RI_from_File(lam, arg)
     ### default is air    
     else:
         A = 0.
@@ -83,8 +83,8 @@ def TiN_Drude_Lorentz(lam):
 def Read_RI_from_File(lam, matname):
     if (matname=='W'):
         a = np.loadtxt('wptherml/datalib/W_Palik_RI_f.txt')
-    #elif (matname=='HfN'):  Need to re-order HfN data
-    #    a = np.loadtxt('wptherml/datalib/HfN_Ellips_RI.txt')
+    elif (matname=='HfN'):  #Need to re-order HfN data
+        a = np.loadtxt('wptherml/datalib/TiO2_Siefke.txt')
     elif (matname=='Re'):
         a = np.loadtxt('wptherml/datalib/Re_Palik_RI_f.txt')
     elif (matname=='Ru'):
