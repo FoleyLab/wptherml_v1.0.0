@@ -83,7 +83,7 @@ def TiN_Drude_Lorentz(lam):
 def Read_RI_from_File(lam, matname):
     if (matname=='W'):
         a = np.loadtxt('wptherml/datalib/W_Palik_RI_f.txt')
-    elif (matname=='HfN'):  #Need to re-order HfN data
+    elif (matname=='TiO2'):  #Need to re-order HfN data
         a = np.loadtxt('wptherml/datalib/TiO2_Siefke.txt')
     elif (matname=='Re'):
         a = np.loadtxt('wptherml/datalib/Re_Palik_RI_f.txt')
