@@ -477,7 +477,7 @@ class multilayer:
         return 1
     
     def luminous_efficacy(self):
-        self.luminous_efficacy_val = self.eta_lum * 683
+        self.luminous_efficacy_val = self.luminous_efficiency_val * 683
         return 1
     
     ''' METHODS FOR COOLINGLIB !!! '''
