@@ -376,5 +376,33 @@ def CIE(lam):
 
     return cie
 
+def TDBC(lam):
+    ### values of lambda along which SR is experimentally known
+    datlamk = 1e-9*np.array([380, 390, 400, 425, 450, 475, 500, 525, 550, 575, 582, 600, 625, 650, 675, 700, 710, 720])
+    ### values of SR that were experimentally measured
+    datk = np.array([0, 0, 0.001, 0.002, 0.003, 0.004, 0.005, 0.01, 0.02, 0.08, 0.11, 0.09, 0.02, 0.01, 0.008, 0.004, 0, 0])
+    ### use linear interpolation/extrapolation
+    order = 1
+    ### form the interpolator/extrapolator object
+    sk = InterpolatedUnivariateSpline(datlamk, datk, k=order)
+    ### compute the interpolated/extrapolated values
+    yk = sk(lam)
+    
+    datlamn = 1e-9*np.array([380, 390, 400, 425, 450, 475, 500, 525, 550, 566, 575, 600, 625, 650, 675, 700, 710, 720])
+    datn = 	np.array([1.550, 1.550, 1.545, 1.540, 1.535, 1.527, 1.520, 1.510, 1.490, 1.475, 1.480, 1.595, 1.580, 1.565, 1.555, 1.550, 1.550, 
+                      1.550])
+    
+    sn = InterpolatedUnivariateSpline(datlamn, datn, k=order)
+    yn = sn(lam)
+
+    ### uncomment to plot experimental values
+    
+    plt.figure()
+    #plt.plot(datlamk, datk, 'o')
+    #plt.plot(lam, yk, '-')
+    plt.plot(datlamn, datn, 'o')
+    plt.plot(lam, yn, '-')
+    return y
+    #return 1
 
     
