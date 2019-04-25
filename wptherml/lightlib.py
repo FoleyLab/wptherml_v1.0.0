@@ -27,6 +27,15 @@ def Lum_efficiency(lam, TE):
     denominator = numlib.Integrate(den, lam, 0, upper)
     return (numerator/denominator)
 
+def normalized_power(lam, TE, BB):
+    upper = np.amax(lam)
+    ph = datalib.PhLum(lam)
+    num = ph*TE
+    den = ph*BB
+    numerator = numlib.Integrate(num, lam, 0, upper)
+    denominator = numlib.Integrate(den, lam, 0, upper)
+    return numerator/denominator
+
 
 def Lum_efficiency_prime(lam, TE, TE_prime):
     upper = np.amax(lam)

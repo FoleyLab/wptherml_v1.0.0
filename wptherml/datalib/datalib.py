@@ -55,6 +55,8 @@ def Material_RI(lam, arg):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='AlN' or arg=='Si' or arg=='TiO2'):
         n = Read_RI_from_File(lam, arg)
+    elif (arg=='J-Agg'):
+        n = TDBC(lam)
     ### default is air    
     else:
         A = 0.
@@ -397,12 +399,12 @@ def TDBC(lam):
 
     ### uncomment to plot experimental values
     
-    plt.figure()
+    #plt.figure()
     #plt.plot(datlamk, datk, 'o')
     #plt.plot(lam, yk, '-')
-    plt.plot(datlamn, datn, 'o')
-    plt.plot(lam, yn, '-')
-    return y
-    #return 1
+    #plt.plot(datlamn, datn, 'o')
+    #plt.plot(lam, yn, '-')
+    ci = 0+1j
+    return yn + ci*yk
 
     
