@@ -181,7 +181,6 @@ class multilayer:
             
             ### Luminous efficiency and efficacy calcs here
             self.luminous_efficiency()
-            print(" Luminous Efficiency at T = ",self.T_ml," is ",self.luminous_efficiency_val)
             plt.plot(self.lambda_array*1e9, self.thermal_emission_array, 'red', label = 'Lighbulb Emission')
             plt.plot(self.lambda_array*1e9, self.BBs, 'black', label = 'Blackbody spectrum')
             plt.xlabel('Wavelength (nm)')
@@ -199,6 +198,26 @@ class multilayer:
             ### self.atmospherical_power_val -> power absorbed from atm at T_amb / unit area
             ### self.cooling_power -> net power flux / unit area from balance of all the above
             self.cooling_power()
+            
+            AM = datalib.AM(self.lambda_array)
+            T_atm = datalib.ATData(self.lambda_array)
+            print(self.cooling_power_val," W/m^2 (Total Cooling Power)")
+            print(self.radiative_power_val," W/m^2 ((Cooling) Power radiated by structure at ",self.T_ml, "K)")
+            print(self.solar_power_val," W/m^2 ((Warming) Power absorbed from sun)")
+            print(self.atmospheric_power_val," W/m^2 ((Warming) Power absorbed from atmospheric radiation at ",self.T_amb, "K)")
+            plt.xlim(0.3, 2.5)
+            plt.plot(self.lambda_array*1e6, self.emissivity_array, 'blue', label = 'Emissivity')
+            plt.plot(self.lambda_array*1e6, AM/(1.4*1e9), 'red', label = 'Solar Spectrum')
+            plt.xlabel('Wavelength (microns)')
+            plt.ylabel('Arb. Units')
+            plt.show()
+            plt.xlim(2.5, 20)
+            plt.plot(self.lambda_array*1e6, T_atm, 'cyan', label = 'Atmospheric Transmissivity')
+            plt.plot(self.lambda_array*1e6, self.emissivity_array, 'red', label = 'Emissivity')
+            plt.xlabel('Wavelength (microns)')
+            plt.ylabel('Arb. Units')
+            plt.show()
+
             
         
     ### Methods to compute all Fresnel quantities at once!
@@ -483,8 +502,8 @@ class multilayer:
         self.luminous_efficiency_val = lightlib.Lum_efficiency(self.lambda_array, self.thermal_emission_array)
         return 1
     
-    def luminous_efficacy(self):
-        self.luminous_efficacy_val = self.luminous_efficiency_val * 683
+    def normalized_luminous_power(self):
+        self.luminous_power_val = lightlib.normalized_power(self.lambda_array, self.thermal_emission_array, self.BBs)
         return 1
     
     ''' METHODS FOR COOLINGLIB !!! '''
