@@ -96,6 +96,11 @@ class multilayer:
         self.emissivity_array = np.zeros(len(self.lambda_array))
         self.thermal_emission_array = np.zeros(len(self.lambda_array))
         
+        ### derivative quantities
+        self.reflectivity_prime_array = np.zeros(len(self.lambda_array))
+        self.emissivity_prime_array = np.zeros(len(self.lambda_array))
+        
+        
         ### In some cases the user may wish to compute
         ### R, T, or eps vs angle at a specific wavelength
         ### we will allocate three arrays for these cases
@@ -246,6 +251,41 @@ class multilayer:
             ### get Transmissivity
             self.transmissivity_array[i] = np.real(t*np.conj(t)*fac)
             self.emissivity_array[i] = 1 - self.reflectivity_array[i] - self.transmissivity_array[i]
+
+        return 1
+    ### currently will return derivative of reflectivity and emissivity 
+    ### wrt to thickness of layer i
+    def fresnel_prime(self, layer_i):
+        nc = np.zeros(len(self.d),dtype=complex)
+        for i in range(0,len(self.lambda_array)):
+            for j in range(0,len(self.d)):
+                nc[j] = self.n[j][i]
+                
+            k0 = np.pi*2/self.lambda_array[i]
+            ### get transfer matrix for this k0, th, pol, nc, and d
+            M = tmm.tmm(k0, self.theta, self.pol, nc, self.d)
+            dM_ds = tmm.d_tmm_dsi(layer_i, k0, self.theta, self.pol, nc, self.d)
+            
+            ### store all relevant matrix elements in variable names
+            M21 = M["M21"]
+            M11 = M["M11"]
+            M21p = dM_ds["dM21_ds"]
+            M11p = dM_ds["dM11_ds"]
+            
+            ### get reflection amplitude
+            r = M["M21"]/M["M11"]
+            r_star = np.conj(r)
+            
+            ### get derivative of reflection amplitudes
+            r_prime = (M11*M21p - M21*M11p)/(M11*M11)
+            r_prime_star = np.conj(r_prime)
+            
+            ### get reflectivity
+            R_prime = r_prime * r_star + r * r_prime_star
+            ### get Reflectivity
+            self.reflectivity_prime_array[i] = np.real(R_prime)
+            ### get Transmissivity
+            self.emissivity_prime_array[i] = 1 - self.reflectivity_prime_array[i] 
 
         return 1
     
