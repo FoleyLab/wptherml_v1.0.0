@@ -29,7 +29,7 @@ def Build_dP_ds(kzl, dl):
     P = np.zeros((2,2),dtype=complex)
     ci = 0+1j
     a = -1*ci*kzl*dl
-    b = ci*kz*dl
+    b = ci*kzl*dl
     P[0][1] = 0+0j
     P[1][0] = 0+0j
     P[0][0] = -ci*kzl*np.exp(a)
