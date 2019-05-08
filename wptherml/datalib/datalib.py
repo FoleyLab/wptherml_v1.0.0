@@ -34,12 +34,12 @@ def Material_RI(lam, arg):
         C = 0.0173801
         D = 1.45
         n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
-    elif (arg=='TiO2') and lam[len(lam)-1]<5000e-9:
-        A = 187178
-        B = 9993.46
-        C = 0.0173801
-        D = 2.4
-        n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
+    #elif (arg=='TiO2') and lam[len(lam)-1]<5000e-9:
+    #    A = 187178
+    #    B = 9993.46
+    #    C = 0.0173801
+    #    D = 2.4
+    #    n = A/(l_nm**4) + B/(l_nm**2) + C/l_nm + D + 0j/l_nm
     elif (arg=='AlN' and lam[len(lam)-1]<10000e-9):
         A = 1.859
         B = 0.3401
