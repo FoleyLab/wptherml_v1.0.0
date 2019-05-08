@@ -449,6 +449,8 @@ class multilayer:
     def stpv_etaabs(self):
         alpha = stpvlib.absorbed_power_ea(self.lambda_array, self.n, self.d, self.solarconc)
         beta = stpvlib.p_in(self.thermal_emission_array, self.lambda_array)
+        print("alpha is ",alpha)
+        print("beta is ",beta)
         self.absorber_efficiency_val = (alpha - beta)/alpha
         return 1
         
