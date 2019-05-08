@@ -155,6 +155,27 @@ def SR_Si(lam):
     return y
     
 
+def Abs_Pyromark(lam):
+    a = np.loadtxt('wptherml/datalib/Pyromark.txt')
+    x = np.zeros(len(a))
+    y = np.zeros(len(a))
+    ###  issue was just that the AM1.5 data had wavelength
+    ###  in nanometers and we were assuming it was in meters!
+    ###  now it is converted to meters at the time that it
+    ###  is stored to the array called x
+    for i in range(0,len(a)):
+        x[i] = a[i][0]
+        y[i] = a[i][1]
+    datlam = x
+    dateqe = y
+    order = 1
+    s = InterpolatedUnivariateSpline(datlam, dateqe, k=order)
+    z = s(lam)
+    #plt.plot(x,y,'blue')
+    #plt.plot(lam, z, 'r--')
+    #plt.show()
+    return z
+    
 
 ### returns interpolated/extrapolated EQE of InGaAsSb PV cells given an input
 ### array of wavelengths
