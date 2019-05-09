@@ -543,6 +543,8 @@ class multilayer:
     def luminous_efficiency(self):
         self.luminous_efficiency_val = lightlib.Lum_efficiency(self.lambda_array, self.thermal_emission_array)
         return 1
+    def luminous_efficiency_prime(self):
+        self.luminous_efficiency_prime_val = lightlib.Lum_efficiency_prime(self.lambda_array, self.thermal_emission_array, self.BBs*self.emissivity_prime_array)
     
     def normalized_luminous_power(self):
         self.luminous_power_val = lightlib.normalized_power(self.lambda_array, self.thermal_emission_array, self.BBs)

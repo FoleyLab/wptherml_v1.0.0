@@ -100,14 +100,18 @@ print(" Efficiency is ",100*(w_abs - w_emit)/solar_int, "%")
 print(" % Absorbed is ", 100*w_abs/solar_int)
 print(" % Emitted ", 100*w_emit/bb_int)
 
+print("Wavelength (nm), AM1.5, BB@750C, CE Emissivity, Pyromark Emissivity, W Emissivity")
+for i in range(0,len(sII.lambda_array)):
+  print(sII.lambda_array[i]*1e9, AMs[i]/1e12, BBs[i]/1e12, sII.emissivity_array[i], py[i], w_slab.emissivity_array[i]) 
 
-plt.plot(sII.lambda_array*1e9, 600*AMs/1e9/1e3, 'black')
-plt.plot(sII.lambda_array*1e9, 600*py*AMs/1e9/1e3, 'red')
+'''
+plt.plot(sII.lambda_array*1e9, AMs/1e9/1e3, 'black')
+plt.plot(sII.lambda_array*1e9, py*AMs/1e9/1e3, 'red')
 plt.xlabel("Wavelength (nm)")
 plt.ylabel("Power Density (W/m^2/nm)")
 plt.legend(('AM 1.5 Spectrum', 'Absorbed Power'),
            loc='upper center', shadow=False)
-'''
+
 plt.plot(sII.lambda_array*1e9, np.pi*BBs/1e9/1e3, 'black')
 plt.plot(sII.lambda_array*1e9, np.pi*py*BBs/1e9/1e3, 'red')
 plt.xlabel("Wavelength (nm)")
@@ -116,8 +120,8 @@ plt.legend(('Blackbody Spectrum', 'Thermal Emission'),
            loc='upper center', shadow=False)
 '''
 #plt.plot(sII.lambda_array*1e9, 600*py*AMs/1e9/1e3)
-plt.show()
-plt.savefig('/Users/jay/Career/Proposals/SETO_V2/Pyro_Abs.png')
+#plt.show()
+#plt.savefig('/Users/jay/Career/Proposals/SETO_V2/Pyro_Abs.png')
 
 
 #plt.plot(sII.lambda_array*1e9, np.pi*sII.thermal_emission_array/1e9/1e3, sII.lambda_array*1e9, np.pi*py*BBs/1e9/1e3, sII.lambda_array*1e9, np.pi*BBs/1e9/1e3)
