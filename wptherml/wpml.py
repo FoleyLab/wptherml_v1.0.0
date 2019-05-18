@@ -492,7 +492,31 @@ class multilayer:
                 self.reflectivity_array[idx] = 1.
                 idx = idx + 1
         return 1
-    
+
+    def step_emissivity_ea(self, lambda_0, delta_lambda):
+        ### The angles come from Gauss-Legendre quadrature
+        ### outter loop is over wavelength - this modulates the RI
+        for j in range(0, len(self.t)):
+            idx = -1
+            for lam in self.lambda_array:
+                idx = idx + 1
+                if (lam>(lambda_0 - delta_lambda/2) and lam < (lambda_0 + delta_lambda/2)):
+                    self.emissivity_array_p[j][idx] = 1.
+                    self.emissivity_array_s[j][idx] = 1.
+                    self.reflectivity_array_p[j][idx] = 0.
+                    self.reflectivity_array_s[j][idx] = 0.
+                    self.transmissivity_array_p[j][idx] = 0.
+                    self.transmissivity_array_s[j][idx] = 0.
+                else:
+                    self.emissivity_array_p[j][idx] = 0.
+                    self.emissivity_array_s[j][idx] = 0.
+                    self.reflectivity_array_p[j][idx] = 1.
+                    self.reflectivity_array_s[j][idx] = 1.
+                    self.transmissivity_array_p[j][idx] = 0.
+                    self.transmissivity_array_s[j][idx] = 0.
+        return 1
+                    
+
     def step_reflectivity(self, lambda_0, delta_lambda):
         idx = 0
         for lam in self.lambda_array:
