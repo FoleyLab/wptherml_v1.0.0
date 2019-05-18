@@ -13,8 +13,8 @@ d1 = 100e-9/(2*1.76)
 structureII = {
 
         ### will modify layer 2 to be an alloy later, for now it is HfO2
-        'Material_List': ['Air', 'Al2O3', 'HfO2', 'W', 'Air'],
-        'Thickness_List': [0, 60e-9, 100e-9, 900e-9, 0],
+        'Material_List': ['Air', 'AlN', 'HfO2', 'W', 'Air'],
+        'Thickness_List': [0, 50e-9, 100e-9, 900e-9, 0],
         'Lambda_List': [200e-9, 10000e-9, 5000],
         'Temperature': 1023,
         'EXPLICIT_ANGLE': 0,
@@ -36,7 +36,7 @@ w_slab = multilayer(w_only)
 w_slab.thermal_emission()
 
 ### change layer 2 of sII to be the 17% TiN in HfO2 alloy
-sII.layer_alloy(2, 0.17, 'HfO2', 'TiN', 'Bruggeman')
+sII.layer_alloy(2, 0.17, 'AlN', 'TiN', 'Bruggeman')
 
 ### need to recompute otical properties and figures of merit with the alloy layer
 sII.fresnel()
@@ -100,30 +100,30 @@ print(" Efficiency is ",100*(w_abs - w_emit)/solar_int, "%")
 print(" % Absorbed is ", 100*w_abs/solar_int)
 print(" % Emitted ", 100*w_emit/bb_int)
 
-print("Wavelength (nm), AM1.5, BB@750C, CE Emissivity, Pyromark Emissivity, W Emissivity")
-for i in range(0,len(sII.lambda_array)):
-  print(sII.lambda_array[i]*1e9, AMs[i]/1e12, BBs[i]/1e12, sII.emissivity_array[i], py[i], w_slab.emissivity_array[i]) 
+#print("Wavelength (nm), AM1.5, BB@750C, CE Emissivity, Pyromark Emissivity, W Emissivity")
+#for i in range(0,len(sII.lambda_array)):
+#  print(sII.lambda_array[i]*1e9, AMs[i]/1e9, BBs[i]/1e9, sII.emissivity_array[i], py[i], w_slab.emissivity_array[i]) 
 
-'''
+
 plt.plot(sII.lambda_array*1e9, AMs/1e9/1e3, 'black')
-plt.plot(sII.lambda_array*1e9, py*AMs/1e9/1e3, 'red')
+plt.plot(sII.lambda_array*1e9, sII.emissivity_array*AMs/1e9/1e3, 'red')
 plt.xlabel("Wavelength (nm)")
 plt.ylabel("Power Density (W/m^2/nm)")
 plt.legend(('AM 1.5 Spectrum', 'Absorbed Power'),
            loc='upper center', shadow=False)
 
-plt.plot(sII.lambda_array*1e9, np.pi*BBs/1e9/1e3, 'black')
-plt.plot(sII.lambda_array*1e9, np.pi*py*BBs/1e9/1e3, 'red')
-plt.xlabel("Wavelength (nm)")
-plt.ylabel("Power Density (W/m^2/nm)")
-plt.legend(('Blackbody Spectrum', 'Thermal Emission'),
-           loc='upper center', shadow=False)
-'''
+#plt.plot(sII.lambda_array*1e9, np.pi*BBs/1e9/1e3, 'black')
+#plt.plot(sII.lambda_array*1e9, np.pi*py*BBs/1e9/1e3, 'red')
+#plt.xlabel("Wavelength (nm)")
+#plt.ylabel("Power Density (W/m^2/nm)")
+#plt.legend(('Blackbody Spectrum', 'Thermal Emission'),
+#           loc='upper center', shadow=False)
+
 #plt.plot(sII.lambda_array*1e9, 600*py*AMs/1e9/1e3)
 #plt.show()
 #plt.savefig('/Users/jay/Career/Proposals/SETO_V2/Pyro_Abs.png')
 
 
 #plt.plot(sII.lambda_array*1e9, np.pi*sII.thermal_emission_array/1e9/1e3, sII.lambda_array*1e9, np.pi*py*BBs/1e9/1e3, sII.lambda_array*1e9, np.pi*BBs/1e9/1e3)
-#plt.show()
+plt.show()
 
