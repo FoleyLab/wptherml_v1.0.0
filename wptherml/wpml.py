@@ -186,11 +186,11 @@ class multilayer:
             
             ### Luminous efficiency and efficacy calcs here
             self.luminous_efficiency()
-            plt.plot(self.lambda_array*1e9, self.thermal_emission_array, 'red', label = 'Lighbulb Emission')
-            plt.plot(self.lambda_array*1e9, self.BBs, 'black', label = 'Blackbody spectrum')
-            plt.xlabel('Wavelength (nm)')
-            plt.ylabel('Spectral Irradiance (W / m^2 / nm / sr)')
-            plt.show()
+            #plt.plot(self.lambda_array*1e9, self.thermal_emission_array, 'red', label = 'Lighbulb Emission')
+            #plt.plot(self.lambda_array*1e9, self.BBs, 'black', label = 'Blackbody spectrum')
+            #plt.xlabel('Wavelength (nm)')
+            #plt.ylabel('Spectral Irradiance (W / m^2 / nm / sr)')
+            #plt.show()
             
             ### need to validate method for computing luminous efficacy
             #self.luminous_efficacy()

@@ -225,7 +225,7 @@ def d_tmm_dsi(li, k0, theta0, pol, nA, tA):
     '''
     
     ''' layers 2 - li-1 '''
-    for i in range(1,(li-1)):
+    for i in range(1,li):
         kz[i] = np.sqrt((nA[i]*k0)**2 - kx**2)
         if np.imag(kz[i])<0:
             kz[i] = -1*kz[i]
