@@ -113,6 +113,8 @@ def Read_RI_from_File(lam, matname):
         a = np.loadtxt('wptherml/datalib/Si_Schinke.txt')
     elif (matname=='W_Al2O3_Alloy'):
         a = np.loadtxt('wptherml/datalib/W_Al2O3_Alloy.txt')
+    elif (matname=='Al'):
+        a = np.loadtxt('wptherml/datalib/Al_Rakic.txt')
     else:
         a = np.loadtxt('wptherml/datalib/W_Palik_RI_f.txt')
     ### now that we have read in the text, interpolate/extrapolate RI
