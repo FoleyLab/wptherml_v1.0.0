@@ -10,6 +10,7 @@ from wptherml import colorlib
 from wptherml import coolinglib
 from wptherml import stpvlib
 from wptherml import lightlib
+from wptherml.numlib import numlib
 from wptherml.datalib import datalib
 from matplotlib import pyplot as plt
 from scipy import integrate
@@ -411,6 +412,11 @@ class multilayer:
                 self.thermal_emission_array_p[i][j] = self.BBs[j] * self.emissivity_array_p[i][j] * np.cos(self.t[i])
                 self.thermal_emission_array_s[i][j] = self.BBs[j] * self.emissivity_array_s[i][j] * np.cos(self.t[i])
             
+        return 1
+    
+    ''' METHOD FOR J-AGG ENHANCEMENT '''
+    def jagg_sd(self):
+        self.jagg_sd_val = numlib.Integrate(self.emissivity_array, self.lambda_array, 500e-9, 700e-9)/200e-9
         return 1
     
     ''' METHODS FOR STPVLIB!!! '''
