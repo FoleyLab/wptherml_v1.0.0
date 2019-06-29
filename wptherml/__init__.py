@@ -3,4 +3,4 @@
 """
 initializer for the wptherml package
 """
-
+name = "example_pkg"

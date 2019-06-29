@@ -1,0 +1,8 @@
+include *.ipynb
+include README.md
+include documentation/*.pdf
+include documentation/*.png
+include wptherml/datalib/*.txt
+include validation_data/*.txt
+include Logo/*.png
+include Logo/*.jpg

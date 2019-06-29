@@ -14,14 +14,18 @@ from wptherml.numlib import numlib
 from wptherml.datalib import datalib
 from matplotlib import pyplot as plt
 from scipy import integrate
-
 import numpy as np
+#from pkg_resources import resource_string
+#import os
 class multilayer:
     
     ### initializer
     #def __init__(self, mode, inputfile):
     def __init__(self, args):
         ### set up some default attributes
+        #contents = resource_string('wptherml','datalib/AM_15.txt')
+        #print(contents)
+        #print(os.path.realpath(__file__))
         self.result = 1
         self.mode = args.get('mode')
         #print(" Mode is ",self.mode)

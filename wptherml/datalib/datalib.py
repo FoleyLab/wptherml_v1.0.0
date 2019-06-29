@@ -1,4 +1,4 @@
-
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline
@@ -7,8 +7,12 @@ q = 1.60217662e-19
 c=299792458
 h=6.626e-34
 k=1.38064852e-23
-
-
+### get a string containing full path and current file name, datalib.py
+path_and_file = os.path.realpath(__file__)
+### datalib.py is 10 characters long, so we want to take the above
+### string minus the last 10 characeters to get the absolute path where 
+### datalib folder is
+path = path_and_file[:-10]
 ### functions for refractive index of different common dielectrics
 def Material_RI(lam, arg):
     ## array of wavelengths should be in meters
@@ -84,39 +88,56 @@ def TiN_Drude_Lorentz(lam):
 
 def Read_RI_from_File(lam, matname):
     if (matname=='W'):
-        a = np.loadtxt('wptherml/datalib/W_Palik_RI_f.txt')
+        file_path = path + 'W_Palik_RI_f.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='TiO2'):  #Need to re-order HfN data
-        a = np.loadtxt('wptherml/datalib/TiO2_Siefke.txt')
+        file_path = path + 'TiO2_Siefke.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Re'):
-        a = np.loadtxt('wptherml/datalib/Re_Palik_RI_f.txt')
+        file_path = path + 'Re_Palik_RI_f.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Ru'):
-        a = np.loadtxt('wptherml/datalib/Ru_Palik_RI_f.txt')
+        file_path = path + 'Ru_Palik_RI_f.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Rh'):
-        a = np.loadtxt('wptherml/datalib/Rh_Palik_RI_f.txt')
+        file_path = path + 'Rh_Palik_RI_f.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Ag' and lam[len(lam)-1]<=1000e-9):
-        a = np.loadtxt('wptherml/datalib/Ag_JC_RI_f.txt')
+        file_path = path + 'Ag_JC_RI_f.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Ag' and lam[len(lam)-1]>1000e-9):
-        a = np.loadtxt('wptherml/datalib/Ag_Yang.txt')
+        file_path = path + 'Ag_Yang.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Au' and lam[len(lam)-1]<=1000e-9):
-        a = np.loadtxt('wptherml/datalib/Au_JC_RI_f.txt')
+        file_path = path + 'Au_JC_RI_f.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Au' and lam[len(lam)-1]>1000e-9):
-        a = np.loadtxt('wptherml/datalib/Au_IR.txt')
+        file_path = path + 'Au_IR.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Pd'):
-        a = np.loadtxt('wptherml/datalib/Pd_Palik_RI_f.txt')
+        file_path = path + 'Pd_Palik_RI_f.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Pt'):
-        a = np.loadtxt('wptherml/datalib/Pt_Palik_RI_f.txt')
+        file_path = path + 'Pt_Palik_RI_f.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='SiO2'):
-        a = np.loadtxt('wptherml/datalib/SiO2_IR.txt')
+        file_path = path + 'SiO2_IR.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='AlN'):
-        a = np.loadtxt('wptherml/datalib/AlN_IR.txt')
+        file_path = path + 'AlN_IR.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Si'):
-        a = np.loadtxt('wptherml/datalib/Si_Schinke.txt')
+        file_path = path + 'Si_Schinke.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='W_Al2O3_Alloy'):
-        a = np.loadtxt('wptherml/datalib/W_Al2O3_Alloy.txt')
+        file_path = path + 'W_Al23_Alloy.txt'
+        a = np.loadtxt(file_path)
     elif (matname=='Al'):
-        a = np.loadtxt('wptherml/datalib/Al_Rakic.txt')
+        file_path = path + 'Al_Rakic.txt'
+        a = np.loadtxt(file_path)
     else:
-        a = np.loadtxt('wptherml/datalib/W_Palik_RI_f.txt')
+        file_path = path + 'W_Palik_RI_f.txt'
+        a = np.loadtxt(file_path)
     ### now that we have read in the text, interpolate/extrapolate RI
     datlam = np.zeros(len(a))
     datn   = np.zeros(len(a))
@@ -158,7 +179,8 @@ def SR_Si(lam):
     
 
 def Abs_Pyromark(lam):
-    a = np.loadtxt('wptherml/datalib/Pyromark.txt')
+    file_path = path + 'Pyromark.txt'
+    a = np.loadtxt(file_path)
     x = np.zeros(len(a))
     y = np.zeros(len(a))
     ###  issue was just that the AM1.5 data had wavelength
@@ -287,7 +309,8 @@ def BB(lam, T):
 ###AM 1.5
   
 def AM(lam):  ###lam is x SI is y
-    a = np.loadtxt('wptherml/datalib/scaled_AM_1_5.txt')
+    file_path = path + 'scaled_AM_1_5.txt'
+    a = np.loadtxt(file_path)
     x = np.zeros(len(a))
     y = np.zeros(len(a))
     ###  issue was just that the AM1.5 data had wavelength
@@ -308,7 +331,8 @@ def AM(lam):  ###lam is x SI is y
     return z
 
 def ATData(lam):
-    a = np.loadtxt('wptherml/datalib/ATrans.txt')
+    file_path = path + 'ATrans.txt'
+    a = np.loadtxt(file_path)
     x = np.zeros(len(a))
     y = np.zeros(len(a))
 
@@ -326,29 +350,6 @@ def ATData(lam):
     return z
     
 
-''' something wrong with reading this pl.txt text file!
-def PhLum(lam):
-    a = np.loadtxt('wptherml/datalib/pl.txt')
-    x = np.zeros(len(a))
-    y = np.zeros(len(a))
-    ###  issue was just that the AM1.5 data had wavelength
-    ###  in nanometers and we were assuming it was in meters!
-    ###  now it is converted to meters at the time that it
-    ###  is stored to the array called x
-    for i in range(0,len(a)):
-        x[i] = a[i][0]*1e-9
-        y[i] = a[i][1]
-    datlam = x
-    datph = y
-    order = 1
-    s = InterpolatedUnivariateSpline(datlam, datph, k=order)
-    z = s(lam)
-    plt.plot(x,y,'blue')
-    plt.plot(lam, z, 'r--')
-    plt.show()
-    return z
-    
-'''
 ### Given an array of lambda values, this function 
 ### will evaluate a Gaussian fit to photopic luminosity function
 ### and return an array of values from that fit.
@@ -369,7 +370,8 @@ def PhLum(lam):
 ### Read in CIE color matching functions from data file and interpolate/extrapolate
 ### on lam
 def CIE(lam):
-    a = np.loadtxt('wptherml/datalib/cie-cmf.txt')
+    file_path = path + 'cie-cmf.txt'
+    a = np.loadtxt(file_path)
     l = np.zeros(len(a))
     x = np.zeros(len(a))
     y = np.zeros(len(a))
