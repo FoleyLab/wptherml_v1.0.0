@@ -7,7 +7,7 @@ The vision of this software package is to provide an easy-to-use platform for th
 the vast number of energy applications where control of absorption and emission of radiation, or conversion of heat to radiation or vice versa, is paramount.
 The optical properties are treated within classical electrodynamics, and the current version uses the Transfer Matrix Method to rigorously solve Maxwell's equations
 for layered isotropic media.  WPTherml was conceived and developed by the [Foley Lab](https://foleylab.github.io) at William Paterson University. More details of the Transfer Matrix equations, along will the full mathematical formulation currently implemented in WPTherml, can be found in
-the [documentation](https://github.com/FoleyLab/wptherml/blob/master/documentation/Equations.pdf).
+the [documentation](https://github.com/FoleyLab/wptherml/blob/master/docs/Equations.pdf).
 
 ## Quick Start
 - WPTherml is written in Python 3 and requires the numpy, scipy, and matplotlib packages.  Current installation of the Anaconda Python 3 package should provide all you need 
@@ -60,7 +60,7 @@ The schematic that illustrates the above example is shown in the figure below. N
 layers in the picture and how they are specified through Material_List and Thickness_List relative to 
 the incident, reflected, transmitted, and thermally-emitted light.
 
-<img src="documentation/Convention.png" alt="drawing" width="500"/>
+<img src="docs/Convention.png" alt="drawing" width="500"/>
 
 
 There are illustrative examples of using the features of the multilayer class contained in Jupyter notebooks within this repository, including:
