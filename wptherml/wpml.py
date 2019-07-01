@@ -356,6 +356,14 @@ class multilayer:
     ### Fresnel methods when explicit angle-averaging is requested...
     ### Need to have FOM methods to accompany this
     def fresnel_ea(self):
+        if (self.explicit_angle!=1):
+            error = 'ERROR: EXPLIT ANGLE OPTION NOT SELECTED! \n'
+            error = error + 'RE-INSTANTIATE YOUR MULTILAYER CLASS AND BE SURE \n'
+            error = error + 'TO INCLUDE A LINE IN YOUR STRUCTURE DICTIONARY LIKE THE FOLLOWING: \n'
+            error = error + 'EXPLICIT_ANGLE: 1'
+            print(error)
+            exit()
+
         ### The angles come from Gauss-Legendre quadrature
         nc = np.zeros(len(self.d),dtype=complex)
         ### outter loop is over wavelength - this modulates the RI

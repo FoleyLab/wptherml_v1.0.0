@@ -1,3 +1,4 @@
+wptherml.egg-info/
 *.pyc
 test*.py
 test*.ipynb
