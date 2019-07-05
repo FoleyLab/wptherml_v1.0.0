@@ -101,6 +101,17 @@ class multilayer:
         self.emissivity_array = np.zeros(len(self.lambda_array))
         self.thermal_emission_array = np.zeros(len(self.lambda_array))
         
+        ### if we run validation tests, the following will be used!
+        self.valid_lambda_array = []
+        self.valid_reflectivity_array = []
+        self.valid_transmissivity_array = []
+        self.valid_emissivity_array = []
+        self.vald_theta_array = []
+        self.valid_ref_vs_theta = []
+        self.valid_trans_vs_theta = []
+        self.valid_emiss_vs_theta = []
+        self.validation_option = 1
+        
         ### derivative quantities
         self.reflectivity_prime_array = np.zeros(len(self.lambda_array))
         self.emissivity_prime_array = np.zeros(len(self.lambda_array))
@@ -114,6 +125,8 @@ class multilayer:
         self.t_vs_theta = np.zeros(180)
         self.eps_vs_theta = np.zeros(180)
         self.theta_array = np.linspace(0,89.5*np.pi/180, 180)
+        ### if we run validation tests, the following will be used!
+
         ### If users selects explicit_angle option, we 
         ### need arrays for R, T, and eps as a function of angle
         ### and polarization, as well
@@ -228,7 +241,30 @@ class multilayer:
             plt.ylabel('Arb. Units')
             plt.show()
 
+
+    def get_validation_data(self):
+        Valid_Dict = datalib.read_validation_data(self.validation_option)
+        if (self.validation_option==1 or self.validation_option==3):
+            self.valid_lambda_array = Valid_Dict['V_LAM']
+            self.valid_reflectivity_array = Valid_Dict['V_REF']
+            self.valid_transmissivity_array = Valid_Dict['V_TRANS']
+            self.valid_emissivity_array = Valid_Dict['V_EMISS']
+        elif (self.validation_option==2):
+            self.valid_theta_array = Valid_Dict['V_THETA']
+            self.valid_ref_vs_theta = Valid_Dict['V_REF_V_THETA']
+            self.valid_trans_vs_theta = Valid_Dict['V_TRANS_V_THETA']
+            self.valid_emiss_vs_theta = Valid_Dict['V_EMISS_V_THETA']
             
+        return 1
+            
+        #self.valid_lambda_array = []
+        #self.valid_reflectivity_array = []
+        #self.valid_transmissivity_array = []
+        #self.valid_emissivity_array = []
+        #self.vald_theta_array = []
+        #self.valid_ref_vs_theta = []
+        #self.valid_trans_vs_theta = []
+        #self.valid_emiss_vs_theta = []
         
     ### Methods to compute all Fresnel quantities at once!
     ### to compute the emissivity, one needs to compute R and T anyway

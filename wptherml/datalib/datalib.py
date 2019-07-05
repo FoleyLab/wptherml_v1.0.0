@@ -67,6 +67,83 @@ def Material_RI(lam, arg):
         n = A/lam + 0j/lam + 1
     return n
 
+def read_validation_data(arg):
+    ### 50 nm Au fresnel data vs wavelength
+    if arg==1:
+        file_path = path + '50nm_Au_wl_scan.txt'
+        a = np.loadtxt(file_path)
+        vlam = np.zeros(len(a))
+        vR   = np.zeros(len(a))
+        vT   = np.zeros(len(a))
+        vE   = np.zeros(len(a))
+        
+        for i in range(0,len(a)):
+            vlam[i]  = a[i][0]
+            vR[i] = a[i][1]
+            vT[i] = a[i][2]
+            vE[i] = a[i][3]
+        
+        Valid = {
+                'V_LAM': vlam,
+                'V_REF': vR, 
+                'V_TRANS': vT,
+                'V_EMISS': vE
+                
+                }
+    elif arg==2:
+        file_path = path + '50nm_Au_theta_scan.txt'
+        a = np.loadtxt(file_path)
+        vtheta = np.zeros(len(a))
+        vR     = np.zeros(len(a))
+        vT     = np.zeros(len(a))
+        vE     = np.zeros(len(a))
+        
+        for i in range(0,len(a)):
+            vtheta[i] = a[i][0]
+            vR[i] = a[i][1]
+            vT[i] = a[i][2]
+            vE[i] = a[i][3]
+        
+        Valid = {
+                'V_THETA': vtheta,
+                'V_REF_V_THETA': vR,
+                'V_TRANS_V_THETA': vT,
+                'V_EMISS_V_THETA': vE
+                
+                }
+        
+    elif arg==3:
+        file_path = path + 'AEM_Fig3.txt'
+        a = np.loadtxt(file_path)
+        vlam = np.zeros(len(a))
+        vR   = np.zeros(len(a))
+        vT   = np.zeros(len(a))
+        vE   = np.zeros(len(a))
+        
+        for i in range(0,len(a)):
+            vlam[i] = a[i][0]
+            vR[i] = a[i][1]
+            vT[i] = a[i][2]
+            vE[i] = a[i][3]
+            
+        Valid = {
+                'V_LAM': vlam,
+                'V_REF': vR,
+                'V_TRANS': vT,
+                'V_EMISS': vE
+                }
+        
+    return Valid
+        
+    
+        
+        
+            
+        
+        
+        
+        
+        
 def TiN_Drude_Lorentz(lam):
     ci = 0+1j
     epsinf = 3.59
