@@ -1,11 +1,6 @@
 <img src="Logo/WPtherml.png" alt="drawing" width="200"/> 
 Pioneering the design of materials for harnessing heat.
 
-| Material/Quantity      | Filename  |  Reference  |
-|---                     |---        |---          |
-|Silver refractive index   | Ag_JC_RI_f.txt    | P. B. Johnson and R. W. Christy, Phys. Rev. B, "Optical Constants of noble metals", 6, 4370 (1972)   |
-|Gold refractive index   | Au_JC_RI_f.txt    | P. B. Johnson and R. W. Christy, Phys. Rev. B, "Optical Constants of noble metals", 6, 4370 (1972)   |
-
 ## Overview
 WPTherml stands for **W**illiam **P**aterson University's tool for **Th**ermal **E**nergy and **R**adiation management with **M**ulti **L**ayer nanostructures.
 The vision of this software package is to provide an easy-to-use platform for the design of materials with tailored optical and thermal properties for
