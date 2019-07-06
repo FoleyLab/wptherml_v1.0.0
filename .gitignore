@@ -20,3 +20,7 @@ TEST*.ipynb
 wptherml/*.pyc
 wptherml/datalib/*.pyc
 wptherml/numlib/*.pyc
+.ipynb_checkpoints/
+.ipynb_checkpoints/*
+example/.ipynb_checkpoints/
+example/.ipynb_checkpoints/*
