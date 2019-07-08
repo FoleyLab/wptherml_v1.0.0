@@ -7,6 +7,9 @@ q = 1.60217662e-19
 c=299792458
 h=6.626e-34
 k=1.38064852e-23
+
+supported_materials = ['Air', 'Al', 'Al2O3', 'AlN', 'Ag', 'Au', 'HfO2', 'Re', 'Rh', 'Ru', 'Pd', 'Pt', 'Si', 'SiO2', 'TiO2', 'TiN']
+
 ### get a string containing full path and current file name, datalib.py
 path_and_file = os.path.realpath(__file__)
 ### datalib.py is 10 characters long, so we want to take the above
@@ -53,7 +56,7 @@ def Material_RI(lam, arg):
         n = A/lam + 0j/lam + 1
     elif (arg=='TiN'):
         n = TiN_Drude_Lorentz(lam)
-    elif (arg=='W' or arg=='HfN' or arg=='Re' or arg=='Rh' or arg=='Ru'):
+    elif (arg=='W' or arg=='Re' or arg=='Rh' or arg=='Ru'):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt' or arg=='SiO2'):
         n = Read_RI_from_File(lam, arg)
@@ -63,8 +66,10 @@ def Material_RI(lam, arg):
         n = TDBC(lam)
     ### default is air    
     else:
-        A = 0.
-        n = A/lam + 0j/lam + 1
+        print("  INVALID MATERIAL OPTION!  THE FOLLOWING MATERIAL KEYWORDS ARE CURRENTLY SUPPORTED: ")
+        print(supported_materials)
+        print("  PLEASE CHECK YOUR Material_List AND RE-RUN ")
+        exit()
     return n
 
 def read_validation_data(arg):
@@ -167,7 +172,7 @@ def Read_RI_from_File(lam, matname):
     if (matname=='W'):
         file_path = path + 'W_Palik_RI_f.txt'
         a = np.loadtxt(file_path)
-    elif (matname=='TiO2'):  #Need to re-order HfN data
+    elif (matname=='TiO2'):  
         file_path = path + 'TiO2_Siefke.txt'
         a = np.loadtxt(file_path)
     elif (matname=='Re'):
