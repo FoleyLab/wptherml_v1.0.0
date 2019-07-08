@@ -14,10 +14,10 @@ wheels/
 .installed.cfg
 *.egg
 *.pyc
-test*.py
-test*.ipynb
-TEST*.py
-TEST*.ipynb
+temp*.ipynb
+temp*.py
+TEMP*.py
+TEMP*.ipynb
 wptherml/*.pyc
 wptherml/datalib/*.pyc
 wptherml/numlib/*.pyc
