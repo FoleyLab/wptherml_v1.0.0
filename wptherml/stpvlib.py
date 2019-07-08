@@ -10,10 +10,10 @@ c=299792458
 h=6.626e-34
 k=1.38064852e-23
 
-T = 1023
-lam = np.linspace(1e-9, 6000e-9, 6001e-9)
-bg = .55 ##eV
-lbg = (h*c)/(bg*1.602176565e-9)
+#T = 1023
+#lam = np.linspace(1e-9, 6000e-9, 6001e-9)
+#bg = .55 ##eV
+#lbg = (h*c)/(bg*1.602176565e-9)
 
 ### computes spectral efficiency given no
 ### angular dependence of emissivity
