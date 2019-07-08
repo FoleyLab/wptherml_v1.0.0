@@ -24,7 +24,7 @@ structure = {
         ### value is stored in attribute self.T
         'Temperature': 300,
         ### gold film with air above and belo
-        'Material_List': ['Air', 'Pt', 'Air'],
+        'Material_List': ['Air', 'Au', 'Air'],
         ### gold film is 50 nm thick
         'Thickness_List': [0, 50e-9, 0],
          ### range of wavelengths optical properties will be calculated for
