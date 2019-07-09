@@ -84,7 +84,7 @@ There are illustrative examples of using the features of the multilayer class co
 
 - [Video Demo for Radiative Cooling](https://youtu.be/LC4TrnB8JK4)
 
-more will be added in the near future!
+More will be added in the near future!
 
 
 ## Playlist
