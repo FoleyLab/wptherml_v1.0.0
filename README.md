@@ -61,9 +61,9 @@ plt.show()
 
 - Save this script and run it either in the terminal as
 
-`python test.py`
+`python example.py`
 
-where test.py is the name of the file you created, or if you were doing this in an IDE, execute it within your IDE!
+where example.py is the name of the file you created, or if you were doing this in an IDE, execute it within your IDE!
 
 The schematic that illustrates the above example is shown in the figure below. Note the ordering of the 
 layers in the picture and how they are specified through Material_List and Thickness_List relative to 
