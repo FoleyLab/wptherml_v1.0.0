@@ -12,9 +12,14 @@ the [documentation](https://github.com/FoleyLab/wptherml/blob/master/docs/Equati
 ## Quick Start
 - WPTherml is written in Python 3 and requires the numpy, scipy, and matplotlib packages.  Current installation of the Anaconda Python 3 package should provide all you need 
 on Windows, Mac, or Linux platforms
-- To get started from github: 
-  -- clone or download this repository to your computer
-  -- install by typing `python setup.py install`
+- To install from github: 
+   * `git clone https://github.com/FoleyLab/wptherml.git`
+   * `cd wptherml`
+   * `python setup.py install`
+   
+- To get started using pip:
+   * `pip install wptherml`
+   
 - Open a new .py file in your favorite text editor or IDE, e.g.
 
 `vim example.py`
