@@ -22,7 +22,7 @@ of a script that imports the multilayer class, computes the reflectivity of 20 n
 TiO2 and 100 nm SiO2, and plots
 it using pyplot follows:
 
-```
+```python
 from wptherml.wpml import multilayer
 from matplotlib import pyplot as plt
 
