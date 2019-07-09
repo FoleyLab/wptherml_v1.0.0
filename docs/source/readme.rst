@@ -27,7 +27,14 @@ Quick Start
    matplotlib packages. Current installation of the Anaconda Python 3
    package should provide all you need on Windows, Mac, or Linux
    platforms
--  To get started, clone or download this repository to your computer
+-  To install from github:
+-  ``git clone https://github.com/FoleyLab/wptherml.git``
+-  ``cd wptherml``
+-  ``python setup.py install``
+
+-  To install with pip:
+-  ``pip install wptherml``
+
 -  Open a new .py file in your favorite text editor or IDE, e.g.
 
 ``vim example.py``
@@ -70,10 +77,10 @@ TiO2 and 100 nm SiO2, and plots it using pyplot follows:
 
 -  Save this script and run it either in the terminal as
 
-``python test.py``
+``python example.py``
 
-where test.py is the name of the file you created, or if you were doing
-this in an IDE, execute it within your IDE!
+where example.py is the name of the file you created, or if you were
+doing this in an IDE, execute it within your IDE!
 
 The schematic that illustrates the above example is shown in the figure
 below. Note the ordering of the layers in the picture and how they are
@@ -84,20 +91,20 @@ There are illustrative examples of using the features of the multilayer
 class contained in Jupyter notebooks within this repository, including:
 
 -  `Validation of Basic Optical
-   Properties <https://github.com/FoleyLab/wptherml/blob/master/Validate_Fresnel.ipynb>`__
+   Properties <https://github.com/FoleyLab/wptherml/blob/master/example/Validate_Fresnel.ipynb>`__
 
 -  `Examples of Computing Basic Optical
-   Properties <https://github.com/FoleyLab/wptherml/blob/master/Example1.ipynb>`__
+   Properties <https://github.com/FoleyLab/wptherml/blob/master/example/Example1.ipynb>`__
 
 -  `Modeling Incandescent
-   Sources <https://github.com/FoleyLab/wptherml/blob/master/Example2.ipynb>`__
+   Sources <https://github.com/FoleyLab/wptherml/blob/master/example/Example2.ipynb>`__
 
 -  `Modeling Radiative Cooling
-   Surfaces <https://github.com/FoleyLab/wptherml/blob/master/Validate_Cooling.ipynb>`__
+   Surfaces <https://github.com/FoleyLab/wptherml/blob/master/example/Validate_Cooling.ipynb>`__
 
 -  `Video Demo for Radiative Cooling <https://youtu.be/LC4TrnB8JK4>`__
 
-more will be added in the near future!
+More will be added in the near future!
 
 Playlist
 --------
