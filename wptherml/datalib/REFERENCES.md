@@ -13,7 +13,7 @@
 |Hafnium oxide refractive index (vis-IR) | Model in datalib.py | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) |
 |Palladium (vis-IR) | Pd_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
 |Platinum (vis-IR) | Pt_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) | 
-|Renium (vis-IR) | Re_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
+|Rhenium (vis-IR) | Re_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
 |Rhodium (vis-IR) | Rh_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
 |Ruthinium (vis-IR) | Ru_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
 |Glass (vis-near-IR) | Model | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) | 
