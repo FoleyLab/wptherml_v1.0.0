@@ -10,7 +10,7 @@
 |Aluminum nitride refractive index (vis) | Model in datalib.py | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018)  |
 |Aluminum nitride refractive index  (IR) | AlN_IR.txt    | J. Kischkat, S. Peters, B. Gruska, M. Semtsiv, M. Chashnikova, M. Klinkmüller, O. Fedosenko, S. Machulik, A. Aleksandrova, G. Monastyrskyi, Y. Flores, and W. T. Masselink, Appl. Opt., "Mid-infrared optical properties of thin films of aluminum oxide, titanium dioxide, silicon dioxide, aluminum nitride, and silicon nitride",  51, 6789-6798 (2012)   | 
 |Aluminum oxide refractive index  (vis-IR) | Al2O3_Ellips_RI.txt |N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) |
-|Halfnium oxide refractive index (vis-IR) | HfN_Ellips_RI.txt | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) |
+|Hafnium oxide refractive index (vis-IR) | Model in datalib.py | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) |
 |Palladium (vis-IR) | Pd_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
 |Platinum (vis-IR) | Pt_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) | 
 |Renium (vis-IR) | Re_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
