@@ -8,7 +8,7 @@
 |Gold refractive index (IR)       | Au_IR.txt         | R. L. Olmon, B. Slovick, T. W. Johnson, D. Shelton, S.-H. Oh, G. D. Boreman, and M. B. Raschke.  Phys. Rev. B, "Optical dielectric function of gold", 86, 235147 (2012)  |
 |Aluminum refractive index (visible-IR)  | Al_Rakic.txt    | A. D. Rakić, Appl. Opt., "Algorithm for the determination of intrinsic optical constants of metal films: application to aluminum",  34, 4755-4767 (1995)    |
 |Aluminum nitride refractive index (vis) | Model in datalib.py | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018)  |
-|Aluminum nitride refractive index  (IR) | AlN_IR.txt    | INSERT   | 
+|Aluminum nitride refractive index  (IR) | AlN_IR.txt    | J. Kischkat, S. Peters, B. Gruska, M. Semtsiv, M. Chashnikova, M. Klinkmüller, O. Fedosenko, S. Machulik, A. Aleksandrova, G. Monastyrskyi, Y. Flores, and W. T. Masselink, Appl. Opt., "Mid-infrared optical properties of thin films of aluminum oxide, titanium dioxide, silicon dioxide, aluminum nitride, and silicon nitride",  51, 6789-6798 (2012)   | 
 |Aluminum oxide refractive index  (vis-IR) | Al2O3_Ellips_RI.txt |N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) |
 |Halfnium oxide refractive index (vis-IR) | HfN_Ellips_RI.txt | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) |
 |Palladium (vis-IR) | Pd_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
