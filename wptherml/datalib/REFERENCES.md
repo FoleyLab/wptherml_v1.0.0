@@ -6,7 +6,7 @@
 |Silver refractive index (IR)        | Ag_Yang.txt       | H. U. Yang, J. D'Archangel, M. L. Sundheimer, E. Tucker, G. D. Boreman, M. B. Raschke,  Phys. Rev. B, "Optical dielectric function of silver",  91, 235137 (2015) |
 |Gold refractive index (visible)  | Au_JC_RI_f.txt    | P. B. Johnson and R. W. Christy, Phys. Rev. B, "Optical Constants of noble metals", 6, 4370 (1972)   |
 |Gold refractive index (IR)       | Au_IR.txt         | R. L. Olmon, B. Slovick, T. W. Johnson, D. Shelton, S.-H. Oh, G. D. Boreman, and M. B. Raschke.  Phys. Rev. B, "Optical dielectric function of gold", 86, 235147 (2012)  |
-|Aluminum refractive index (visible-IR)  | Al_Rakic.txt    | INSERT    |
+|Aluminum refractive index (visible-IR)  | Al_Rakic.txt    | A. D. Rakić, Appl. Opt., "Algorithm for the determination of intrinsic optical constants of metal films: application to aluminum",  34, 4755-4767 (1995)    |
 |Aluminum nitride refractive index (vis) | Model in datalib.py | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018)  |
 |Aluminum nitride refractive index  (IR) | AlN_IR.txt    | INSERT   | 
 |Aluminum oxide refractive index  (vis-IR) | Al2O3_Ellips_RI.txt |N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) |
