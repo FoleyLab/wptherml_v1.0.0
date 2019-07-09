@@ -32,11 +32,9 @@ from PyPI::
 
 .. toctree::
    :maxdepth: 2
+
+   readme
+   license
    :caption: Contents:
 
-Further Information
-==================
-
-* :ref:`genindex`
-* :ref:`license`
 
