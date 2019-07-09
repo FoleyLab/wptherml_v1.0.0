@@ -146,7 +146,7 @@ The following strings are currently recognized for the following supported mater
 'DEG' # an int that specifies the number of different angles that will be considered 
 in the calculation of optical and thermal emission properties as a function of angle. (Default is 7, which has been observed to give reasonably good accuracy when all angular integrals are performed using Gauss-Legendre quadrature).
 ```
-
+{: .language-python}
 ## Method and attribute list for multilayer class
 Given the input parameters specified above, the *multilayer* class uses different methods to compute properties relevant for thermal applications, and those properties are stored as attributes
 of the *multilayer* object.  The following is a list of methods of the *multilayer* class and their related attributes:
@@ -172,6 +172,7 @@ of the *multilayer* object.  The following is a list of methods of the *multilay
 	self.explicit_angle 	# the flag that determines if explicit angle-dependence of optical properties will be considered
 	self.deg		# the number of different angles that will be computed for angle-dependent optical properties
   ```
+{: .language-python}
 In addition to the attributes that are explicitly set by parsing user input, several more attributes that are arrays will be 
 allocated based on attributes defined by inline_structure:
 ```python
@@ -195,7 +196,7 @@ allocated based on attributes defined by inline_structure:
         self.thermal_emission_array_p   # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
         self.thermal_emission_array_s   # initialized as a 2D array of zeros, inner dimension same as self.deg and outter same as self.lambda_array
 ```
-
+{: .language-python}
 ```python
 ''' Method to compute optical properties of reflectivity, transmissivity, and 
 emissivity of structure as a function of wavelength assuming normal incidence '''
@@ -207,7 +208,7 @@ self.reflectivity_array
 self.transmissivity_array
 self.emissivity_array
 ```
-
+{: .language-python}
 ```python
 ''' Method to compute optical properties of reflectivity, transmissivity, and 
 emissivity of structure as a function of wavelength and angle, both p- and s-polarizations
@@ -223,7 +224,7 @@ self.transmissivity_array_s
 self.emissivity_array_p
 self.emissivity_array_s
 ```
-
+{: .language-python}
 ```python
 ''' Method to compute thermal emission spectrum of a structure at a given temperature;
 note temperature specified by self.T_ml '''
@@ -234,7 +235,7 @@ def thermal_emission()
 self.BBs   # Blackbody spectrum
 self.thermal_emission_array ## thermal emission of structure defined as Blackbody * emissivity
 ```
-
+{: .language-python}
 
 ```python
 ''' Method to compute thermal emission spectrum of a structure at a given temperature for a range of angles '''
@@ -245,6 +246,7 @@ def thermal_emission_ea()
 self.thermal_emission_array_p ## thermal emission of structure defined as Blackbody * p-polarized emissivity
 self.thermal_emission_array_s ## thermal emission of structure defined as Blackbody * s-polarized emissivity
 ```
+{: .language-python}
 ```python
 ''' Method to compute optical properties of reflectivity, transmissivity, 
 and emissivity as a function of angle for a given polarization self.pol and wavelength lambda_0 '''
@@ -255,7 +257,7 @@ self.r_vs_theta # reflectivity
 self.t_vs_theta # transmissivity
 self.eps_vs_theta # emissivity
 ```
-
+{: .language-python}
 ```python
 ''' The following three methods compute figures of merit relevant for STPV emitters for a given
     temperature self.T_ml, PV type self.PV and bandgap self.lbg, and PV temperature self.T_cell.
@@ -265,7 +267,7 @@ self.stpv_se() # compute the spectral efficiency and stores it in the attribute 
 self.stpv_pd() # computes the useful power density and stores it in the attribute self.power_density_val
 self.stpv_etatpv() # computes the TPV emitter efficiency and stores it in the attribute self.tpv_efficiency_val
 ```
-
+{: .language-python}
 ```python
 ''' The following methods compute figures of merit relevant for STPV emitters for a given
     temperature self.T_ml, PV type self.PV and bandgap self.lbg, and PV temperature self.T_cell.
@@ -275,11 +277,13 @@ self.stpv_se_ea() # compute the spectral efficiency and stores it in the attribu
 self.stpv_pd_ea() # computes the useful power density and stores it in the attribute self.power_density_val
 self.stpv_etatpv_ea() # computes the TPV emitter efficiency and stores it in the attribute self.tpv_efficiency_val
 ```
+{: .language-python}
 ```python
 ''' The following methods compute the absorber efficiency of a STPV or concentrated solar absorber at a 
     given temperature self.T_ml '''
 def stpv_etaabs_ea() # computes absorber efficiency and stores it in the attribute self.absorber_efficiency_val
 ```
+{: .language-python}
 ```python
 ''' method to render color of a structure from its thermal emission at a given temperature self.T_ml '''
 def thermal_color()
@@ -288,7 +292,7 @@ def ambient_color()
 ''' method to render color in a +/- 5nm band around the wavelength lambda '''
 def pure_color(lambda)
 ```
-
+{: .language-python}
 ```python
 ''' Method to compute the luminous efficiency of a structure at temperature self.T_ml.
     Stores value to self.luminous_efficiency_val '''
@@ -335,4 +339,4 @@ def find_spp(wavelength_index)
     self.pa_resonance_val '''
 def find_pa()
 ```
-
+{: .language-python}
