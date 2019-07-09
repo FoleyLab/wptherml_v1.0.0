@@ -17,7 +17,7 @@ on Windows, Mac, or Linux platforms
    * `cd wptherml`
    * `python setup.py install`
    
-- To get started using pip:
+- To install with pip:
    * `pip install wptherml`
    
 - Open a new .py file in your favorite text editor or IDE, e.g.
