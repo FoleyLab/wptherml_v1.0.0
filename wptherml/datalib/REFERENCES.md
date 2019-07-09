@@ -17,7 +17,7 @@
 |Rhodium (vis-IR) | Rh_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
 |Ruthinium (vis-IR) | Ru_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
 |Glass (vis-near-IR) | Model | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) | 
-|Glass (IR) | SiO2_IR.txt | Two references are combined in a single file to provide refractive index data from 210 - 50000 nm: from 210 - 6700 nm, I. H. Malitson. Interspecimen comparison of the refractive index of fused silica, J. Opt. Soc. Am. 55, 1205-1208 (1965), and from 7000 - 50000 nm, S. Popova, T. Tolstykh, V. Vorobev. Optical characteristics of amorphous quartz in the 1400–200 cm-1 region, Opt. Spectrosc. 33, 444–445 (1972) |
+|Glass (IR) | SiO2_IR.txt | Two references are combined in a single file to provide refractive index data from 210 - 50000 nm: from 210 - 6700 nm, I. H. Malitson,  J. Opt. Soc. Am., "Interspecimen comparison of the refractive index of fused silica", 55, 1205-1208 (1965), and from 7000 - 50000 nm, S. Popova, T. Tolstykh, V. Vorobev, Opt. Spectrosc., "Optical characteristics of amorphous quartz in the 1400–200 cm-1 region", 33, 444–445 (1972) |
 |Silicon    | Si_Schinke.txt | INSERT |
 |Titanium nitride | TiN_Ellips_RI.txt | INSERT | 
 |Titanium dioxide | TiO2_Siefke.txt | INSERT |
