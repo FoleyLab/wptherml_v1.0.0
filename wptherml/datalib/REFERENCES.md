@@ -26,7 +26,7 @@
 |GaSb Spectral Response | Model | D. Martin and C. Algora, "Temperature-dependent GaSb material parameters for reliable thermophotovoltaic cell modelling", Semicond. Sci. Technol., 19, 1040-1052 (2004) |
 |AM 1.5 Spectrum | scaled_AM_1_5.txt | ASTM G173-03 Reference Spectra Derived from SMARTS v. 2.9.2 |
 |Photopic Luminosity Function | Model | Guassian Parameters can be found in datalib.py-> PhLum(lam), data can be found http://www.cvrl.org/database/data/lum/linCIE2008v2e_5.html |
- 
+|Atmospheric transmissivity | ATrans.txt | https://www.gemini.edu/sciops/telescopes-and-sites/observing-condition-constraints/ir-transmission-spectra |
 
 
 
