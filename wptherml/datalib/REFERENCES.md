@@ -3,7 +3,7 @@
 | Material/Quantity      | Filename  |  Reference  |
 |---                     |---        |---          |
 |Silver refractive index (visible)   | Ag_JC_RI_f.txt    | P. B. Johnson and R. W. Christy, Phys. Rev. B, "Optical Constants of noble metals", 6, 4370 (1972)   |
-|Silver refractive index (IR)        | Ag_Yang.txt       | INSERT
+|Silver refractive index (IR)        | Ag_Yang.txt       | H. U. Yang, J. D'Archangel, M. L. Sundheimer, E. Tucker, G. D. Boreman, M. B. Raschke,  Phys. Rev. B, "Optical dielectric function of silver",  91, 235137 (2015) |
 |Gold refractive index (visible)  | Au_JC_RI_f.txt    | P. B. Johnson and R. W. Christy, Phys. Rev. B, "Optical Constants of noble metals", 6, 4370 (1972)   |
 |Gold refractive index (IR)       | Au_IR.txt         | INSERT |
 |Aluminum refractive index (visible-IR)  | Al_Rakic.txt    | INSERT    |
