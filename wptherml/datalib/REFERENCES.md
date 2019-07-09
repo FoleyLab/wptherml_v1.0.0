@@ -17,10 +17,10 @@
 |Rhodium (vis-IR) | Rh_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
 |Ruthinium (vis-IR) | Ru_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
 |Glass (vis-near-IR) | Model | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) | 
-|Glass (IR) | SiO2_IR.txt | INSERT |
-|Silicon    | Si_Schinke.txt | INSERT |
-|Titanium nitride | TiN_Ellips_RI.txt | INSERT | 
-|Titanium dioxide | TiO2_Siefke.txt | INSERT |
+|Glass (IR) | SiO2_IR.txt | Two references are combined in a single file to provide refractive index data from 210 - 50000 nm: from 210 - 6700 nm, I. H. Malitson,  J. Opt. Soc. Am., "Interspecimen comparison of the refractive index of fused silica", 55, 1205-1208 (1965), and from 7000 - 50000 nm, S. Popova, T. Tolstykh, V. Vorobev, Opt. Spectrosc., "Optical characteristics of amorphous quartz in the 1400–200 cm-1 region", 33, 444–445 (1972) |
+|Silicon    | Si_Schinke.txt | C. Schinke, P. C. Peest, J. Schmidt, R. Brendel, K. Bothe, M. R. Vogt, I. Kröger, S. Winter, A. Schirmacher, S. Lim, H. T. Nguyen, D. MacDonald, AIP Advances, "Uncertainty analysis for the coefficient of band-to-band absorption of crystalline silicon" 5, 67168 (2015) |
+|Titanium nitride | TiN_Ellips_RI.txt | N. Jeoni et al., Adv. Energy Materials, "Pareto optimal spectrally selective emitters for thermophotovoltaics viaweak absorber critical coupling", 8, 1801035 (2018) | 
+|Titanium dioxide | TiO2_Siefke.txt | T. Siefke, S. Kroker, K. Pfeiffer, O. Puffky, K. Dietrich, D. Franta, I. Ohlídal, A. Szeghalmi, E.-B. Kley, A. Tünnermann, Adv. Opt. Mater., "Materials pushing the application limits of wire grid polarizers further into the deep ultraviolet spectral range", 4, 1780–1786 (2016) |
 |Tungsten (vis-IR) | W_Palik_RI_f.txt | E. D. Palik, "Handbook of optical constants of solids" (Academic Press, 1998) |
 |InGaAsSb Spectral Response | Model | M. Dashiell et al., "Quaternary InGaAsSb Thermophotovoltaic Diode Technology", (Technical Report, 2005) |
 |GaSb Spectral Response | Model | D. Martin and C. Algora, "Temperature-dependent GaSb material parameters for reliable thermophotovoltaic cell modelling", Semicond. Sci. Technol., 19, 1040-1052 (2004) |
