@@ -15,13 +15,14 @@ on Windows, Mac, or Linux platforms
 - To get started, clone or download this repository to your computer
 - Open a new .py file in your favorite text editor or IDE, e.g.
 
-`vim test.py`
+`vim example.py`
 
 The capabilities of this package are contained within a class called multilayer.  A basic example 
 of a script that imports the multilayer class, computes the reflectivity of 20 nm gold film coated with 50 nm of 
 TiO2 and 100 nm SiO2, and plots
 it using pyplot follows:
-```python
+
+```
 from wptherml.wpml import multilayer
 from matplotlib import pyplot as plt
 
@@ -49,6 +50,7 @@ coated_au_film = multilayer(structure)
 plt.plot(1e9*coated_au_film.lambda_array, coated_au_film.reflectivity_array, 'red')
 plt.show()
 ```
+{: .language-python}
 
 - Save this script and run it either in the terminal as
 

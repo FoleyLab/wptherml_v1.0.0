@@ -3,20 +3,40 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to wptherml's documentation!
+WPTherml's documentation!
 ====================================
+
+Installation Instructions
+=========================
+
+
+from github::
+
+    git clone https://github.com/FoleyLab/wptherml.git
+    cd wptherml
+    python setup.py install
+
+
+running unit tests from cloned repository::
+
+    cd test
+    python -m pytest test.py
+
+
+from PyPI::
+
+    pip install wptherml 
+
+.. raw:: html
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-
-
-Indices and tables
+Further Information
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+* :ref:`license`
 
