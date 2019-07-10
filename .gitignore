@@ -1,6 +1,9 @@
 .ipynb_checkpoints/
 .DS_Store
 __pycache__/
+wptherml/__pycache__/
+wptherml/datalib/__pycache__/
+wptherml/numlib/__pycache__/
 .Python
 build/
 develop-eggs/

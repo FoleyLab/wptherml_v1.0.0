@@ -32,6 +32,13 @@ Quick Start
 -  ``cd wptherml``
 -  ``python setup.py install``
 
+-  To run unit tests from cloned repository:
+-  ``cd test``
+-  ``python -m pytest test.py``
+
+-  The test script for running unit tests can be downloaded
+   `here <https://github.com/FoleyLab/wptherml/blob/master/example/test/test.py>`__
+
 -  To install with pip:
 -  ``pip install wptherml``
 
@@ -403,3 +410,26 @@ emission of structure defined as Blackbody \* emissivity \`\`\` {:
     def find_pa()
 
 {: .language-python}
+
+Extending the multilayer class
+------------------------------
+
+The multilayer class should provide a convenient mechanism for extension
+of the package to include additional applications (which might require
+different manipulations of the Fresnel quantities stored as the
+attributes self.reflectivity\_array, self.emissivity\_array,
+self.transmissivity\_array, or the thermal emission stored as the
+attribute self.thermal\_emission\_array), or to include different
+classes of structures (non-planar structures, for example, where the
+same attributes self.reflectivity\_array, etc., would be computed by a
+different method than the transfer matrix method). The typical workflow
+to extend the capabilities of the package could include
+
+-  Identifying any new properties that will be computed by the extension
+   and adding appropriate attributes to the multilayer class
+-  Adding one or more functions to the libraries (stpvlib, etc.) that
+   manipulates the Fresnel and/or thermal emission quantites as required
+   to compute the new desired property
+-  Adding one or more multilayer methods to call the new library
+   functions and store the resulting data in new or existing multilayer
+   attributes as appropriate.
