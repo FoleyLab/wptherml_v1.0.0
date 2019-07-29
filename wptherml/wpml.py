@@ -126,9 +126,7 @@ class multilayer:
         self.validation_option = 1
         
         ### derivative quantities
-        self.reflectivity_prime_array = np.zeros(len(self.lambda_array))
-        self.emissivity_prime_array = np.zeros(len(self.lambda_array))
-        
+
         
         ### In some cases the user may wish to compute
         ### R, T, or eps vs angle at a specific wavelength
