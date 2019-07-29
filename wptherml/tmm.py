@@ -175,152 +175,108 @@ def tmm(k0, theta0, pol, nA, tA):
 ### analytically differentiates the transfer matrix
 ### with respect to the thickness of a layer li to be specified by 
 ### the user!
-def d_tmm_dsi(li, k0, theta0, pol, nA, tA):
-    t1 = np.zeros((2,2),dtype=complex)
-    t2 = np.zeros((2,2),dtype=complex)
-    Dl = np.zeros((2,2),dtype=complex)
-    Dli = np.zeros((2,2),dtype=complex)
-    Pl = np.zeros((2,2),dtype=complex)
-    M  = np.zeros((2,2),dtype=complex)
-    
-    D1 = BuildD(nA[0], np.cos(theta0), pol)
-    ### Note it is actually faster to invert the 2x2 matrix
-    ### "By Hand" than it is to use linalg.inv
-    ### and this inv step seems to be the bottleneck for the TMM function
+def tmm_grad(k0, theta0, pol, nA, tA, layers):
+    n = len(layers)
+    N = len(tA)
+    ### Initialize arrays!
+    Dli = np.zeros((N,2,2), dtype = complex)
+    Dl = np.zeros((N,2,2), dtype = complex)
+    Pl = np.zeros((N, 2, 2), dtype = complex)
+    Plp = np.zeros((n,2,2), dtype = complex)
+    Mp = np.zeros((n, 2,2), dtype = complex)
+    t1 = np.zeros((2,2), dtype = complex)
+    t2 = np.zeros((2,2), dtype = complex)
+    kz = np.zeros(N, dtype = complex)
+    phil = np.zeros(N, dtype = complex)
+    ctheta = np.zeros(N, dtype = complex)
+    theta = np.zeros(N, dtype = complex)
+    M = np.zeros((2,2), dtype = complex)
+    ### compute kx
+    kx = nA[0]*np.sin(theta0)*k0
+    ### compute D1
+    D1 = BuildD(nA[0],np.cos(theta0), pol)
+    ### compute D1^-1
     tmp = D1[0,0]*D1[1,1]-D1[0,1]*D1[1,0]
     det = 1/tmp
     M[0,0] = det*D1[1,1]
     M[0,1] = -det*D1[0,1]
     M[1,0] = -det*D1[1,0]
     M[1,1] = det*D1[0,0]
-    #D1i = inv(D1)
-   #print("D1i is ")
-   #print(D1i)
-    
-    
-    ### This is the number of layers in the structure
-    L = len(nA)
-    kz = np.zeros(L,dtype=complex)
-    phil = np.zeros(L,dtype=complex)
-    ctheta = np.zeros(L,dtype=complex)
-    theta = np.zeros(L,dtype=complex)
-    
-    ### since kx is conserved through all layers, just compute it
-    ### in the upper layer (layer 1), for which you already known
-    ### the angle of incidence
-    kx = nA[0]*k0*np.sin(theta0)
-    kz[0] = np.sqrt((nA[0]*k0)**2 - kx**2)
-    kz[L-1] = np.sqrt((nA[L-1]*k0)**2 - kx**2)
-    
-    ### keeping consistent with K-R excitation
-    if np.real(kz[0])<0:
-        kz[0] = -1*kz[0]
-    if np.imag(kz[L-1])<0:
-        kz[L-1] = -1*kz[L-1]
-        
-    ''' For dM/dsi we have three cases:
-        we compute contributions to M as normal for layers 2-li-1
-        we compute dPi/dsi for layer li
-        we compute contributions to M as normal for layers li+1 - L-1
-    '''
-    
-    ''' layers 2 - li-1 '''
-    for i in range(1,li):
-        kz[i] = np.sqrt((nA[i]*k0)**2 - kx**2)
-        if np.imag(kz[i])<0:
-            kz[i] = -1*kz[i]
-        
+    Dli[0,:,:] = np.copy(M)
+    ### Initialize gradient of M with D1^-1
+    for i in range(0,n):
+        Mp[i,:,:] = np.copy(M)
+    ### Compute kz0
+    kz[0] = np.sqrt(nA[0]*k0)**2-kx**2
+    ### Compute kz, phil, D, P, D^-1 quantities for all  finite layers!
+    for i in range (1,(N-1)):
+        kz[i] = np.sqrt((nA[i]*k0)**2-kx**2)
+        if np.imag(kz[i]) < 0:
+            kz[i] = -1 * kz[i]
         ctheta[i] = kz[i]/(nA[i]*k0)
         theta[i] = np.arccos(ctheta[i])
-
         phil[i] = kz[i]*tA[i]
-
-        Dl = BuildD(nA[i],ctheta[i], pol)
-        ## Invert Dl
-        tmp = Dl[0,0]*Dl[1,1]-Dl[0,1]*Dl[1,0]
+        Dl[i,:,:] = BuildD(nA[i], ctheta[i], pol)
+        tmp = Dl[i,0,0]*Dl[i,1,1]-Dl[i,0,1]*Dl[i,1,0]
         det = 1/tmp
-        Dli[0,0] = det*Dl[1,1]
-        Dli[0,1] = -det*Dl[0,1]
-        Dli[1,0] = -det*Dl[1,0]
-        Dli[1,1] = det*Dl[0,0]
-        #Dli = inv(Dl)
-        ## form Pl
-        Pl = BuildP(phil[i])
-
-        t1 = np.matmul(M,Dl)
-        t2 = np.matmul(t1,Pl)
-        M  = np.matmul(t2,Dli)
-
-    ''' layer li  '''
-    kz[li] = np.sqrt((nA[li]*k0)**2 - kx**2)
-    if np.imag(kz[li])<0:
-        kz[li] = -1*kz[li]
+        Dli[i,0,0] = det*Dl[i,1,1]
+        Dli[i,0,1] = -det*Dl[i,0,1]
+        Dli[i,1,0] = -det*Dl[i,1,0]
+        Dli[i,1,1] = det*Dl[i,0,0]
+        Pl[i,:,:] = BuildP(phil[i])
+        t1 = np.dot(M,Dl[i,:,:])
+        t2 = np.dot(t1, Pl[i,:,:])
+        M = np.dot(t2,Dli[i,:,:])
         
-    ctheta[li] = kz[li]/(nA[li]*k0)
-    theta[li] = np.arccos(ctheta[li])
+    ### kz, Dl for final layer!
+    kz[N-1] = np.sqrt((nA[N-1]*k0)**2-kx**2)
+    ctheta[N-1] = kz[N-1]/(nA[N-1]*k0)
+    Dl[N-1,:,:] = BuildD(nA[N-1],ctheta[N-1], pol)
+    ctheta[0] = np.cos(theta0)
+    t1 = np.dot(M,Dl[N-1,:,:])
+    ### This is the transfer matrix!
+    M = np.copy(t1)
+    ### for all layers we want to differentiate with respect to, 
+    ### form Plp matrices
+    for l in range(0,n):
+        Plp[l,:,:] = Build_dP_ds(kz[layers[l]],tA[layers[l]])
+    ### for all those layers, compute associated matrix products!
+    idx = 0
+    for i in layers:
+        for l in range(1,i):
+            t1 = np.dot(Mp[idx,:,:], Dl[l,:,:])
+            t2 = np.dot(t1, Pl[l,:,:])
+            Mp[idx,:,:] = np.dot(t2,Dli[l,:,:])
+        t1 = np.dot(Mp[idx,:,:],Dl[i,:,:])
+        t2 = np.dot(t1,Plp[idx,:,:])
+        Mp[idx,:,:] = np.dot(t2,Dli[i,:,:])
+        for l in range(i+1,N-1):
+            t1 = np.dot(Mp[idx,:,:], Dl[l,:,:])
+            t2 = np.dot(t1, Pl[l,:,:])
+            Mp[idx,:,:] = np.dot(t2,Dli[l,:,:])
+        t1 = np.dot(Mp[idx,:,:],Dl[N-1,:,:])
+        Mp[idx,:,:] = np.copy(t1)
+        idx = idx+1
     
-    Dl = BuildD(nA[li], ctheta[li], pol)
-    tmp = Dl[0,0]*Dl[1,1]-Dl[0,1]*Dl[1,0]
-    det = 1/tmp
-    Dli[0,0] = det*Dl[1,1]
-    Dli[0,1] = -det*Dl[0,1]
-    Dli[1,0] = -det*Dl[1,0]
-    Dli[1,1] = det*Dl[0,0]
-    
-    Pl = Build_dP_ds(kz[li], tA[li])
-    
-    t1 = np.matmul(M, Dl)
-    t2 = np.matmul(t1, Pl)
-    M = np.matmul(t2, Dli)
+    M = {
+         "Mp": Mp,   
+         "M11": M[0,0], 
+         "M12": M[0,1], 
+         "M21": M[1,0], 
+         "M22": M[1,1],
+         "theta_i": theta0,
+         "theta_L": np.real(np.arccos(ctheta[N-1])),
+         "kz": kz,
+         "phil": phil,
+         "ctheta": ctheta,
+         "theta": theta
+            
+            
+            }
+    return M
 
 
-    ''' layers li+1 - L-1  '''
-    for i in range(li+1,(L-1)):
-        kz[i] = np.sqrt((nA[i]*k0)**2 - kx**2)
-        if np.imag(kz[i])<0:
-            kz[i] = -1*kz[i]
-        
-        ctheta[i] = kz[i]/(nA[i]*k0)
-        theta[i] = np.arccos(ctheta[i])
 
-        phil[i] = kz[i]*tA[i]
-
-        Dl = BuildD(nA[i],ctheta[i], pol)
-        ## Invert Dl
-        tmp = Dl[0,0]*Dl[1,1]-Dl[0,1]*Dl[1,0]
-        det = 1/tmp
-        Dli[0,0] = det*Dl[1,1]
-        Dli[0,1] = -det*Dl[0,1]
-        Dli[1,0] = -det*Dl[1,0]
-        Dli[1,1] = det*Dl[0,0]
-        #Dli = inv(Dl)
-        ## form Pl
-        Pl = BuildP(phil[i])
-
-        t1 = np.matmul(M,Dl)
-        t2 = np.matmul(t1,Pl)
-        M  = np.matmul(t2,Dli)   
-        
-    ### M is now the product of D_1^-1 .... D_l-1^-1... just need to 
-    ### compute D_L and multiply M*D_L
-    kz[L-1] = np.sqrt((nA[L-1]*k0)**2 - kx**2)
-    ctheta[L-1]= kz[L-1]/(nA[L-1]*k0)
-    DL = BuildD(nA[L-1], ctheta[L-1], pol)
-    t1 = np.matmul(M,DL)
-    ### going to create a dictionary called M which will 
-    ### contain the matrix elements of M as well as 
-    ### other important quantities like incoming and outgoing angles
-    dM_ds = {"dM11_ds": t1[0,0], 
-         "dM12_ds": t1[0,1], 
-         "dM21_ds": t1[1,0], 
-         "dM22_ds": t1[1,1]
-         }
-
-    return dM_ds
-### This function will take a thickness array
-### and a scalar thickness and will return
-### the index of the layer in which you are in
-### at that thickness
 def whichLayer(t, d):
     ### empty array for cumulative thickness array
     dc = cumulativeD(d)
