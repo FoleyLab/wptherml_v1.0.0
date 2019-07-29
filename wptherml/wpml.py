@@ -92,7 +92,16 @@ class multilayer:
         ### current version only inline_structure method supported
         ### more modes of operation will come in later versions!
         self.inline_structure(args)
-            
+        
+        self.gradient_dimension = len(self.gradient_list)
+        
+        ### pre-allocate gradient arrays for different FOMS!
+        ### GRAD
+        self.luminous_efficiency_grad = np.zeros(self.gradient_dimension)
+        self.short_circuit_current_grad = np.zeros(self.gradient_dimension)
+        self.conversion_efficiency_grad = np.zeros(self.gradient_dimension)
+        self.jagg_scale_grad = np.zeros(self.gradient_dimension)
+        
         ### Now that structure is defined and we have the lambda array, 
         ### allocate other arrays!
         ### Always need normal arrays
@@ -100,6 +109,10 @@ class multilayer:
         self.transmissivity_array = np.zeros(len(self.lambda_array))
         self.emissivity_array = np.zeros(len(self.lambda_array))
         self.thermal_emission_array = np.zeros(len(self.lambda_array))
+        
+        self.reflectivity_prime_array = np.zeros( (self.gradient_dimension, len(self.lambda_array)) )
+        self.emissivity_prime_array = np.zeros((self.gradient_dimension, len(self.lambda_array)))
+        self.transmissivity_prime_array = np.zeros((self.gradient_dimension, len(self.lambda_array)))
         
         ### if we run validation tests, the following will be used!
         self.valid_lambda_array = []
@@ -297,38 +310,57 @@ class multilayer:
         return 1
     ### currently will return derivative of reflectivity and emissivity 
     ### wrt to thickness of layer i
-    def fresnel_prime(self, layer_i):
+     def fresnel_prime(self):
         nc = np.zeros(len(self.d),dtype=complex)
         for i in range(0,len(self.lambda_array)):
             for j in range(0,len(self.d)):
                 nc[j] = self.n[j][i]
                 
             k0 = np.pi*2/self.lambda_array[i]
-            ### get transfer matrix for this k0, th, pol, nc, and d
-            M = tmm.tmm(k0, self.theta, self.pol, nc, self.d)
-            dM_ds = tmm.d_tmm_dsi(layer_i, k0, self.theta, self.pol, nc, self.d)
+            ### Calling tmm_grad will return a dictionary that contains
+            ### both the transfer matrix and its derivative with respect to 
+            ### elements in the gradient_list
+            M = tmm.tmm_grad(k0, self.theta, self.pol, nc, self.d, self.gradient_list)
+            #M = tmm.tmm(k0, self.theta, self.pol, nc, self.d)
+            #dM_ds = tmm.d_tmm_dsi(layer_i, k0, self.theta, self.pol, nc, self.d)
             
             ### store all relevant matrix elements in variable names
             M21 = M["M21"]
             M11 = M["M11"]
-            M21p = dM_ds["dM21_ds"]
-            M11p = dM_ds["dM11_ds"]
-            
-            ### get reflection amplitude
+            ### These are vectors... inner index of dictionary element denotes the layer!
+            M21p = M["Mp"][:,1,0]
+            M11p = M["Mp"][:,0,0]
+                        
+            ### get reflection amplitude... only one no matter how many layers we are 
+            ### taking the derivative with respect to!
             r = M["M21"]/M["M11"]
             r_star = np.conj(r)
             
-            ### get derivative of reflection amplitudes
-            r_prime = (M11*M21p - M21*M11p)/(M11*M11)
-            r_prime_star = np.conj(r_prime)
+            t = 1./M["M11"]
+            t_star = np.conj(t)
+            ### get incident/final angle
+            ti = M["theta_i"]
+            tL = M["theta_L"]
+            ### get geometric factor associated with transmission
+            fac = nc[len(self.d)-1]*np.cos(tL)/(nc[0]*np.cos(ti))
             
-            ### get reflectivity
-            R_prime = r_prime * r_star + r * r_prime_star
-            ### get Reflectivity
-            self.reflectivity_prime_array[i] = np.real(R_prime)
-            ### get Transmissivity
-            self.emissivity_prime_array[i] = 1 - self.reflectivity_prime_array[i] 
-
+            ### now we need to loop over the number of elements we are differentiating with respect
+            ### to!
+            for j in range(0,self.gradient_dimension):
+                r_prime = (M11*M21p[j] - M21*M11p[j])/(M11*M11)
+                t_prime = -M11p[j]/(M11*M11)
+                
+                r_prime_star = np.conj(r_prime)
+                t_prime_star = np.conj(t_prime)
+                
+                ### get reflectivity and transmissivity derivatives
+                R_prime = r_prime * r_star + r * r_prime_star
+                T_prime = (t_prime * t_star + t * t_prime_star) * fac
+                ### Store reflectivity and transmissivity derivatives
+                self.reflectivity_prime_array[j,i] = np.real(R_prime)
+                self.transmissivity_prime_array[j,i] = np.real(T_prime)
+                ### get Emissivity Derivative
+                self.emissivity_prime_array[j,i] = 0 - self.reflectivity_prime_array[j,i] - self.transmissivity_prime_array[j,i]
         return 1
     
     def angular_fresnel(self, lambda_0):
@@ -531,7 +563,19 @@ class multilayer:
         #self.conversion_efficiency_val = self.conversion_efficiency_val*self.fill_factor_val
         self.conversion_efficiency_val = self.conversion_efficiency_val / self.incident_power
 
-        return 1        
+        return 1     
+    
+    def pv_conversion_efficiency_prime(self):
+        self.short_circuit_current_grad = stpvlib.ambient_jsc_grad(self.gradient_dimension, self.emissivity_prime_array, self.lambda_array, self.lbg)
+        #self.open_circuit_voltage_val = stpvlib.Voc(self.short_circuit_current_val, self.T_cell)
+        #self.fill_factor_val = stpvlib.FF(self.open_circuit_voltage_val, self.T_cell)
+        self.incident_power =  stpvlib.integrated_solar_power(self.lambda_array)
+        self.conversion_efficiency_grad = self.short_circuit_current_grad * 0.828 * 0.706
+        #self.conversion_efficiency_val = self.conversion_efficiency_val*self.open_circuit_voltage_val
+        #self.conversion_efficiency_val = self.conversion_efficiency_val*self.fill_factor_val
+        self.conversion_efficiency_grad = self.conversion_efficiency_grad / self.incident_power
+
+        return 1
 
     def step_emissivity(self, lambda_0, delta_lambda):
         idx = 0
@@ -622,12 +666,25 @@ class multilayer:
     def luminous_efficiency(self):
         self.luminous_efficiency_val = lightlib.Lum_efficiency(self.lambda_array, self.thermal_emission_array)
         return 1
-    def luminous_efficiency_prime(self):
-        self.luminous_efficiency_prime_val = lightlib.Lum_efficiency_prime(self.lambda_array, self.thermal_emission_array, self.BBs*self.emissivity_prime_array)
+   def luminous_efficiency_prime(self):
+        ### this is a vector of length self.gradient_dimension
+        self.luminous_efficiency_grad = lightlib.lum_efficiency_prime(self.gradient_dimension, self.lambda_array, self.emissivity_array, self.emissivity_prime_array, self.BBs)
     
     def normalized_luminous_power(self):
         self.luminous_power_val = lightlib.normalized_power(self.lambda_array, self.thermal_emission_array, self.BBs)
         return 1
+    
+    
+    ### GRAD
+    def luminous_efficiency_filter(self, emissivity):
+        self.luminous_efficiency_val = lightlib.lum_efficiency_filter(self.lambda_array, self.BBs, emissivity, self.transmissivity_array)
+        return 1
+    
+    ###  GRAD
+    def luminous_efficiency_filter_prime(self, emissivity):
+        self.luminous_efficiency_grad = lightlib.lum_efficiency_filter_prime(self.gradient_dimension, self.lambda_array, self.BBs, emissivity, self.transmissivity_array, self.transmissivity_prime_array)
+        return 1
+
     
     ''' METHODS FOR COOLINGLIB !!! '''
     def cooling_power(self):
@@ -932,6 +989,18 @@ class multilayer:
             self.n = np.zeros((len(self.d),len(self.lambda_array)),dtype=complex)
             for i in range(0,len(self.matlist)):
                 self.n[:][i] = datalib.Material_RI(self.lambda_array, self.matlist[i])
+                
+                
+        if 'Gradient_List' in args:
+            self.gradient_list = args['Gradient_List']
+            
+        ### default is to include all layers!
+        ### GRAD
+        else:
+            print("  Gradient will be taken with respect to all layers! ")
+            self.gradient_list = []
+            for i in range(1,len(self.d)-1):
+                self.gradient_list.append(i)
                 
         if 'Material_List' in args:
             self.matlist = args['Material_List']
