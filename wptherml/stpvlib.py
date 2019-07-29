@@ -301,3 +301,39 @@ def Abs_eff(lam, EM, solarconc, T):
     beta = np.pi*numlib.Integrate(TE , lam,  100e-9, upper)
     return (alpha - beta)/(alpha)
 
+
+    def ambient_jsc_grad(dim, eps_prime, lam, lbg):
+    ### allocate grad!
+    grad = np.zeros(dim)
+    ### get upper bound of integral
+    upper = np.amax(lam)
+    ### get the AM1.5 spectrum
+    AM = datalib.AM(lam)
+    ### get the spectral response of Si
+    SR = datalib.SR_Si(lam)
+    ### Loop over the layers in gradient_list... compute jsc_prime for each one and store in grad!
+    for i in range(0,dim):
+        integrand = AM * SR * eps_prime[i,:]
+        jsc_prime = numlib.Integrate(integrand, lam, 1e-9, upper)
+        #print(" just computed Jsc' ... is is ",jsc_prime)
+        grad[i] = jsc_prime
+    
+    return grad
+### GRAD
+def ambient_jsc_grad(dim, eps_prime, lam, lbg):
+    ### allocate grad!
+    grad = np.zeros(dim)
+    ### get upper bound of integral
+    upper = np.amax(lam)
+    ### get the AM1.5 spectrum
+    AM = datalib.AM(lam)
+    ### get the spectral response of Si
+    SR = datalib.SR_Si(lam)
+    ### Loop over the layers in gradient_list... compute jsc_prime for each one and store in grad!
+    for i in range(0,dim):
+        integrand = AM * SR * eps_prime[i,:]
+        jsc_prime = numlib.Integrate(integrand, lam, 1e-9, upper)
+        #print(" just computed Jsc' ... is is ",jsc_prime)
+        grad[i] = jsc_prime
+    
+    return grad
