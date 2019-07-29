@@ -36,19 +36,62 @@ def normalized_power(lam, TE, BB):
     denominator = numlib.Integrate(den, lam, 0, upper)
     return numerator/denominator
 
-
-def Lum_efficiency_prime(lam, TE, TE_prime):
+def lum_efficiency_filter(lam, BBs, emissivity, transmissivity):
     upper = np.amax(lam)
     ph = datalib.PhLum(lam)
-    num = ph*TE
-    num_prime = ph*TE_prime
-    numerator = numlib.Integrate(num, lam, 0, upper )
-    numerator_prime = numlib.Integrate(num_prime, lam, 0, upper)
-    
+    ### total observed thermal emission is BB spectrum * emissivity of emitter * transmissivity of filter
+    TE = BBs * emissivity * transmissivity
+    num = ph * TE
+    numerator = numlib.Integrate(num, lam, 0, upper)
     denominator = numlib.Integrate(TE, lam, 0, upper)
-    denominator_prime = numlib.Integrate(TE_prime, lam, 0, upper)
+    return (numerator/denominator)
+
+def lum_efficiency_filter_prime(dim, lam, BBs, emissivity, transmissivity, transmissivity_prime):
+        
+    ### allocate gradient vector
+    grad = np.zeros(dim)
+    ### get data that will not change for each element of the gradient first!
+    upper = np.amax(lam)
+    ph = datalib.PhLum(lam)
+    TE = BBs * emissivity * transmissivity
+    TE_prime = np.zeros(len(lam))
+    num = ph*TE
+    numerator = numlib.Integrate(num, lam, 0, upper )
+    denominator = numlib.Integrate(TE, lam, 0, upper)
     
-    return (denominator*numerator_prime - numerator*denominator_prime)/(denominator**2)
+    ### now loop through elements of gradient_list and fill in elements of grad
+    for i in range(0,dim):
+        TE_prime = BBs * emissivity * transmissivity_prime[i,:]
+        num_prime = ph * TE_prime
+        numerator_prime = numlib.Integrate(num_prime, lam, 0, upper)
+        denominator_prime = numlib.Integrate(TE_prime, lam, 0, upper)
+        grad[i] = (denominator*numerator_prime - numerator*denominator_prime)/(denominator**2)
+    
+    return grad
+
+def lum_efficiency_prime(dim, lam, emissivity, emissivity_prime, BBs):
+    
+    ### allocate gradient vector
+    grad = np.zeros(dim)
+    ### get data that will not change for each element of the gradient first!
+    upper = np.amax(lam)
+    ph = datalib.PhLum(lam)
+    TE = emissivity*BBs
+    TE_prime = np.zeros(len(lam))
+    num = ph*TE
+    numerator = numlib.Integrate(num, lam, 0, upper )
+    denominator = numlib.Integrate(TE, lam, 0, upper)
+    
+    ### now loop through elements of gradient_list and fill in elements of grad
+    for i in range(0,dim):
+        TE_prime = BBs*emissivity_prime[i,:]
+        num_prime = ph*TE_prime
+        numerator_prime = numlib.Integrate(num_prime, lam, 0, upper)
+        denominator_prime = numlib.Integrate(TE_prime, lam, 0, upper)
+        grad[i] = (denominator*numerator_prime - numerator*denominator_prime)/(denominator**2)
+    
+    return grad
+
 
 def Lum_efficacy(lam, TE):
     le = Lum_efficiency(lam, TE)
@@ -64,29 +107,4 @@ def IdealSource(lam, T):
     TE_ideal = ph * rho
     return TE_ideal
 
-'''
-    
-def luminous_efficiency(lam, thermal_emission_array):
-    upper = np.amax(lam)
-    ph = datalib.PhLum(lam)
-    num = datalib.PhLum(lam)*thermal_emission_array
-    numerator = numlib.Integrate(num, lam, 0, upper )
-    den = thermal_emission_array
-    denominator = numlib.Integrate(den, lam, 0, upper)
-    luminous_efficiency_value = (numerator/denominator)
-    return luminous_efficiency_value
 
-def luminous_efficacy(lam, thermal_emission_array):
-    le = luminous_efficiency_value(lam, thermal_emission_array)
-    luminous_efficacy_value = 683*le
-    return luminous_efficacy_value
-
-def thermal_emission_ideal_source(lam, T):
-    ### compute blackbody spectrum at current T
-    rho = datalib.BB(lam, T)
-    ### get photopic luminosity function
-    ph  = datalib.PhLum(lam)
-    ### ideal thermal emission is product of the two
-    thermal_emission_ideal_source = ph * rho
-    return thermal_emission_ideal_source_array
-'''
