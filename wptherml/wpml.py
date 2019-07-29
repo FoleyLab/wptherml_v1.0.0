@@ -310,7 +310,7 @@ class multilayer:
         return 1
     ### currently will return derivative of reflectivity and emissivity 
     ### wrt to thickness of layer i
-     def fresnel_prime(self):
+    def fresnel_prime(self):
         nc = np.zeros(len(self.d),dtype=complex)
         for i in range(0,len(self.lambda_array)):
             for j in range(0,len(self.d)):
