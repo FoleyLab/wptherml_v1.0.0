@@ -666,7 +666,7 @@ class multilayer:
     def luminous_efficiency(self):
         self.luminous_efficiency_val = lightlib.Lum_efficiency(self.lambda_array, self.thermal_emission_array)
         return 1
-   def luminous_efficiency_prime(self):
+    def luminous_efficiency_prime(self):
         ### this is a vector of length self.gradient_dimension
         self.luminous_efficiency_grad = lightlib.lum_efficiency_prime(self.gradient_dimension, self.lambda_array, self.emissivity_array, self.emissivity_prime_array, self.BBs)
     
