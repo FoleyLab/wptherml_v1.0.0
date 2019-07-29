@@ -319,7 +319,8 @@ def Abs_eff(lam, EM, solarconc, T):
         grad[i] = jsc_prime
     
     return grad
-### GRAD
+
+### GRAD THis has been added!
 def ambient_jsc_grad(dim, eps_prime, lam, lbg):
     ### allocate grad!
     grad = np.zeros(dim)
