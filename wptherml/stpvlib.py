@@ -302,7 +302,7 @@ def Abs_eff(lam, EM, solarconc, T):
     return (alpha - beta)/(alpha)
 
 
-    def ambient_jsc_grad(dim, eps_prime, lam, lbg):
+def ambient_jsc_grad(dim, eps_prime, lam, lbg):
     ### allocate grad!
     grad = np.zeros(dim)
     ### get upper bound of integral
