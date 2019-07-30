@@ -8,7 +8,7 @@ c=299792458
 h=6.626e-34
 k=1.38064852e-23
 
-supported_materials = ['Air', 'Al', 'Al2O3', 'AlN', 'Ag', 'Au', 'HfO2', 'Re', 'Rh', 'Ru', 'Pd', 'Pt', 'Si', 'SiO2', 'TiO2', 'TiN']
+supported_materials = ['Air', 'Al', 'Al2O3', 'AlN', 'Ag', 'Au', 'HfO2', 'Re', 'Rh', 'Ru', 'Pd', 'Pt', 'Si', 'SiO2', 'TiO2', 'TiN', 'Ta2O5']
 
 ### get a string containing full path and current file name, datalib.py
 path_and_file = os.path.realpath(__file__)
@@ -60,7 +60,7 @@ def Material_RI(lam, arg):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt' or arg=='SiO2'):
         n = Read_RI_from_File(lam, arg)
-    elif (arg=='AlN' or arg=='Si' or arg=='TiO2'):
+    elif (arg=='AlN' or arg=='Si' or arg=='TiO2' or arg=='Ta2O5'):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='J-Agg'):
         n = TDBC(lam)
@@ -140,13 +140,6 @@ def read_validation_data(arg):
         
     return Valid
         
-    
-        
-        
-            
-        
-        
-        
         
         
 def TiN_Drude_Lorentz(lam):
@@ -217,6 +210,10 @@ def Read_RI_from_File(lam, matname):
     elif (matname=='Al'):
         file_path = path + 'Al_Rakic.txt'
         a = np.loadtxt(file_path)
+    elif (matname=='Ta2O5'):
+        file_path = path + 'Ta2O5_vis_IR.txt'
+        a = np.loadtxt(file_path)
+        
     else:
         file_path = path + 'W_Palik_RI_f.txt'
         a = np.loadtxt(file_path)
