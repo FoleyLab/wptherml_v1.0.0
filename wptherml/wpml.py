@@ -512,6 +512,7 @@ class multilayer:
     ### this is Eq. (4) in Varner et al, "Accelerating the discovery of multilayer 
     ### nanostructures with analytic differentiation of the transfer matrix equations."
     ### https://doi.org/10.26434/chemrxiv.9197957.v1
+    ### STILL IN NEED OF TESTING!
     def stpv_se_grad(self):
         self.spectral_efficiency_grad = stpvlib.SpectralEfficiency_grad(self.gradient_dimension,  self.lambda_array, self.lbg, self.emissivity_array, self.emissivity_prime_array, self.BBs)
         return 1
