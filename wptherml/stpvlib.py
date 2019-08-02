@@ -335,15 +335,17 @@ def SpectralEfficiency_grad(dim, lam, lbg, emissivity, emissivity_prime, BBs):
     ### loop over degrees of freedom and get gradient elements
     for i in range(0,dim):
         ### derivative of thermal emission wrt layer thickness, also integrand for P_prime
-        TE_prime = BBs * emissivity_prime[i,;]
+        TE_prime = BBs * emissivity_prime[i,:]
         ### integrand for  rho_prime
-        num_prime = TE_Prime * lam/lbg
+        num_prime = TE_prime * lam/lbg
         ### rho_prime
         rho_prime = numlib.Integrate(num_prime, lam, 1e-9, lbg)
         ### P_prime
         P_prime = numlib.Integrate(TE_prime, lam, 1e-9, upper)
-        ### FINISH HERE!
-    return SE
+        ### compute gradient element
+        grad[i] = (rho_prime * P - P_prime * rho)/(P**2) 
+    ### return gradient
+    return grad
 
 
 # Spectral efficiency prime in progress

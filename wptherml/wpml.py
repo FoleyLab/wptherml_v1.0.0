@@ -100,6 +100,7 @@ class multilayer:
         self.luminous_efficiency_grad = np.zeros(self.gradient_dimension)
         self.short_circuit_current_grad = np.zeros(self.gradient_dimension)
         self.conversion_efficiency_grad = np.zeros(self.gradient_dimension)
+        self.spectral_efficiency_grad = np.zeros(self.gradient_dimension)
         self.jagg_scale_grad = np.zeros(self.gradient_dimension)
         
         ### Now that structure is defined and we have the lambda array, 
@@ -507,6 +508,13 @@ class multilayer:
         self.spectral_efficiency_val = stpvlib.SpectralEfficiency(self.thermal_emission_array, self.lambda_array, self.lbg)
         return 1
     
+    ### get the gradient of spectral efficiency with respect to layer thickness, 
+    ### this is Eq. (4) in Varner et al, "Accelerating the discovery of multilayer 
+    ### nanostructures with analytic differentiation of the transfer matrix equations."
+    ### https://doi.org/10.26434/chemrxiv.9197957.v1
+    def stpv_se_grad(self):
+        self.spectral_efficiency_grad = stpvlib.SpectralEfficiency_grad(self.gradient_dimension,  self.lambda_array, self.lbg, self.emissivity_array, self.emissivity_prime_array, self.BBs)
+        return 1
     ### Power density - see Eq. 3 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
     def stpv_pd(self):
         self.power_density_val = stpvlib.Pwr_den(self.thermal_emission_array, self.lambda_array, self.lbg)
