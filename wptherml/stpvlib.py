@@ -321,6 +321,55 @@ def ambient_jsc_grad(dim, eps_prime, lam, lbg):
     return grad
 
 ### GRAD THis has been added!
+def SpectralEfficiency_grad(dim, lam, lbg, emissivity, emissivity_prime, BBs):
+    ### ininitalize gradient vector
+    grad = np.zeros(dim)
+    TE = emissivity * BBs
+    ynum = TE*lam/lbg  
+    upper = np.amax(lam)
+    ### normal numerator (rho)
+    rho = numlib.Integrate(ynum, lam, 1e-9, lbg)
+    ### normal denomenator (P)
+    P = numlib.Integrate(TE, lam, 1e-9, upper)
+    
+    ### loop over degrees of freedom and get gradient elements
+    for i in range(0,dim):
+        ### derivative of thermal emission wrt layer thickness, also integrand for P_prime
+        TE_prime = BBs * emissivity_prime[i,;]
+        ### integrand for  rho_prime
+        num_prime = TE_Prime * lam/lbg
+        ### rho_prime
+        rho_prime = numlib.Integrate(num_prime, lam, 1e-9, lbg)
+        ### P_prime
+        P_prime = numlib.Integrate(TE_prime, lam, 1e-9, upper)
+        ### FINISH HERE!
+    return SE
+
+
+# Spectral efficiency prime in progress
+# =============================================================================
+# def SpectralEfficiency_prime(dim, lam, lbg, TE, TE_prime, BBs):
+#     grad = np.zeros(dim)
+#     
+#     ynum = TE*lam/lbg  
+#     upper = np.amax(lam)
+#     num = numlib.Integrate(ynum, lam, 1e-9, lbg)
+#     den = numlib.Integrate(TE, lam, 1e-9, upper)
+#     SE = num/den
+# 
+#     ### now loop through elements of gradient_list and fill in elements of grad
+#     for i in range(0,dim):
+#         TE_prime = BBs*emissivity_prime[i,:]
+#         num_prime = *TE_prime
+#         numerator_prime = numlib.Integrate(num_prime, lam, 0, upper)
+#         denominator_prime = numlib.Integrate(TE_prime, lam, 0, upper)
+#         grad[i] = (denominator*numerator_prime - numerator*denominator_prime)/(denominator**2)
+#     
+#     return grad
+# =============================================================================
+
+
+
 def ambient_jsc_grad(dim, eps_prime, lam, lbg):
     ### allocate grad!
     grad = np.zeros(dim)
