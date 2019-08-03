@@ -14,18 +14,18 @@ from github::
 
     git clone https://github.com/FoleyLab/wptherml.git
     cd wptherml
-    python setup.py install
+    python3 setup.py install
 
 
 running unit tests from cloned repository::
 
     cd test
-    python -m pytest test.py
+    python3 -m pytest test.py
 
 
 from PyPI::
 
-    pip install wptherml 
+    pip3 install wptherml 
 
 .. raw:: html
 
