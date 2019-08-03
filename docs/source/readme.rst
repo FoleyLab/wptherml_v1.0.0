@@ -30,17 +30,17 @@ Quick Start
 -  To install from github:
 -  ``git clone https://github.com/FoleyLab/wptherml.git``
 -  ``cd wptherml``
--  ``python setup.py install``
+-  ``python3 setup.py install``
 
 -  To run unit tests from cloned repository:
 -  ``cd test``
--  ``python -m pytest test.py``
+-  ``python3 -m pytest test.py``
 
 -  The test script for running unit tests can be downloaded
    `here <https://github.com/FoleyLab/wptherml/blob/master/example/test/test.py>`__
 
 -  To install with pip:
--  ``pip install wptherml``
+-  ``pip3 install wptherml``
 
 -  Open a new .py file in your favorite text editor or IDE, e.g.
 
@@ -84,7 +84,7 @@ TiO2 and 100 nm SiO2, and plots it using pyplot follows:
 
 -  Save this script and run it either in the terminal as
 
-``python example.py``
+``python3 example.py``
 
 where example.py is the name of the file you created, or if you were
 doing this in an IDE, execute it within your IDE!
