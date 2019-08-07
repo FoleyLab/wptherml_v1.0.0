@@ -920,6 +920,8 @@ class multilayer:
                                                       self.lambda_array, 
                                                       self.n, 
                                                       self.d)
+        
+        self.cooling_power_grad = self.radiative_power_grad - self.solar_power_grad - self.atmospheric_power_grad
         return 1
     
     ''' MISCELLANEOUS METHODS TO MANIPULATE THE STRUCTURE

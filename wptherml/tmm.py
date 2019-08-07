@@ -73,15 +73,23 @@ def BuildD(nl, ctheta,pol):
 ### 3. Calculate D_L
 ### 4. Multiply all matrices together in order to form M
 ### 5. Return relevant quantity(s)... maybe M itself, maybe 1 - R - T... TBD
+
 def tmm(k0, theta0, pol, nA, tA):
     t1 = np.zeros((2,2),dtype=complex)
     t2 = np.zeros((2,2),dtype=complex)
+    D1 = np.zeros((2,2),dtype=complex)
     Dl = np.zeros((2,2),dtype=complex)
     Dli = np.zeros((2,2),dtype=complex)
     Pl = np.zeros((2,2),dtype=complex)
     M  = np.zeros((2,2),dtype=complex)
+    L = len(nA)
+    kz = np.zeros(L,dtype=complex)
+    phil = np.zeros(L,dtype=complex)
+    ctheta = np.zeros(L,dtype=complex)
+    theta = np.zeros(L,dtype=complex)
+    ctheta[0] = np.cos(theta0)
     
-    D1 = BuildD(nA[0], np.cos(theta0), pol)
+    D1 = BuildD(nA[0], ctheta[0], pol)
     ### Note it is actually faster to invert the 2x2 matrix
     ### "By Hand" than it is to use linalg.inv
     ### and this inv step seems to be the bottleneck for the TMM function
@@ -97,11 +105,7 @@ def tmm(k0, theta0, pol, nA, tA):
     
     
     ### This is the number of layers in the structure
-    L = len(nA)
-    kz = np.zeros(L,dtype=complex)
-    phil = np.zeros(L,dtype=complex)
-    ctheta = np.zeros(L,dtype=complex)
-    theta = np.zeros(L,dtype=complex)
+
     
     ### since kx is conserved through all layers, just compute it
     ### in the upper layer (layer 1), for which you already known
@@ -181,6 +185,7 @@ def tmm_grad(k0, theta0, pol, nA, tA, layers):
     ### Initialize arrays!
     Dli = np.zeros((N,2,2), dtype = complex)
     Dl = np.zeros((N,2,2), dtype = complex)
+    D1 = np.zeros((2,2),dtype=complex)
     Pl = np.zeros((N, 2, 2), dtype = complex)
     Plp = np.zeros((n,2,2), dtype = complex)
     Mp = np.zeros((n, 2,2), dtype = complex)
@@ -194,7 +199,8 @@ def tmm_grad(k0, theta0, pol, nA, tA, layers):
     ### compute kx
     kx = nA[0]*np.sin(theta0)*k0
     ### compute D1
-    D1 = BuildD(nA[0],np.cos(theta0), pol)
+    ctheta[0] = np.cos(theta0)
+    D1 = BuildD(nA[0],ctheta[0], pol)
     ### compute D1^-1
     tmp = D1[0,0]*D1[1,1]-D1[0,1]*D1[1,0]
     det = 1/tmp
@@ -232,7 +238,6 @@ def tmm_grad(k0, theta0, pol, nA, tA, layers):
     kz[N-1] = np.sqrt((nA[N-1]*k0)**2-kx**2)
     ctheta[N-1] = kz[N-1]/(nA[N-1]*k0)
     Dl[N-1,:,:] = BuildD(nA[N-1],ctheta[N-1], pol)
-    ctheta[0] = np.cos(theta0)
     t1 = np.dot(M,Dl[N-1,:,:])
     ### This is the transfer matrix!
     M = np.copy(t1)

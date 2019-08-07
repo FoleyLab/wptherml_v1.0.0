@@ -226,13 +226,13 @@ def Psun_prime(grad_list, theta_sun, lam, n, d):
             ts_prime_star = np.conj(ts_prime)
                     
             ### p-polarized R, T, and epsilon prime
-            Rp_prime = rp_prime * rp_star + rp * rp_prime_star
-            Tp_prime = (tp_prime * tp_star + tp * tp_prime_star)*fac
+            Rp_prime = np.real(rp_prime * rp_star + rp * rp_prime_star)
+            Tp_prime = np.real((tp_prime * tp_star + tp * tp_prime_star)*fac)
             eps_p_prime = 0 - Rp_prime - Tp_prime
             
             ### s-polarized R, T, and epsilon prime
-            Rs_prime = rs_prime * rs_star + rs * rs_prime_star
-            Ts_prime = (ts_prime * ts_star + ts * ts_prime_star)*fac
+            Rs_prime = np.real(rs_prime * rs_star + rs * rs_prime_star)
+            Ts_prime = np.real((ts_prime * ts_star + ts * ts_prime_star)*fac)
             eps_s_prime = 0 - Rs_prime - Ts_prime
             
             g[k] = g[k] + 0.5*(eps_p_prime + eps_s_prime) * AM[i] * dl
