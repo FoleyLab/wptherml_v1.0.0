@@ -102,6 +102,11 @@ class multilayer:
         self.conversion_efficiency_grad = np.zeros(self.gradient_dimension)
         self.spectral_efficiency_grad = np.zeros(self.gradient_dimension)
         self.jagg_scale_grad = np.zeros(self.gradient_dimension)
+        self.atmospheric_power_grad = np.zeros(self.gradient_dimension)
+        self.solar_power_grad = np.zeros(self.gradient_dimension)
+        self.cooling_power_grad = np.zeros(self.gradient_dimension)
+        self.radiative_power_grad = np.zeros(self.gradient_dimension)
+        
         
         ### Now that structure is defined and we have the lambda array, 
         ### allocate other arrays!
@@ -158,6 +163,19 @@ class multilayer:
             self.emissivity_array_s = np.zeros((self.deg,len(self.lambda_array)))
             self.thermal_emission_array_p = np.zeros((self.deg,len(self.lambda_array)))
             self.thermal_emission_array_s = np.zeros((self.deg,len(self.lambda_array)))
+            
+            ### gradient arrays
+            self.reflectivity_prime_array_p = np.zeros((self.gradient_dimension, self.deg, len(self.lambda_array)))
+            self.reflectivity_prime_array_s = np.zeros_like(self.reflectivity_prime_array_p)
+            
+            self.transmissivity_prime_array_p = np.zeros_like(self.reflectivity_prime_array_p)
+            self.transmissivity_prime_array_s = np.zeros_like(self.reflectivity_prime_array_p)
+            
+            self.emissivity_prime_array_p = np.zeros_like(self.reflectivity_prime_array_p)
+            self.emissivity_prime_array_s = np.zeros_like(self.reflectivity_prime_array_p)
+            
+            self.thermal_emission_prime_array_p = np.zeros_like(self.reflectivity_prime_array_p)
+            self.thermal_emission_prime_array_s = np.zeros_like(self.reflectivity_prime_array_p)
 
 
             
@@ -270,14 +288,6 @@ class multilayer:
             
         return 1
             
-        #self.valid_lambda_array = []
-        #self.valid_reflectivity_array = []
-        #self.valid_transmissivity_array = []
-        #self.valid_emissivity_array = []
-        #self.vald_theta_array = []
-        #self.valid_ref_vs_theta = []
-        #self.valid_trans_vs_theta = []
-        #self.valid_emiss_vs_theta = []
         
     ### Methods to compute all Fresnel quantities at once!
     ### to compute the emissivity, one needs to compute R and T anyway
@@ -307,6 +317,57 @@ class multilayer:
             self.emissivity_array[i] = 1 - self.reflectivity_array[i] - self.transmissivity_array[i]
 
         return 1
+    
+        ### Fresnel methods when explicit angle-averaging is requested...
+    ### Need to have FOM methods to accompany this
+    def fresnel_ea(self):
+        if (self.explicit_angle!=1):
+            error = 'ERROR: EXPLIT ANGLE OPTION NOT SELECTED! \n'
+            error = error + 'RE-INSTANTIATE YOUR MULTILAYER CLASS AND BE SURE \n'
+            error = error + 'TO INCLUDE A LINE IN YOUR STRUCTURE DICTIONARY LIKE THE FOLLOWING: \n'
+            error = error + 'EXPLICIT_ANGLE: 1'
+            print(error)
+            exit()
+
+        ### The angles come from Gauss-Legendre quadrature
+        nc = np.zeros(len(self.d),dtype=complex)
+        ### outter loop is over wavelength - this modulates the RI
+        for i in range(0,len(self.lambda_array)):
+            k0 = np.pi*2/self.lambda_array[i]
+            ### for given wavelength, the stack will have the following set of RIs
+            for j in range(0,len(self.d)):
+                nc[j] = self.n[j][i]
+            
+            ### iterate over angles
+            for j in range(0,len(self.t)):
+                ### for given angle, k0, pol, nc, and d
+                ### compute M
+                Mp = tmm.tmm(k0, self.t[j], 'p', nc, self.d)
+                Ms = tmm.tmm(k0, self.t[j], 's', nc, self.d)
+                ### get amplitudes and related quantities from M dictionaries
+                tp = 1./Mp["M11"]
+                ts = 1./Ms["M11"]
+                tp_i = Mp["theta_i"]
+                ts_i = Ms["theta_L"]
+                tp_L = Mp["theta_L"]
+                ts_L = Ms["theta_L"]
+                facp = nc[len(self.d)-1]*np.cos(tp_L)/(nc[0]*np.cos(tp_i))
+                facs = nc[len(self.d)-1]*np.cos(ts_L)/(nc[0]*np.cos(ts_i))
+                rp = Mp["M21"]/Mp["M11"]
+                rs = Ms["M21"]/Ms["M11"]
+                
+                ### Reflectivity for each polarization
+                self.reflectivity_array_p[j][i] = np.real(rp * np.conj(rp))
+                self.reflectivity_array_s[j][i] = np.real(rs * np.conj(rs))
+                ### Transmissivity for each polarization
+                self.transmissivity_array_p[j][i] = np.real(tp*np.conj(tp)*facp)
+                self.transmissivity_array_s[j][i] = np.real(ts*np.conj(ts)*facs)
+                ### Emissivity for each polarization
+                self.emissivity_array_p[j][i] = 1. - self.reflectivity_array_p[j][i] - self.transmissivity_array_p[j][i]
+                self.emissivity_array_s[j][i] = 1. - self.reflectivity_array_s[j][i] - self.transmissivity_array_s[j][i]
+                
+        return 1
+    
     ### currently will return derivative of reflectivity and emissivity 
     ### wrt to thickness of layer i
     def fresnel_prime(self):
@@ -361,6 +422,94 @@ class multilayer:
                 ### get Emissivity Derivative
                 self.emissivity_prime_array[j,i] = 0 - self.reflectivity_prime_array[j,i] - self.transmissivity_prime_array[j,i]
         return 1
+    
+    def fresnel_prime_ea(self):
+        if (self.explicit_angle!=1):
+            error = 'ERROR: EXPLIT ANGLE OPTION NOT SELECTED! \n'
+            error = error + 'RE-INSTANTIATE YOUR MULTILAYER CLASS AND BE SURE \n'
+            error = error + 'TO INCLUDE A LINE IN YOUR STRUCTURE DICTIONARY LIKE THE FOLLOWING: \n'
+            error = error + 'EXPLICIT_ANGLE: 1'
+            print(error)
+            exit()
+            
+        ### The angles come from Gauss-Legendre quadrature
+        nc = np.zeros(len(self.d),dtype=complex)
+        ### outter loop is over wavelength - this modulates the RI
+        for i in range(0,len(self.lambda_array)):
+            k0 = np.pi*2/self.lambda_array[i]
+            ### for given wavelength, the stack will have the following set of RIs
+            for j in range(0,len(self.d)):
+                nc[j] = self.n[j][i]
+                
+            ### iterate over angles
+            for j in range(0,len(self.t)):
+                
+                Mp = tmm.tmm_grad(k0, self.t[j], 'p', nc, self.d, self.gradient_list)
+                Ms = tmm.tmm_grad(k0, self.t[j], 's', nc, self.d, self.gradient_list)
+                
+                ### p-polarized arrays - normal arrays
+                Mp21 = Mp["M21"]
+                Mp11 = Mp["M11"]
+                ### p-polarized arrays - gradient arrays
+                Mp21p = Mp["Mp"][:,1,0]
+                Mp11p = Mp["Mp"][:,0,0]
+                
+                ### s-polarized arrays - normal arrays
+                Ms21 = Ms["M21"]
+                Ms11 = Ms["M11"]
+                ### s-polarized arrays - gradient arrays
+                Ms21p = Ms["Mp"][:,1,0]
+                Ms11p = Ms["Mp"][:,0,0]
+                
+                ### p-polarized amplitudes
+                rp = Mp21/Mp11
+                rp_star = np.conj(rp)
+                tp = 1./Mp11
+                tp_star = np.conj(tp)
+                
+                ### s-polarized amplitudes
+                rs = Ms21/Ms11
+                rs_star = np.conj(rs)
+                ts = 1./Ms11
+                ts_star = np.conj(ts)
+                
+                ### get incident/final angle... will be independent of polarization
+                ti = Mp["theta_i"]
+                tL = Mp["theta_L"]
+                ### get geometric factor associated with transmission
+                fac = nc[len(self.d)-1]*np.cos(tL)/(nc[0]*np.cos(ti))
+                
+                ### now we need to loop over the number of elements we are differentiating with respect
+                ### to!
+                for k in range(0,self.gradient_dimension):
+                    ### p-polarized primed quantities
+                    rp_prime = (Mp11*Mp21p[k] - Mp21*Mp11p[k])/(Mp11*Mp11)
+                    tp_prime = -Mp11p[k]/(Mp11*Mp11)
+                    rp_prime_star = np.conj(rp_prime)
+                    tp_prime_star = np.conj(tp_prime)
+                    
+                    ### s-polarized primed quantities
+                    rs_prime = (Ms11*Ms21p[k] - Ms21*Ms11p[k])/(Ms11*Ms11)
+                    ts_prime = -Ms11p[k]/(Ms11*Ms11)
+                    rs_prime_star = np.conj(rs_prime)
+                    ts_prime_star = np.conj(ts_prime)
+                    
+                    ### p-polarized R, T, and epsilon prime
+                    Rp_prime = rp_prime * rp_star + rp * rp_prime_star
+                    Tp_prime = (tp_prime * tp_star + tp * tp_prime_star)*fac
+                    self.reflectivity_prime_array_p[k,j,i] = np.real(Rp_prime)
+                    self.transmissivity_prime_array_p[k,j,i] = np.real(Tp_prime)
+                    self.emissivity_prime_array_p[k,j,i] = 0 - np.real(Rp_prime) - np.real(Tp_prime)
+                    
+                    ### s-polarized R, T, and epsilon prime
+                    Rs_prime = rs_prime * rs_star + rs * rs_prime_star
+                    Ts_prime = (ts_prime * ts_star + ts * ts_prime_star)*fac
+                    self.reflectivity_prime_array_s[k,j,i] = np.real(Rs_prime)
+                    self.transmissivity_prime_array_s[k,j,i] = np.real(Ts_prime)
+                    self.emissivity_prime_array_s[k,j,i] = 0 - np.real(Rs_prime) - np.real(Ts_prime)
+                    
+        return 1
+        
     
     def angular_fresnel(self, lambda_0):
         ### create an array for RI of each layer at the
@@ -421,56 +570,7 @@ class multilayer:
 
         return 1
     
-    ### Fresnel methods when explicit angle-averaging is requested...
-    ### Need to have FOM methods to accompany this
-    def fresnel_ea(self):
-        if (self.explicit_angle!=1):
-            error = 'ERROR: EXPLIT ANGLE OPTION NOT SELECTED! \n'
-            error = error + 'RE-INSTANTIATE YOUR MULTILAYER CLASS AND BE SURE \n'
-            error = error + 'TO INCLUDE A LINE IN YOUR STRUCTURE DICTIONARY LIKE THE FOLLOWING: \n'
-            error = error + 'EXPLICIT_ANGLE: 1'
-            print(error)
-            exit()
 
-        ### The angles come from Gauss-Legendre quadrature
-        nc = np.zeros(len(self.d),dtype=complex)
-        ### outter loop is over wavelength - this modulates the RI
-        for i in range(0,len(self.lambda_array)):
-            k0 = np.pi*2/self.lambda_array[i]
-            ### for given wavelength, the stack will have the following set of RIs
-            for j in range(0,len(self.d)):
-                nc[j] = self.n[j][i]
-            
-            ### iterate over angles
-            for j in range(0,len(self.t)):
-                ### for given angle, k0, pol, nc, and d
-                ### compute M
-                Mp = tmm.tmm(k0, self.t[j], 'p', nc, self.d)
-                Ms = tmm.tmm(k0, self.t[j], 's', nc, self.d)
-                ### get amplitudes and related quantities from M dictionaries
-                tp = 1./Mp["M11"]
-                ts = 1./Ms["M11"]
-                tp_i = Mp["theta_i"]
-                ts_i = Ms["theta_L"]
-                tp_L = Mp["theta_L"]
-                ts_L = Ms["theta_L"]
-                facp = nc[len(self.d)-1]*np.cos(tp_L)/(nc[0]*np.cos(tp_i))
-                facs = nc[len(self.d)-1]*np.cos(ts_L)/(nc[0]*np.cos(ts_i))
-                rp = Mp["M21"]/Mp["M11"]
-                rs = Ms["M21"]/Ms["M11"]
-                
-                ### Reflectivity for each polarization
-                self.reflectivity_array_p[j][i] = np.real(rp * np.conj(rp))
-                self.reflectivity_array_s[j][i] = np.real(rs * np.conj(rs))
-                ### Transmissivity for each polarization
-                self.transmissivity_array_p[j][i] = np.real(tp*np.conj(tp)*facp)
-                self.transmissivity_array_s[j][i] = np.real(ts*np.conj(ts)*facs)
-                ### Emissivity for each polarization
-                self.emissivity_array_p[j][i] = 1. - self.reflectivity_array_p[j][i] - self.transmissivity_array_p[j][i]
-                self.emissivity_array_s[j][i] = 1. - self.reflectivity_array_s[j][i] - self.transmissivity_array_s[j][i]
-                
-        return 1
-    
     ### Method to evaluate/update thermal emission spectrum - normal angle only!
     def thermal_emission(self):
         ### Temperature might change, update BB spectrum
@@ -494,9 +594,29 @@ class multilayer:
             
         return 1
     
+    def thermal_emission_prime_ea(self):
+        
+                ### Temperature might change, update BB spectrum
+        self.BBs = datalib.BB(self.lambda_array, self.T_ml)
+        #temp = np.zeros(len(self.lambda_array))
+        
+        for i in range(0,len(self.lambda_array)):
+            ### Thermal emission goes like BBs(lambda) * eps(theta, lambda) * cos(theta)
+            for j in range(0,len(self.t)):
+                ### dof
+                for k in range(0,self.gradient_dimension):
+                    self.thermal_emission_prime_array_p[k,j,i] = self.BBs[i] * self.emissivity_prime_array_p[k,j,i] * np.cos(self.t[j])
+                    self.thermal_emission_prime_array_s[k,j,i] = self.BBs[i] * self.emissivity_prime_array_s[k,j,i] * np.cos(self.t[j])
+            
+        return 1
+        
+    
     ''' METHOD FOR J-AGG ENHANCEMENT '''
     def jagg_sd(self):
-        self.jagg_sd_val = numlib.Integrate(self.emissivity_array, self.lambda_array, 500e-9, 700e-9)/200e-9
+        self.jagg_sd_val = numlib.Integrate(self.emissivity_array, 
+                                            self.lambda_array, 
+                                            500e-9, 
+                                            700e-9)/200e-9
         return 1
     
     ''' METHODS FOR STPVLIB!!! '''
@@ -505,7 +625,9 @@ class multilayer:
     
     ### Spectral Efficiency - see Eq. 4 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
     def stpv_se(self):
-        self.spectral_efficiency_val = stpvlib.SpectralEfficiency(self.thermal_emission_array, self.lambda_array, self.lbg)
+        self.spectral_efficiency_val = stpvlib.SpectralEfficiency(self.thermal_emission_array, 
+                                                                  self.lambda_array, 
+                                                                  self.lbg)
         return 1
     
     ### get the gradient of spectral efficiency with respect to layer thickness, 
@@ -514,35 +636,65 @@ class multilayer:
     ### https://doi.org/10.26434/chemrxiv.9197957.v1
     ### STILL IN NEED OF TESTING!
     def stpv_se_grad(self):
-        self.spectral_efficiency_grad = stpvlib.SpectralEfficiency_grad(self.gradient_dimension,  self.lambda_array, self.lbg, self.emissivity_array, self.emissivity_prime_array, self.BBs)
+        self.spectral_efficiency_grad = stpvlib.SpectralEfficiency_grad(self.gradient_dimension,  
+                                                                        self.lambda_array, 
+                                                                        self.lbg, 
+                                                                        self.emissivity_array, 
+                                                                        self.emissivity_prime_array, 
+                                                                        self.BBs)
         return 1
     ### Power density - see Eq. 3 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
     def stpv_pd(self):
-        self.power_density_val = stpvlib.Pwr_den(self.thermal_emission_array, self.lambda_array, self.lbg)
+        self.power_density_val = stpvlib.Pwr_den(self.thermal_emission_array, 
+                                                 self.lambda_array, 
+                                                 self.lbg)
         return 1
     
     ### TPV Efficiency, see Eq. S20-S26 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
     def stpv_etatpv(self):
-        self.tpv_efficiency_val = stpvlib.Eta_TPV(self.thermal_emission_array, self.lambda_array, self.PV, self.T_cell)
+        self.tpv_efficiency_val = stpvlib.Eta_TPV(self.thermal_emission_array, 
+                                                  self.lambda_array, 
+                                                  self.PV, 
+                                                  self.T_cell)
         return 1
     
     ### Explicit Angle versions of methods for STPV quantities
     def stpv_se_ea(self):
-        self.spectral_efficiency_val = stpvlib.SpectralEfficiency_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.lbg, self.t, self.w)
+        self.spectral_efficiency_val = stpvlib.SpectralEfficiency_EA(self.thermal_emission_array_p, 
+                                                                     self.thermal_emission_array_s, 
+                                                                     self.lambda_array, 
+                                                                     self.lbg, 
+                                                                     self.t, 
+                                                                     self.w)
 
         
     def stpv_pd_ea(self):
-        self.power_density_val = stpvlib.Pwr_den_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.lbg, self.t, self.w)
+        self.power_density_val = stpvlib.Pwr_den_EA(self.thermal_emission_array_p, 
+                                                    self.thermal_emission_array_s, 
+                                                    self.lambda_array, 
+                                                    self.lbg, 
+                                                    self.t, 
+                                                    self.w)
         return 1
     
     def stpv_etatpv_ea(self):
-        self.tpv_efficiency_val = stpvlib.Eta_TPV_EA(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.PV, self.T_cell, self.t, self.w)
+        self.tpv_efficiency_val = stpvlib.Eta_TPV_EA(self.thermal_emission_array_p, 
+                                                     self.thermal_emission_array_s, 
+                                                     self.lambda_array, 
+                                                     self.PV, 
+                                                     self.T_cell, 
+                                                     self.t, 
+                                                     self.w)
     
     
     ### Absorber Efficiency - see 
     def stpv_etaabs(self):
-        alpha = stpvlib.absorbed_power_ea(self.lambda_array, self.n, self.d, self.solarconc)
-        beta = stpvlib.p_in(self.thermal_emission_array, self.lambda_array)
+        alpha = stpvlib.absorbed_power_ea(self.lambda_array, 
+                                          self.n, 
+                                          self.d, 
+                                          self.solarconc)
+        beta = stpvlib.p_in(self.thermal_emission_array, 
+                            self.lambda_array)
         print("alpha is ",alpha)
         print("beta is ",beta)
         self.absorber_efficiency_val = (alpha - beta)/alpha
@@ -552,8 +704,15 @@ class multilayer:
         
         ### Power absorbed is going to explicitly consider a range of incident angles which
         ### will depend on the solar concentration
-        alpha = stpvlib.absorbed_power_ea(self.lambda_array, self.n, self.d, self.solarconc)
-        beta = stpvlib.p_in_ea(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.t, self.w )
+        alpha = stpvlib.absorbed_power_ea(self.lambda_array, 
+                                          self.n, 
+                                          self.d, 
+                                          self.solarconc)
+        beta = stpvlib.p_in_ea(self.thermal_emission_array_p, 
+                               self.thermal_emission_array_s, 
+                               self.lambda_array, 
+                               self.t, 
+                               self.w )
         self.absorber_efficiency_val = (alpha - beta)/alpha
         return 1
     
@@ -561,7 +720,9 @@ class multilayer:
     ### in Nanoscale Research Letters, (2016) vol 11 pg 453, L.-X. Wang, Z.-Q. Zhou, T.-N. Zhang, X. Chen
     ### and M. Lu
     def pv_conversion_efficiency(self):
-        self.short_circuit_current_val = stpvlib.ambient_jsc(self.emissivity_array, self.lambda_array, self.lbg)
+        self.short_circuit_current_val = stpvlib.ambient_jsc(self.emissivity_array, 
+                                                             self.lambda_array, 
+                                                             self.lbg)
         #self.open_circuit_voltage_val = stpvlib.Voc(self.short_circuit_current_val, self.T_cell)
         #self.fill_factor_val = stpvlib.FF(self.open_circuit_voltage_val, self.T_cell)
         self.incident_power =  stpvlib.integrated_solar_power(self.lambda_array)
@@ -573,7 +734,10 @@ class multilayer:
         return 1     
     
     def pv_conversion_efficiency_prime(self):
-        self.short_circuit_current_grad = stpvlib.ambient_jsc_grad(self.gradient_dimension, self.emissivity_prime_array, self.lambda_array, self.lbg)
+        self.short_circuit_current_grad = stpvlib.ambient_jsc_grad(self.gradient_dimension, 
+                                                                   self.emissivity_prime_array, 
+                                                                   self.lambda_array, 
+                                                                   self.lbg)
         #self.open_circuit_voltage_val = stpvlib.Voc(self.short_circuit_current_val, self.T_cell)
         #self.fill_factor_val = stpvlib.FF(self.open_circuit_voltage_val, self.T_cell)
         self.incident_power =  stpvlib.integrated_solar_power(self.lambda_array)
@@ -645,16 +809,22 @@ class multilayer:
     ### based only on thermal emission
     def thermal_color(self):
         string = "Color at T = " + str(self.T_ml) + " K"
-        colorlib.RenderColor(self.thermal_emission_array, self.lambda_array, string)
-        self.thermal_rgb = colorlib.RGB_FromSpec(self.thermal_emission_array, self.lambda_array)
+        colorlib.RenderColor(self.thermal_emission_array, 
+                             self.lambda_array, 
+                             string)
+        self.thermal_rgb = colorlib.RGB_FromSpec(self.thermal_emission_array, 
+                                                 self.lambda_array)
         return 1
     
     ### Displays the perceived color of an object based only
     ### on reflected light
     def ambient_color(self):
         string = "Ambient Color"
-        colorlib.RenderColor(self.reflectivity_array, self.lambda_array, string)
-        self.reflective_rgb = colorlib.RGB_FromSpec(self.reflectivity_array, self.lambda_array)
+        colorlib.RenderColor(self.reflectivity_array, 
+                             self.lambda_array, 
+                             string)
+        self.reflective_rgb = colorlib.RGB_FromSpec(self.reflectivity_array, 
+                                                    self.lambda_array)
         return 1
     
     ### Displays the percieved color of a narrow bandwidth lightsource
@@ -667,38 +837,89 @@ class multilayer:
         return 1
     
     def classify_color(self):
-        self.color_name = colorlib.classify_color(self.reflectivity_array, self.lambda_array)
+        self.color_name = colorlib.classify_color(self.reflectivity_array, 
+                                                  self.lambda_array)
     
     ''' METHODS FOR LIGHTLIB '''
     def luminous_efficiency(self):
-        self.luminous_efficiency_val = lightlib.Lum_efficiency(self.lambda_array, self.thermal_emission_array)
+        self.luminous_efficiency_val = lightlib.Lum_efficiency(self.lambda_array, 
+                                                               self.thermal_emission_array)
         return 1
     def luminous_efficiency_prime(self):
         ### this is a vector of length self.gradient_dimension
-        self.luminous_efficiency_grad = lightlib.lum_efficiency_prime(self.gradient_dimension, self.lambda_array, self.emissivity_array, self.emissivity_prime_array, self.BBs)
+        self.luminous_efficiency_grad = lightlib.lum_efficiency_prime(self.gradient_dimension, 
+                                                                      self.lambda_array, 
+                                                                      self.emissivity_array, 
+                                                                      self.emissivity_prime_array, 
+                                                                      self.BBs)
     
     def normalized_luminous_power(self):
-        self.luminous_power_val = lightlib.normalized_power(self.lambda_array, self.thermal_emission_array, self.BBs)
+        self.luminous_power_val = lightlib.normalized_power(self.lambda_array, 
+                                                            self.thermal_emission_array, 
+                                                            self.BBs)
         return 1
     
     
     ### GRAD
     def luminous_efficiency_filter(self, emissivity):
-        self.luminous_efficiency_val = lightlib.lum_efficiency_filter(self.lambda_array, self.BBs, emissivity, self.transmissivity_array)
+        self.luminous_efficiency_val = lightlib.lum_efficiency_filter(self.lambda_array, 
+                                                                      self.BBs, 
+                                                                      emissivity, 
+                                                                      self.transmissivity_array)
         return 1
     
     ###  GRAD
     def luminous_efficiency_filter_prime(self, emissivity):
-        self.luminous_efficiency_grad = lightlib.lum_efficiency_filter_prime(self.gradient_dimension, self.lambda_array, self.BBs, emissivity, self.transmissivity_array, self.transmissivity_prime_array)
+        self.luminous_efficiency_grad = lightlib.lum_efficiency_filter_prime(self.gradient_dimension, 
+                                                                             self.lambda_array, 
+                                                                             self.BBs, 
+                                                                             emissivity, 
+                                                                             self.transmissivity_array, 
+                                                                             self.transmissivity_prime_array)
         return 1
 
     
     ''' METHODS FOR COOLINGLIB !!! '''
     def cooling_power(self):
-        self.radiative_power_val = coolinglib.Prad(self.thermal_emission_array_p, self.thermal_emission_array_s, self.lambda_array, self.t, self.w)
-        self.atmospheric_power_val = coolinglib.Patm(self.emissivity_array_p, self.emissivity_array_s, self.T_amb, self.lambda_array, self.t, self.w)
-        self.solar_power_val = coolinglib.Psun(self.theta_sun, self.lambda_array, self.n, self.d)
+        self.radiative_power_val = coolinglib.Prad(self.thermal_emission_array_p, 
+                                                   self.thermal_emission_array_s, 
+                                                   self.lambda_array, 
+                                                   self.t, 
+                                                   self.w)
+        self.atmospheric_power_val = coolinglib.Patm(self.emissivity_array_p, 
+                                                     self.emissivity_array_s, 
+                                                     self.T_amb, 
+                                                     self.lambda_array, 
+                                                     self.t, 
+                                                     self.w)
+        self.solar_power_val = coolinglib.Psun(self.theta_sun, 
+                                               self.lambda_array, 
+                                               self.n, 
+                                               self.d)
         self.cooling_power_val = self.radiative_power_val - self.atmospheric_power_val - self.solar_power_val
+        return 1
+    
+    def cooling_power_prime(self):
+        self.radiative_power_grad = coolinglib.Prad_prime(self.gradient_dimension, 
+                                                          self.thermal_emission_prime_array_p,
+                                                          self.thermal_emission_prime_array_s,
+                                                          self.lambda_array,
+                                                          self.t,
+                                                          self.w)
+
+        
+        self.atmospheric_power_grad = coolinglib.Patm_prime(self.gradient_dimension,
+                                                            self.emissivity_prime_array_p,
+                                                            self.emissivity_prime_array_s,
+                                                            self.T_amb,
+                                                            self.lambda_array,
+                                                            self.t,
+                                                            self.w)
+        self.solar_power_grad = coolinglib.Psun_prime(self.gradient_list, 
+                                                      self.theta_sun, 
+                                                      self.lambda_array, 
+                                                      self.n, 
+                                                      self.d)
         return 1
     
     ''' MISCELLANEOUS METHODS TO MANIPULATE THE STRUCTURE
