@@ -320,7 +320,7 @@ def ambient_jsc_grad(dim, eps_prime, lam, lbg):
     
     return grad
 
-### GRAD THis has been added!
+### This gradient function needs to be tested!
 def SpectralEfficiency_grad(dim, lam, lbg, emissivity, emissivity_prime, BBs):
     ### ininitalize gradient vector
     grad = np.zeros(dim)
@@ -347,28 +347,6 @@ def SpectralEfficiency_grad(dim, lam, lbg, emissivity, emissivity_prime, BBs):
     ### return gradient
     return grad
 
-
-# Spectral efficiency prime in progress
-# =============================================================================
-# def SpectralEfficiency_prime(dim, lam, lbg, TE, TE_prime, BBs):
-#     grad = np.zeros(dim)
-#     
-#     ynum = TE*lam/lbg  
-#     upper = np.amax(lam)
-#     num = numlib.Integrate(ynum, lam, 1e-9, lbg)
-#     den = numlib.Integrate(TE, lam, 1e-9, upper)
-#     SE = num/den
-# 
-#     ### now loop through elements of gradient_list and fill in elements of grad
-#     for i in range(0,dim):
-#         TE_prime = BBs*emissivity_prime[i,:]
-#         num_prime = *TE_prime
-#         numerator_prime = numlib.Integrate(num_prime, lam, 0, upper)
-#         denominator_prime = numlib.Integrate(TE_prime, lam, 0, upper)
-#         grad[i] = (denominator*numerator_prime - numerator*denominator_prime)/(denominator**2)
-#     
-#     return grad
-# =============================================================================
 
 
 
