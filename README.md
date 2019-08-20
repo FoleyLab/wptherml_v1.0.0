@@ -6,7 +6,12 @@ WPTherml stands for **W**illiam **P**aterson University's tool for **Th**ermal *
 The vision of this software package is to provide an easy-to-use platform for the design of materials with tailored optical and thermal properties for
 the vast number of energy applications where control of absorption and emission of radiation, or conversion of heat to radiation or vice versa, is paramount.
 The optical properties are treated within classical electrodynamics, and the current version uses the Transfer Matrix Method to rigorously solve Maxwell's equations
-for layered isotropic media.  WPTherml was conceived and developed by the [Foley Lab](https://foleylab.github.io) at William Paterson University. More details of the Transfer Matrix equations, along will the full mathematical formulation currently implemented in WPTherml, can be found in
+for layered isotropic media.  WPTherml was conceived and developed by the [Foley Lab](https://foleylab.github.io) at William Paterson University. 
+
+**Citation Instructions** The following citation should be used in any publication utilizing the WPTherml program: "WPTherml: A Python Package for the Design
+of Materials for Harnessing Heat", J. F. Varner, N. Eldabagh, D. Volta, R. Eldabagh, J. J. Foley IV, *J. Open Research Software*, **7**, 28 (2019)
+
+More details of the Transfer Matrix equations, along will the full mathematical formulation currently implemented in WPTherml, can be found in
 the [documentation](https://github.com/FoleyLab/wptherml/blob/master/docs/Equations.pdf).
 
 ## Quick Start
