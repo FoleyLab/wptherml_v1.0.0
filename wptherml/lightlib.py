@@ -37,19 +37,6 @@ def normalized_power(lam, TE, BB):
     return numerator/denominator
 
 
-def Lum_efficiency_prime(lam, TE, TE_prime):
-    upper = np.amax(lam)
-    ph = datalib.PhLum(lam)
-    num = ph*TE
-    num_prime = ph*TE_prime
-    numerator = numlib.Integrate(num, lam, 0, upper )
-    numerator_prime = numlib.Integrate(num_prime, lam, 0, upper)
-    
-    denominator = numlib.Integrate(TE, lam, 0, upper)
-    denominator_prime = numlib.Integrate(TE_prime, lam, 0, upper)
-    
-    return (denominator*numerator_prime - numerator*denominator_prime)/(denominator**2)
-
 def Lum_efficacy(lam, TE):
     le = Lum_efficiency(lam, TE)
     efficacy = 683*le
@@ -64,29 +51,3 @@ def IdealSource(lam, T):
     TE_ideal = ph * rho
     return TE_ideal
 
-'''
-    
-def luminous_efficiency(lam, thermal_emission_array):
-    upper = np.amax(lam)
-    ph = datalib.PhLum(lam)
-    num = datalib.PhLum(lam)*thermal_emission_array
-    numerator = numlib.Integrate(num, lam, 0, upper )
-    den = thermal_emission_array
-    denominator = numlib.Integrate(den, lam, 0, upper)
-    luminous_efficiency_value = (numerator/denominator)
-    return luminous_efficiency_value
-
-def luminous_efficacy(lam, thermal_emission_array):
-    le = luminous_efficiency_value(lam, thermal_emission_array)
-    luminous_efficacy_value = 683*le
-    return luminous_efficacy_value
-
-def thermal_emission_ideal_source(lam, T):
-    ### compute blackbody spectrum at current T
-    rho = datalib.BB(lam, T)
-    ### get photopic luminosity function
-    ph  = datalib.PhLum(lam)
-    ### ideal thermal emission is product of the two
-    thermal_emission_ideal_source = ph * rho
-    return thermal_emission_ideal_source_array
-'''
