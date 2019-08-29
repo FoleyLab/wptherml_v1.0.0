@@ -482,6 +482,27 @@ def CIE(lam):
 
     return cie
 
+### Get reference absorbance of 15 nm J-agg layer
+def JAgg_Abs(lam):
+    a = np.loadtxt('wptherml/datalib/J_Agg_15nm_Abs.txt')
+    x = np.zeros(len(a))
+    y = np.zeros(len(a))
+    
+    for i in range(0,len(a)):
+        x[i] = a[i][0]
+        y[i] = a[i][1]
+        
+    datlam = x
+    databs = y
+    order = 1
+    s = InterpolatedUnivariateSpline(datlam, databs, k=order)
+    z = s(lam)
+    
+    return z
+
+### Get RI of cyanine-based J-aggregate dye embedded in PVA 
+### described by S.  Wang,Strong light-molecule coupling: 
+### routes to new hybridmaterials, Ph.D. thesis, Universite de Strasbourg (2015).
 def TDBC(lam):
     ### values of lambda along which SR is experimentally known
     datlamk = 1e-9*np.array([380, 390, 400, 425, 450, 475, 500, 525, 550, 575, 582, 600, 625, 650, 675, 700, 710, 720])

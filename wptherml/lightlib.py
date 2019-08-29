@@ -18,6 +18,42 @@ from wptherml.numlib import numlib
 from wptherml.datalib import datalib
 import numpy as np
 
+
+### This figure of merit takes the overlap of the coupled J-Agg / ML structure
+### with a 15 nm J-Agg layer and normalizes it to the overlap of the 15 nm J-Agg absorbance with itself
+### hence: this is a dimensionless quantity or "enhancement" factor.  If the
+### absorbance of the coupled structure is identical to the J-Agg absorbance, the fom will be 1 (no enhancement).
+### If the composite absorbance is diminished relative to the lone J-Agg, the fom will be < 1,
+### and if it is enhanced relative to lone J-Agg, it will be > 1
+def Jagg_enhancement(emissivity, lam):
+    upper = np.amax(lam)
+    jg = datalib.JAgg_Abs(lam)
+    num = jg*emissivity
+    numerator = numlib.Integrate(num, lam, 0, upper )
+    den = jg*jg
+    denominator = numlib.Integrate(den, lam,0, upper)
+    return (numerator/denominator)
+
+
+### Only the numerator has terms that depend on thickness (lone j-agg absorbance is constant with thickness of ML layers)
+### so we only need emissivity_prime, there are complicated terms from the quotient of two quantities that depend on thickness
+def Jagg_enhancement_prime(dim, lam, emissivity, emissivity_prime):
+    grad = np.zeros(dim)
+    upper = np.amax(lam)
+    #upper = np.amax(lam)
+    ### we want the absorption spectrum of the lone J-Agg layer, not just the refractive index
+    jg = datalib.JAgg_Abs(lam)
+    denominator = jg*jg
+    ### denominator intergral only needs to be computed once
+    den = numlib.Integrate(denominator, lam, 0, upper)
+    for i in range(0,dim):
+        numerator = emissivity_prime[i,:] * jg
+        num_prime = numlib.Integrate(numerator, lam, 0, upper)
+        grad[i] = num_prime / den
+
+    return grad
+
+
 def Lum_efficiency(lam, TE):
     upper = np.amax(lam)
     ph = datalib.PhLum(lam)

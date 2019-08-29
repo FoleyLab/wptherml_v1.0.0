@@ -101,11 +101,11 @@ class multilayer:
         self.short_circuit_current_grad = np.zeros(self.gradient_dimension)
         self.conversion_efficiency_grad = np.zeros(self.gradient_dimension)
         self.spectral_efficiency_grad = np.zeros(self.gradient_dimension)
-        self.jagg_scale_grad = np.zeros(self.gradient_dimension)
         self.atmospheric_power_grad = np.zeros(self.gradient_dimension)
         self.solar_power_grad = np.zeros(self.gradient_dimension)
         self.cooling_power_grad = np.zeros(self.gradient_dimension)
         self.radiative_power_grad = np.zeros(self.gradient_dimension)
+        self.jagg_enhancement_grad = np.zeros(self.gradient_dimension)
         
         
         ### Now that structure is defined and we have the lambda array, 
@@ -609,16 +609,18 @@ class multilayer:
                     self.thermal_emission_prime_array_s[k,j,i] = self.BBs[i] * self.emissivity_prime_array_s[k,j,i] * np.cos(self.t[j])
             
         return 1
-        
-    
-    ''' METHOD FOR J-AGG ENHANCEMENT '''
-    def jagg_sd(self):
-        self.jagg_sd_val = numlib.Integrate(self.emissivity_array, 
-                                            self.lambda_array, 
-                                            500e-9, 
-                                            700e-9)/200e-9
+
+# =============================================================================
+    ''' Methods for enhancement of thin-film absorber layer, i.e. J-Agg layer, coupled to BR '''
+    def jagg_enhancement(self):
+        self.jagg_enhancement_val = lightlib.Jagg_enhancement(self.emissivity_array, self.lambda_array)
         return 1
     
+    def jagg_enhancement_prime(self):
+        self.jagg_enhancement_grad = lightlib.Jagg_enhancement_prime(self.gradient_dimension, self.lambda_array, self.emissivity_array, self.emissivity_prime_array)
+        return 1
+    
+
     ''' METHODS FOR STPVLIB!!! '''
     
     ### Normal versions first - no explicit dependence on angle
