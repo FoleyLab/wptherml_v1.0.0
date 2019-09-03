@@ -484,7 +484,8 @@ def CIE(lam):
 
 ### Get reference absorbance of 15 nm J-agg layer
 def JAgg_Abs(lam):
-    a = np.loadtxt('datalib/J_Agg_15nm_Abs.txt')
+    file_path = path + 'J_Agg_15nm_Abs.txt'
+    a = np.loadtxt(file_path)
     x = np.zeros(len(a))
     y = np.zeros(len(a))
     
