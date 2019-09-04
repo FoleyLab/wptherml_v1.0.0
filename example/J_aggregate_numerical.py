@@ -14,9 +14,9 @@ import numpy as np
 
 structure = {
 
-        'Material_List' : ['Air','J-Agg','TiO2', 'AlN', 'Ag', 'Air'],
+        'Material_List' : ['Air','J-Agg','TiO2', 'AlN','Ag', 'Air'],
         ### Thicknesses just chosen arbitrarily, replace with "optimal" values
-        'Thickness_List': [0, 15e-9,8e-9, 8e-9,300e-9, 0 ],
+        'Thickness_List': [0, 15e-9,8e-9, 8e-9, 300e-9, 0 ],
         'Lambda_List': [300e-9, 1500e-9, 1000],
         'Temperature': 300,
         'Gradient_List':[2,3],
@@ -60,7 +60,7 @@ def analytic_grad(x0):
     dim = len(x0)
     g = np.zeros(dim)
     ### update multilayer and fresnel quantities
-    #cur = update_multilayer(x0)
+    cur = update_multilayer(x0)
     ### update gradient of fresnel quantities
     cc.fresnel_prime()
     ### compute gradient of objective
@@ -69,12 +69,56 @@ def analytic_grad(x0):
     
     return -g*1e-9
 
-### just a function that calls both update_multilayer and analytic_gradient
+def numeric_grad(x0):
+    dim = len(x0)
+    h0 = 0.01*np.ones(dim)
+    g = np.zeros(dim)
+    for i in range(0,dim):
+        xpass = np.copy(x0)
+        fx = x0[i] + h0[i]
+        bx = x0[i] - h0[i]
+        xpass[i] = fx
+        efx = update_multilayer(xpass)
+        xpass[i] = bx
+        ebx = update_multilayer(xpass)
+        run = 2*h0[i]
+        g[i] = (efx-ebx)/run
+    return g
+
+### function that calls both update_multilayer and analytic_gradient
 ### and returns both objective and gradient
-def SuperFunc(x0):
+def SuperFunc1(x0):
     en = update_multilayer(x0)
     gr = analytic_grad(x0)
     return en, gr
+
+### function that calls both update_multilayer and numerical_gradient
+### and returns both objective and gradient
+def SuperFunc(x0):
+    en = update_multilayer(x0)
+    gr = numeric_grad(x0)
+    return en, gr
+
+### Just to confirm that both 
+### analytic and numerical gradients give the
+### same results to within acceptable precision
+x0 = np.zeros(2)
+### this is geometry that maximizes enhancement, 
+### so gradient should nearly vanish
+x0[0] = 7.152392
+x0[1] = 21.5937
+en1, gr1 = SuperFunc1(x0)
+en2, gr2 = SuperFunc(x0)
+print("Gr1",en1,gr1)
+print("Gr2",en2,gr2)
+
+### this is a random point, gradient probably won't vanish
+x0[0] = 13.1
+x0[1] = 42.1
+en1, gr1 = SuperFunc1(x0)
+en2, gr2 = SuperFunc(x0)
+print("Gr1",en1,gr1)
+print("Gr2",en2,gr2)
 
 
 # We will customize a few things related to the Basin Hopping algorithm
@@ -131,7 +175,7 @@ mybounds = MyBounds()
 xs = np.ones(length)*20
 print("xs is ",xs)
 
-ret = basinhopping(SuperFunc, xs, minimizer_kwargs=minimizer_kwargs, niter=30, take_step=my_take_step, callback=print_fun, accept_test=mybounds)
+ret = basinhopping(SuperFunc, xs, minimizer_kwargs=minimizer_kwargs, niter=60, take_step=my_take_step, callback=print_fun, accept_test=mybounds)
 
 print(ret.x)
 print(update_multilayer(ret.x))
