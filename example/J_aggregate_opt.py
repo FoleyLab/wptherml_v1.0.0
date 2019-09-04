@@ -14,9 +14,9 @@ import numpy as np
 
 structure = {
 
-        'Material_List' : ['Air','J-Agg','TiO2', 'AlN','Ag', 'Air'],
+        'Material_List' : ['Air','J-Agg','TiO2', 'AlN','TiO2', 'AlN', 'Ag', 'Air'],
         ### Thicknesses just chosen arbitrarily, replace with "optimal" values
-        'Thickness_List': [0, 15e-9,8e-9, 8e-9, 300e-9, 0 ],
+        'Thickness_List': [0, 15e-9,8e-9, 8e-9,10e-9, 10e-9 ,300e-9, 0 ],
         'Lambda_List': [300e-9, 1500e-9, 1000],
         'Temperature': 300,
         'Gradient_List':[2,3],
