@@ -348,27 +348,27 @@ class multilayer:
         r_len = 1000
         i_len = 1000
         
-        eps_real = np.linspace(1.0,100.,r_len)
-        #eps_imag = np.linspace(0.000,20,i_len)
+        n_real = np.linspace(0.001,100.,r_len)
+        n_imag = np.linspace(0.0,100.,i_len)
         diff_array = np.zeros(r_len)
         min_diff = 1e12
         cdiff = 0+0j
         diff = 0
         best_eps = 0+0j
         for i in range(0,r_len):
-            #for j in range(0,i_len):
-            eps_eff = eps_real[i] + 0j #eps_imag[j]*1j
-            n_eff[1] = np.sqrt(eps_eff)
-            M_eff = tmm.tmm(k0, self.theta, self.pol, n_eff, d_eff)
-            cdiff = (M["M11"] - M_eff["M11"]) * np.conj(M["M11"] - M_eff["M11"])
-            cdiff = cdiff + (M["M21"] - M_eff["M21"]) * np.conj(M["M21"] - M_eff["M21"])
-            cdiff = cdiff + (M["M12"] - M_eff["M12"]) * np.conj(M["M12"] - M_eff["M12"])
-            cdiff = cdiff + (M["M22"] - M_eff["M22"]) * np.conj(M["M22"] - M_eff["M22"])
-            diff = np.real(np.sqrt(cdiff))
-            diff_array[i] = diff
-            if diff<min_diff:
-                best_eps = eps_eff
-                min_diff = diff
+            for j in range(0,i_len):
+                n_eff[1] = np.sqrt(eps_eff)
+                M_eff = tmm.tmm(k0, self.theta, self.pol, n_eff, d_eff)
+                cdiff = (M["M11"] - M_eff["M11"]) * np.conj(M["M11"] - M_eff["M11"])
+                cdiff = cdiff + (M["M21"] - M_eff["M21"]) * np.conj(M["M21"] - M_eff["M21"])
+                cdiff = cdiff + (M["M12"] - M_eff["M12"]) * np.conj(M["M12"] - M_eff["M12"])
+                cdiff = cdiff + (M["M22"] - M_eff["M22"]) * np.conj(M["M22"] - M_eff["M22"])
+                diff = np.real(np.sqrt(cdiff))
+                diff_array[i] = diff
+                
+                if diff<min_diff:
+                    best_eps = eps_eff
+                    min_diff = diff
         print(" effective epsilon is ",best_eps)
         print(" effective RI      is ",np.sqrt(best_eps))
         print(" difference in transfer matrix is ",min_diff)
