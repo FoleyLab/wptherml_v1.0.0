@@ -318,6 +318,64 @@ class multilayer:
 
         return 1
     
+    ''' method that computes the dielectric function that minimizes error between an actual
+        multilayer and an effective medium layer of the same total thickness... currently just do 
+        it at one wavelength, i.e. the first in the list! '''
+    def effective_eps(self):
+        L = len(self.d)
+        print(L)
+        idx = 0
+        nc = np.zeros(L,dtype=complex)
+        print(" initialized nc",nc)
+        d_tot = 0.
+        d_eff = np.zeros(3)
+        n_eff = np.zeros(3,dtype=complex)
+        d_eff[0] = 0.
+        d_eff[2] = 0.
+        n_eff[0] = 1.+0j
+        n_eff[2] = 1.+0j
+        eps_eff = 0+0j
+        for i in range(0,L):
+            nc[i] = self.n[i][idx]
+            d_tot = d_tot + self.d[i]
+        print("filled nc",nc)
+        print("dtot",d_tot)
+        k0 = np.pi*2/(self.lambda_array[idx])
+        ### this is the TM of the real ML
+        M = tmm.tmm(k0, self.theta, self.pol, nc, self.d)
+        d_eff[1] = d_tot
+        
+        r_len = 1000
+        i_len = 1000
+        
+        eps_real = np.linspace(1.0,100.,r_len)
+        #eps_imag = np.linspace(0.000,20,i_len)
+        diff_array = np.zeros(r_len)
+        min_diff = 1e12
+        cdiff = 0+0j
+        diff = 0
+        best_eps = 0+0j
+        for i in range(0,r_len):
+            #for j in range(0,i_len):
+            eps_eff = eps_real[i] + 0j #eps_imag[j]*1j
+            n_eff[1] = np.sqrt(eps_eff)
+            M_eff = tmm.tmm(k0, self.theta, self.pol, n_eff, d_eff)
+            cdiff = (M["M11"] - M_eff["M11"]) * np.conj(M["M11"] - M_eff["M11"])
+            cdiff = cdiff + (M["M21"] - M_eff["M21"]) * np.conj(M["M21"] - M_eff["M21"])
+            cdiff = cdiff + (M["M12"] - M_eff["M12"]) * np.conj(M["M12"] - M_eff["M12"])
+            cdiff = cdiff + (M["M22"] - M_eff["M22"]) * np.conj(M["M22"] - M_eff["M22"])
+            diff = np.real(np.sqrt(cdiff))
+            diff_array[i] = diff
+            if diff<min_diff:
+                best_eps = eps_eff
+                min_diff = diff
+        print(" effective epsilon is ",best_eps)
+        print(" effective RI      is ",np.sqrt(best_eps))
+        print(" difference in transfer matrix is ",min_diff)
+        plt.plot(eps_real, diff_array, 'red')
+        plt.show()
+        return np.sqrt(best_eps)
+    
         ### Fresnel methods when explicit angle-averaging is requested...
     ### Need to have FOM methods to accompany this
     def fresnel_ea(self):
