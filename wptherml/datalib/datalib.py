@@ -533,4 +533,25 @@ def TDBC(lam):
     ci = 0+1j
     return yn + ci*yk
 
+### Get transmission spectrum of polystyrene
+def poly_styrene_T(lam):
+    file_path = path + 'polystyrene_T_vs_wl.txt'
+    order = 1
+    a = np.loadtxt(file_path)
+    x = np.zeros(len(a))
+    y = np.zeros(len(a))
+    
+    for i in range(0,len(a)):
+        x[i] = a[i][0]*1e-9
+        y[i] = a[i][1]*1e-2
+        
+    datlam = x
+    databs = y
+    s = InterpolatedUnivariateSpline(datlam, databs, k=order)
+    z = s(lam)
+    plt.plot(datlam, databs,'o')
+    plt.plot(lam, z, 'r--')
+    plt.show()
+    return z
+
     
