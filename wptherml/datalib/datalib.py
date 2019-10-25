@@ -549,9 +549,9 @@ def poly_styrene_T(lam):
     databs = y
     s = InterpolatedUnivariateSpline(datlam, databs, k=order)
     z = s(lam)
-    plt.plot(datlam, databs,'o')
-    plt.plot(lam, z, 'r--')
-    plt.show()
+    #plt.plot(datlam, databs,'o')
+    #plt.plot(lam, z, 'r--')
+    #plt.show()
     return z
 
     
