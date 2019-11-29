@@ -26,7 +26,7 @@ on Windows, Mac, or Linux platforms
    * `cd test`
    * `python3 -m pytest test.py`
 
-- The test script for running unit tests can be downloaded [here](https://github.com/FoleyLab/wptherml/blob/master/example/test/test.py)
+- The test script for running unit tests can be downloaded [here](https://github.com/FoleyLab/wptherml/blob/dev/test/test.py)
    
 - To install with pip3:
    * `pip3 install wptherml`
