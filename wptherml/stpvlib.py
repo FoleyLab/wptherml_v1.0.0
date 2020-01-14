@@ -21,6 +21,36 @@ def SpectralEfficiency(TE,lam,lbg):
     SE = num/den
     return SE
 
+def stpv_pv_filter_fom(trans, ref, lam):
+    AM = datalib.AM(lam)
+    integrand1 = AM * trans
+    BBs = datalib.BB(lam, 440)
+    integrand2 = BBs * ref
+    
+    num1 = numlib.Integrate(integrand1, lam, 500e-9, 3200e-9)
+    den1 = numlib.Integrate(AM, lam, 500e-9, 3200e-9)
+    num2 = numlib.Integrate(ref, lam, 3300e-9, 3700e-9)
+    den2 = numlib.Integrate(BBs, lam, 3300e-9, 3700e-9)
+    return num1/den1+num2/den2
+
+def stpv_pv_filter_grad(dim, trans_prime, ref_prime, lam):
+    grad = np.zeros(dim)
+    AM = datalib.AM(lam)
+    BBs = datalib.BB(lam, 440)
+    den1 = numlib.Integrate(AM, lam, 400e-9, 3200e-9)
+    den2 = numlib.Integrate(BBs, lam, 3200e-9, 3500e-9)
+    
+    for i in range(0,dim):
+        integrand_1 = trans_prime[i,:]*AM
+        integrand_2 = ref_prime[i,:]*BBs
+        fom_prime_1 = numlib.Integrate(integrand_1, lam, 400e-9, 3200e-9)
+        
+        fom_prime_2 = numlib.Integrate(integrand_2, lam, 3200e-9, 3500e-9)
+        grad[i] = fom_prime_1/den1 + fom_prime_2/den2
+        
+    return grad
+
+
 ### Computes spectral efficiency explicitly
 ### taking angular dependence into account
 def SpectralEfficiency_EA(TE_p, TE_s, lam, lbg, t, w):

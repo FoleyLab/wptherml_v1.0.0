@@ -106,12 +106,14 @@ class multilayer:
         self.cooling_power_grad = np.zeros(self.gradient_dimension)
         self.radiative_power_grad = np.zeros(self.gradient_dimension)
         self.jagg_enhancement_grad = np.zeros(self.gradient_dimension)
+        self.filter_fom_grad = np.zeros(self.gradient_dimension)
         
         
         ### Now that structure is defined and we have the lambda array, 
         ### allocate other arrays!
         ### Always need normal arrays
         self.reflectivity_array = np.zeros(len(self.lambda_array))
+        self.r_amp_array = np.zeros(len(self.lambda_array),dtype=complex)
         self.transmissivity_array = np.zeros(len(self.lambda_array))
         self.emissivity_array = np.zeros(len(self.lambda_array))
         self.thermal_emission_array = np.zeros(len(self.lambda_array))
@@ -310,6 +312,7 @@ class multilayer:
             fac = nc[len(self.d)-1]*np.cos(tL)/(nc[0]*np.cos(ti))
             ### get reflection amplitude
             r = M["M21"]/M["M11"]
+            self.r_amp_array[i] = r
             ### get Reflectivity
             self.reflectivity_array[i] = np.real(r * np.conj(r))
             ### get Transmissivity
@@ -678,6 +681,20 @@ class multilayer:
         self.jagg_enhancement_grad = lightlib.Jagg_enhancement_prime(self.gradient_dimension, self.lambda_array, self.emissivity_array, self.emissivity_prime_array)
         return 1
     
+    ''' Methods for selective transmitter/reflector for hybrid PV-STPV '''
+    def filter_fom(self):
+        self.filter_fom_val = stpvlib.stpv_pv_filter_fom(self.transmissivity_array, 
+                                                         self.reflectivity_array, 
+                                                         self.lambda_array)
+        return 1
+    
+    def filter_grad(self):
+        self.filter_fom_grad = stpvlib.stpv_pv_filter_grad(self.gradient_dimension, 
+                                                           self.transmissivity_prime_array, 
+                                                           self.reflectivity_prime_array, 
+                                                           self.lambda_array)
+        return 1
+        
 
     ''' METHODS FOR STPVLIB!!! '''
     
@@ -1133,6 +1150,15 @@ class multilayer:
         for i in range(0,len(self.lambda_array)):
             omega = 2*np.pi*c/self.lambda_array[i]
             eps_lr = 1 + omega_p**2/(omega_0**2 - omega**2 - ci*omega*gamma)
+            self.n[layer][i] = np.sqrt(eps_lr)
+        return 1
+    
+    def layer_drude(self, layer, eps_inf, omega_p, gamma):
+        c = 299792458.
+        ci = 0+1j
+        for i in range(0,len(self.lambda_array)):
+            omega = 2*np.pi*c/self.lambda_array[i]
+            eps_lr = eps_inf - omega_p**2/(omega * (ci * gamma + omega))
             self.n[layer][i] = np.sqrt(eps_lr)
         return 1
     ### METHODS FOR PLOTTING DATA!
