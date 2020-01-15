@@ -22,31 +22,54 @@ def SpectralEfficiency(TE,lam,lbg):
     return SE
 
 def stpv_pv_filter_fom(trans, ref, lam):
+    ### set lambda_bg to 750 nm
+    lbg = 750e-9
+    ### get AM1.5 spectrum
     AM = datalib.AM(lam)
-    integrand1 = AM * trans
+    ### get BB spectrum at 440 K
     BBs = datalib.BB(lam, 440)
-    integrand2 = BBs * ref
     
-    num1 = numlib.Integrate(integrand1, lam, 500e-9, 3200e-9)
-    den1 = numlib.Integrate(AM, lam, 500e-9, 3200e-9)
-    num2 = numlib.Integrate(ref, lam, 3300e-9, 3700e-9)
-    den2 = numlib.Integrate(BBs, lam, 3300e-9, 3700e-9)
-    return num1/den1+num2/den2
+    ### There are three different integrands for numerator 
+    num_integrand_1 = np.copy(AM * trans * lam/lbg)
+    num_integrand_2 = np.copy(AM * trans)
+    num_integrand_3 = np.copy(BBs * ref)
+    
+    num1 = numlib.Integrate(num_integrand_1, lam, 300e-9, lbg)
+    num2 = numlib.Integrate(num_integrand_2, lam, lbg, 3200e-9)
+    num3 = numlib.Integrate(num_integrand_3, lam, 3200e-9, 3700e-9)
+    
+    ### denominator 1 comes from lam/lbg * AM1.5
+    den_integrand_1 = np.copy(AM * lam/lbg)
+    den1 = numlib.Integrate(den_integrand_1, lam, 300e-9, lbg)
+    
+    ### denominator 2 comes from AM1.5
+    den2 = numlib.Integrate(AM, lam, lbg, 3200e-9)
+    
+    ### denominator 3 comes from BB spectrum
+    return num1/den1+num2/den2+num2/den2
+
 
 def stpv_pv_filter_grad(dim, trans_prime, ref_prime, lam):
+    lbg = 750e-9
     grad = np.zeros(dim)
     AM = datalib.AM(lam)
     BBs = datalib.BB(lam, 440)
-    den1 = numlib.Integrate(AM, lam, 400e-9, 3200e-9)
-    den2 = numlib.Integrate(BBs, lam, 3200e-9, 3500e-9)
+    
+    den_integrand_1 = np.copy(AM * lam/lbg)
+    den1 = numlib.Integrate(den_integrand_1, lam, 300e-9, lbg)
+    den2 = numlib.Integrate(AM, lam, lbg, 3200e-9)
+    den3 = numlib.Integrate(BBs, lam, 3200e-9, 3700e-9)
+    
     
     for i in range(0,dim):
-        integrand_1 = trans_prime[i,:]*AM
-        integrand_2 = ref_prime[i,:]*BBs
-        fom_prime_1 = numlib.Integrate(integrand_1, lam, 400e-9, 3200e-9)
-        
-        fom_prime_2 = numlib.Integrate(integrand_2, lam, 3200e-9, 3500e-9)
-        grad[i] = fom_prime_1/den1 + fom_prime_2/den2
+        integrand_1 = np.copy(trans_prime[i,:]*AM*lam/lbg)
+        integrand_2 = np.copy(trans_prime[i,:]*AM)
+        integrand_3 = np.copy(ref_prime[i,:]*BBs)
+        num_prime_1 = numlib.Integrate(integrand_1, lam, 300e-9, lbg)
+        num_prime_2 = numlib.Integrate(integrand_2, lam, lbg, 3200e-9)
+        num_prime_3 = numlib.Integrate(integrand_3, lam, 3200e-9, 3700e-9)
+
+        grad[i] = num_prime_1/den1 + num_prime_2/den2 + num_prime_3/den3
         
     return grad
 
