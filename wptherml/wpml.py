@@ -1212,9 +1212,10 @@ class multilayer:
         a_beg = -1500000 #-1000000 #0.000001
         a_end = 1500000 #0.01*b_end
         
-        self.beta = np.linspace(b_beg, b_end,200)
-        self.alpha = np.linspace(a_beg, a_end, 200)
-        self.SPP_Map = np.zeros((200,200))
+        ### try this in degrees rather than kx
+        self.beta = np.linspace(0, 90,300)
+        self.alpha = np.linspace(-5, 5, 300)
+        self.SPP_Map = np.zeros((300,300))
         ### initialize values
         rr_max = -100
         rr_temp = 0
@@ -1227,14 +1228,14 @@ class multilayer:
             idx_j = idx_j + 1
             #print(idx_j)
             idx_i = -1
-            print(" ")
+            #print(" ")
             for b in self.beta:
                 idx_i = idx_i + 1
                 #print(idx_i)
-                kx = b + a*1j
+                kx = nc[0] * k0 * np.sin(b*np.pi/180) + nc[0] * k0 * np.sin(a*np.pi/180)*1j
                 rr_temp = tmm.tmm_ab(k0, kx, 'p', nc, self.d)
-                self.SPP_Map[idx_j,idx_i] = np.log(rr_temp)                
-                print(np.real(kx),np.imag(kx), rr_temp)
+                self.SPP_Map[idx_j,idx_i] = np.log10(rr_temp)                
+                #print(np.real(kx),np.imag(kx), rr_temp)
                 #t_array[k] = t_temp
                 #k+=1
                 if rr_temp>rr_max:
