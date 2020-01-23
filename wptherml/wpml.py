@@ -1203,30 +1203,38 @@ class multilayer:
             
         ### SPP is "above the light line" so
         ### start searching beta at the light line
-        b_beg = k0*nc[L-1]
+        b_beg = 4500000 #10000000 #k0*nc[L-1]
         ### set maximum beta as k0*index of incident material
-        b_end = k0*nc[0]
+        b_end = 14500000 #k0*nc[0]
         
         ### alpha is harder to bound... must be positive, should be much smaller
         ### than beta
-        a_beg = 0.000001
-        a_end = 0.2*b_end
+        a_beg = -1500000 #-1000000 #0.000001
+        a_end = 1500000 #0.01*b_end
         
-        beta = np.linspace(b_beg, b_end,100)
-        alpha = np.linspace(a_beg, a_end, 100)
-        
+        self.beta = np.linspace(b_beg, b_end,200)
+        self.alpha = np.linspace(a_beg, a_end, 200)
+        self.SPP_Map = np.zeros((200,200))
         ### initialize values
         rr_max = -100
         rr_temp = 0
         a_spp = 0
         b_spp = 0
-
-        for a in alpha:
-           # print(" ")
-            for b in beta:
+        
+        
+        idx_j = -1
+        for a in self.alpha:
+            idx_j = idx_j + 1
+            #print(idx_j)
+            idx_i = -1
+            print(" ")
+            for b in self.beta:
+                idx_i = idx_i + 1
+                #print(idx_i)
                 kx = b + a*1j
-                rr_temp = tmm.tmm_ab(k0, kx, 'p', nc, self.d)                
-                #print(np.real(kx),np.imag(kx), t_temp)
+                rr_temp = tmm.tmm_ab(k0, kx, 'p', nc, self.d)
+                self.SPP_Map[idx_j,idx_i] = np.log(rr_temp)                
+                print(np.real(kx),np.imag(kx), rr_temp)
                 #t_array[k] = t_temp
                 #k+=1
                 if rr_temp>rr_max:
