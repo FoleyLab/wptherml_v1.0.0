@@ -8,7 +8,7 @@ c=299792458
 h=6.626e-34
 k=1.38064852e-23
 
-supported_materials = ['Air', 'Al', 'Al2O3', 'AlN', 'Ag', 'Au', 'HfO2', 'Re', 'Rh', 'Ru', 'Pd', 'Pt', 'Si', 'SiO2', 'TiO2', 'TiN', 'Ta2O5']
+supported_materials = ['Air', 'Al', 'Al2O3', 'AlN', 'Ag', 'Au', 'HfO2', 'Re', 'Rh', 'Ru', 'Pd', 'Pt', 'Si', 'SiO2', 'TiO2', 'TiN', 'Ta2O5', 'InGaAs']
 
 ### get a string containing full path and current file name, datalib.py
 path_and_file = os.path.realpath(__file__)
@@ -56,11 +56,12 @@ def Material_RI(lam, arg):
         n = A/lam + 0j/lam + 1
     elif (arg=='TiN'):
         n = TiN_Drude_Lorentz(lam)
+    ### All materials with data files need a if-statement here!
     elif (arg=='W' or arg=='Re' or arg=='Rh' or arg=='Ru'):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt' or arg=='SiO2'):
         n = Read_RI_from_File(lam, arg)
-    elif (arg=='AlN' or arg=='Si' or arg=='TiO2' or arg=='Ta2O5'):
+    elif (arg=='AlN' or arg=='Si' or arg=='TiO2' or arg=='Ta2O5' or arg=='InGaAs'):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='J-Agg'):
         n = TDBC(lam)
@@ -213,7 +214,9 @@ def Read_RI_from_File(lam, matname):
     elif (matname=='Ta2O5'):
         file_path = path + 'Ta2O5_vis_IR.txt'
         a = np.loadtxt(file_path)
-        
+    elif (matname=='InGaAs'):
+        file_path = path + 'InGaAs.txt'
+        a = np.loadtxt(file_path)
     else:
         file_path = path + 'W_Palik_RI_f.txt'
         a = np.loadtxt(file_path)
