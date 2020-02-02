@@ -420,3 +420,46 @@ def ambient_jsc_grad(dim, eps_prime, lam, lbg):
         grad[i] = jsc_prime
     
     return grad
+
+
+
+def multi_junction_Jsc_1(lam, TE_1, TE_2, PV_1):
+    #PV device 1 choice
+    if (PV_1=='InGaAsSb'):
+        SR = datalib.SR_InGaAsSb(lam)
+    elif (PV_1=='GaSb'):
+        SR = datalib.SR_GaSb(lam)
+    else:
+        SR = datalib.SR_InGaAsSb(lam)
+   
+        
+ #start Integrals       
+    Integrand_1 = TE_1*SR
+    Integrand_2 = TE_2*SR
+    upper = np.amax(lam)
+    
+    a = numlib.integrate(Integrand_1, lam, 100e-9, upper)
+    b = numlib.integrate(Integrand_2, lam, 100e-9, upper)
+    Jsc_1 = a+b
+    return Jsc_1
+
+#def multi_junction_Jsc_2(lam, TE_1, TE_2, PV_2, T_pv2):
+    #PV device 2   choice
+ #   if (PV_2=='InGaAsSb'):
+  #      SR = datalib.SR_InGaAsSb(lam)
+   # elif (PV_2=='GaSb'):
+     #   SR = datalib.SR_GaSb(lam)
+    #else:
+      #  SR = datalib.SR_InGaAsSb(lam)
+   
+        
+ #start Integrals       
+#    Integrand_1 = TE_1*SR
+ #   Integrand_2 = TE_2*SR
+  #  upper = np.amax(lam)
+    
+#    a = numlib.integrate(Integrand_1, lam, 100e-9, upper)
+ #   b = numlib.integrate(Integrand_2, lam, 100e-9, upper)
+  #  Jsc_1 = a+b
+   # return Jsc_1
+
