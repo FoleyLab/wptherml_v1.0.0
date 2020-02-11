@@ -7,7 +7,7 @@ Created on Tue Jan 28 13:57:44 2020
 
 from wptherml.wpml import multilayer
 from matplotlib import pyplot as plt
-
+from wptherml import stpvlib
 ### dictionary that stores basic properties 
 ### of the multilayer structure you want to simulate
 structure = {
@@ -20,7 +20,7 @@ structure = {
         'Thickness_List': [0, 100e-9, 50e-9, 20e-9,  0],
          ### range of wavelengths optical properties will be calculated for
          ### values are stored in the array self.lam
-        'Lambda_List': [400e-9, 800e-9, 1000]
+        'Lambda_List': [400e-9, 6000e-9, 1000]
         }
 
 ### create the instance called coated_au_film
@@ -29,5 +29,8 @@ coated_au_film = multilayer(structure)
 ### create a plot of the reflectivity of the coated au film - use red lines
 ### the wavelengths are stored in SI units so we will multiply by 1e9 to 
 ### plot them in nanometers
-plt.plot(1e9*coated_au_film.lambda_array, coated_au_film.reflectivity_array, 'red')
-plt.show()
+#plt.plot(1e9*coated_au_film.lambda_array, coated_au_film.reflectivity_array, 'red')
+#plt.show()
+
+stpvlib.jsc_multi(coated_au_film.lambda_array)
+

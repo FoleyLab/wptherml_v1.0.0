@@ -10,6 +10,29 @@ c=299792458
 h=6.626e-34
 k=1.38064852e-23
 
+def jsc_multi(lam, TE, eps_pv1, eps_pv2, T_pv1):
+    upper = np.amax(lam)
+    ### get the spectral response of Silicon and store it to an array called sr1
+    sr1 = datalib.SR_Si(lam)
+    ### get the spectral response of GaSb and store it to an array called sr1
+    sr2 = datalib.SR_GaSb(lam)
+    
+    ### create integrand for jsc1
+    int_1 = sr1 * eps_pv1 * TE
+    
+    ### create integrand for jsc2
+    int_2 = sr2 * eps_pv2 * TE * T_pv1
+    
+    ### integrate the integrands!
+    jsc1 = numlib.Integrate(int_1, lam, 1e-9, upper )
+    
+    jsc2 = numlib.Integrate(int_2, lam, 1e-9, upper )
+    
+    #plt.plot(lam*1e9, sr1, 'red', label='Si')
+    #plt.plot(lam*1e9, sr2, 'blue', label='GaSb')
+    #plt.legend()
+    #plt.show()
+    return jsc1, jsc2
 
 ### computes spectral efficiency given no
 ### angular dependence of emissivity
