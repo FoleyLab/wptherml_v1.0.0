@@ -10,6 +10,8 @@ c=299792458
 h=6.626e-34
 k=1.38064852e-23
 
+
+### Trial objective function for multi-junction STPV with a single emitter!
 def jsc_multi(lam, TE, eps_pv1, eps_pv2, T_pv1):
     upper = np.amax(lam)
     ### get the spectral response of Silicon and store it to an array called sr1
@@ -28,10 +30,11 @@ def jsc_multi(lam, TE, eps_pv1, eps_pv2, T_pv1):
     
     jsc2 = numlib.Integrate(int_2, lam, 1e-9, upper )
     
-    #plt.plot(lam*1e9, sr1, 'red', label='Si')
-    #plt.plot(lam*1e9, sr2, 'blue', label='GaSb')
-    #plt.legend()
-    #plt.show()
+    plt.plot(lam, int_1, 'red', label='Integrand 1')
+    plt.plot(lam, int_2, 'blue', label='Integrand 2')
+
+    plt.legend()
+    plt.show()
     return jsc1, jsc2
 
 ### computes spectral efficiency given no
