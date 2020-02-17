@@ -11,6 +11,32 @@ h=6.626e-34
 k=1.38064852e-23
 
 
+### Trial objective function for multi-junction STPV with a single emitter!
+def jsc_multi(lam, TE, eps_pv1, eps_pv2, T_pv1):
+    upper = np.amax(lam)
+    ### get the spectral response of Silicon and store it to an array called sr1
+    sr1 = datalib.SR_Si(lam)
+    ### get the spectral response of GaSb and store it to an array called sr1
+    sr2 = datalib.SR_GaSb(lam)
+    
+    ### create integrand for jsc1
+    int_1 = sr1 * eps_pv1 * TE
+    
+    ### create integrand for jsc2
+    int_2 = sr2 * eps_pv2 * TE * T_pv1
+    
+    ### integrate the integrands!
+    jsc1 = numlib.Integrate(int_1, lam, 1e-9, upper )
+    
+    jsc2 = numlib.Integrate(int_2, lam, 1e-9, upper )
+    
+    plt.plot(lam, int_1, 'red', label='Integrand 1')
+    plt.plot(lam, int_2, 'blue', label='Integrand 2')
+
+    plt.legend()
+    plt.show()
+    return jsc1, jsc2
+
 ### computes spectral efficiency given no
 ### angular dependence of emissivity
 def SpectralEfficiency(TE,lam,lbg):
@@ -420,3 +446,46 @@ def ambient_jsc_grad(dim, eps_prime, lam, lbg):
         grad[i] = jsc_prime
     
     return grad
+
+
+
+def multi_junction_Jsc_1(lam, TE_1, TE_2, PV_1):
+    #PV device 1 choice
+    if (PV_1=='InGaAsSb'):
+        SR = datalib.SR_InGaAsSb(lam)
+    elif (PV_1=='GaSb'):
+        SR = datalib.SR_GaSb(lam)
+    else:
+        SR = datalib.SR_InGaAsSb(lam)
+   
+        
+ #start Integrals       
+    Integrand_1 = TE_1*SR
+    Integrand_2 = TE_2*SR
+    upper = np.amax(lam)
+    
+    a = numlib.integrate(Integrand_1, lam, 100e-9, upper)
+    b = numlib.integrate(Integrand_2, lam, 100e-9, upper)
+    Jsc_1 = a+b
+    return Jsc_1
+
+#def multi_junction_Jsc_2(lam, TE_1, TE_2, PV_2, T_pv2):
+    #PV device 2   choice
+ #   if (PV_2=='InGaAsSb'):
+  #      SR = datalib.SR_InGaAsSb(lam)
+   # elif (PV_2=='GaSb'):
+     #   SR = datalib.SR_GaSb(lam)
+    #else:
+      #  SR = datalib.SR_InGaAsSb(lam)
+   
+        
+ #start Integrals       
+#    Integrand_1 = TE_1*SR
+ #   Integrand_2 = TE_2*SR
+  #  upper = np.amax(lam)
+    
+#    a = numlib.integrate(Integrand_1, lam, 100e-9, upper)
+ #   b = numlib.integrate(Integrand_2, lam, 100e-9, upper)
+  #  Jsc_1 = a+b
+   # return Jsc_1
+
