@@ -46,7 +46,7 @@ def stpv_pv_filter_fom(trans, ref, lam):
     den2 = numlib.Integrate(AM, lam, lbg, 3200e-9)
     
     ### denominator 3 comes from BB spectrum
-    return num1/den1+num2/den2+num2/den2
+    return 0.5*num1/den1+0.5*num2/den2+2*num2/den2
 
 
 def stpv_pv_filter_grad(dim, trans_prime, ref_prime, lam):
@@ -69,7 +69,7 @@ def stpv_pv_filter_grad(dim, trans_prime, ref_prime, lam):
         num_prime_2 = numlib.Integrate(integrand_2, lam, lbg, 3200e-9)
         num_prime_3 = numlib.Integrate(integrand_3, lam, 3200e-9, 3700e-9)
 
-        grad[i] = num_prime_1/den1 + num_prime_2/den2 + num_prime_3/den3
+        grad[i] = 0.5*num_prime_1/den1 + 0.5*num_prime_2/den2 + 2*num_prime_3/den3
         
     return grad
 
