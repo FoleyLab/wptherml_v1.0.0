@@ -557,4 +557,36 @@ def poly_styrene_T(lam):
     #plt.show()
     return z
 
+### function to read and interpolate the RI of polystyrene
+def polystyrene_ri(lam):
+    ### file path for real part
+    n_path = path + 'Polystyrene_Real_n.txt'
+    ### file path for imaginary part
+    k_path = path + 'Polystyrene_Imaginary_n.txt'
+    
+    ### load real data set into array called n
+    n = np.loadtxt(n_path)
+    ### load imaginary data set into array called n
+    k = np.loadtxt(k_path)
+    
+    ### get two lists to store the wavelengths and real RI values from
+    ### the files in!
+    n_x = np.zeros(len(n))
+    n_y = np.zeros(len(n))
+    
+    ### Fit a spline to the values in the list!
+    n_spline = InterpolatedUnivariateSpline(n_x, n_y, k=1)
+    
+    ### get two lists to store the wavelengths and imagniary RI values from
+    ### the files in!
+    k_x = np.zero(len(k))
+    k_y = np.zeros(len(k))
+    
+    ### Fit a spline, called k_spline, to the list containing the imaginary RI values and corresponding wavelengths!
+    ''' For Laura, Jose, Alyssa to write! '''
+    
+    ### we will complete this function after the spline has been fit!
+    return 1
+
+
     
