@@ -59,7 +59,7 @@ def Material_RI(lam, arg):
     elif (arg=='PS'):
         n = polystyrene_ri(lam)
     ### All materials with data files need a if-statement here!
-    elif (arg=='W' or arg=='Re' or arg=='Rh' or arg=='Ru'):
+    elif (arg=='W' or arg=='Re' or arg=='Rh' or arg=='Ru' or arg=='Al'):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt' or arg=='SiO2'):
         n = Read_RI_from_File(lam, arg)
@@ -170,6 +170,9 @@ def Read_RI_from_File(lam, matname):
         a = np.loadtxt(file_path)
     elif (matname=='TiO2'):  
         file_path = path + 'TiO2_Siefke.txt'
+        a = np.loadtxt(file_path)
+    elif (matname=='Al'):
+        file_path = path + 'Al_RI.txt'
         a = np.loadtxt(file_path)
     elif (matname=='Re'):
         file_path = path + 'Re_Palik_RI_f.txt'
