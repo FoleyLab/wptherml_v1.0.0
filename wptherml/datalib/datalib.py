@@ -8,7 +8,7 @@ c=299792458
 h=6.626e-34
 k=1.38064852e-23
 
-supported_materials = ['Air', 'Al', 'Al2O3', 'AlN', 'Ag', 'Au', 'HfO2', 'Re', 'Rh', 'Ru', 'Pd', 'Pt', 'Si', 'SiO2', 'TiO2', 'TiN', 'Ta2O5', 'InGaAs']
+supported_materials = ['Air', 'Al', 'Al2O3', 'AlN', 'Ag', 'Au', 'HfO2', 'Re', 'Rh', 'Ru', 'Pd', 'Pt', 'Si', 'SiO2', 'TiO2', 'TiN', 'Ta2O5', 'InGaAs', 'PS']
 
 ### get a string containing full path and current file name, datalib.py
 path_and_file = os.path.realpath(__file__)
@@ -56,6 +56,8 @@ def Material_RI(lam, arg):
         n = A/lam + 0j/lam + 1
     elif (arg=='TiN'):
         n = TiN_Drude_Lorentz(lam)
+    elif (arg=='PS'):
+        n = polystyrene_ri(lam)
     ### All materials with data files need a if-statement here!
     elif (arg=='W' or arg=='Re' or arg=='Rh' or arg=='Ru'):
         n = Read_RI_from_File(lam, arg)
@@ -571,22 +573,23 @@ def polystyrene_ri(lam):
     
     ### get two lists to store the wavelengths and real RI values from
     ### the files in!
-    n_x = np.zeros(len(n))
-    n_y = np.zeros(len(n))
+    n_x = np.flip(n[:,0])
+    n_y = np.flip(n[:,1])
     
     ### Fit a spline to the values in the list!
     n_spline = InterpolatedUnivariateSpline(n_x, n_y, k=1)
     
     ### get two lists to store the wavelengths and imagniary RI values from
     ### the files in!
-    k_x = np.zero(len(k))
-    k_y = np.zeros(len(k))
+    k_x = np.flip(k[:,0])
+    k_y = np.flip(k[:,1])
     
     ### Fit a spline, called k_spline, to the list containing the imaginary RI values and corresponding wavelengths!
     ''' For Laura, Jose, Alyssa to write! '''
-    
+    k_spline = InterpolatedUnivariateSpline(k_x, k_y, k=1)
     ### we will complete this function after the spline has been fit!
-    return 1
+    z = n_spline(lam) + 1j*k_spline(lam)
+    return z
 
 
     
