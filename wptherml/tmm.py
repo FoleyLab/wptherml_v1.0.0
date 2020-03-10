@@ -15,8 +15,10 @@ from numpy.linalg import inv
 def BuildP(phil):
     P = np.zeros((2,2),dtype=complex)
     ci = 0+1j
+
     a = -1*ci*phil
     b = ci*phil
+    
     P[0][1] = 0+0j
     P[1][0] = 0+0j
     P[0][0] = np.exp(a)
