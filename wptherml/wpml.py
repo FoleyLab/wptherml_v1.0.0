@@ -701,6 +701,19 @@ class multilayer:
     ### Normal versions first - no explicit dependence on angle
     
     ### Spectral Efficiency - see Eq. 4 in Jeon et al, Adv. Energy Mater. 2018 (8) 1801035
+    ''' method for multi-junction stpv devices!  Provide the light-source and the band-gap wavelengths
+        of the first and second PVs, it will return the useful power density of the first and
+        second PVs along with the incident power density! '''
+    def multistpv_se(self, light, lbg1, lbg2):
+        output = stpvlib.multi_spectral_efficiency(self.lambda_array, light, lbg1, lbg2)
+        self.pv1_useful_power_val = output[0]
+        self.pv2_useful_power_val = output[1]
+        self.pv1_spectral_efficiency_val = output[0]/output[2]
+        self.pv2_spectral_efficiency_val = output[1]/output[2]
+        self.spectral_efficiency_val = (output[0]+output[1])/output[2]
+        return 1
+            
+    
     def stpv_se(self):
         self.spectral_efficiency_val = stpvlib.SpectralEfficiency(self.thermal_emission_array, 
                                                                   self.lambda_array, 

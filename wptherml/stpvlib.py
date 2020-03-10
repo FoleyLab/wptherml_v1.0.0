@@ -11,6 +11,25 @@ h=6.626e-34
 k=1.38064852e-23
 
 
+''' An idealized efficiency figure of merit with a numerator 
+    that is proportional to short circuit current and a denominator proporitonal
+    to incident power... the light-source can be thermal emission or can be solar.  '''
+def multi_spectral_efficiency(lam, light, lbg1, lbg2):
+    ### upper-bound of light-source
+    upper = np.amax(lam)
+    ### integrand for PV 1
+    num_integrand_1 = light * lam/lbg1
+    ### integrand for PV 2
+    num_integrand_2 = light * lam/lbg2
+    ### numerator 1
+    numerator_1 = numlib.Integrate(num_integrand_1, lam, 1e-9, lbg1)
+    ### numerator 2 
+    numerator_2 = numlib.Integrate(num_integrand_2, lam, lbg1, lbg2)
+    ### denominator
+    denominator = numlib.Integrate(light, 1e-9, upper)
+    
+    return numerator_1, numerator_2, denominator
+    
 ### Trial objective function for multi-junction STPV with a single emitter!
 def jsc_multi(lam, TE, eps_pv1, eps_pv2, T_pv1):
     upper = np.amax(lam)
