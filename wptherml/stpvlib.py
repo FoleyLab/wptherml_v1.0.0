@@ -26,7 +26,7 @@ def multi_spectral_efficiency(lam, light, lbg1, lbg2):
     ### numerator 2 
     numerator_2 = numlib.Integrate(num_integrand_2, lam, lbg1, lbg2)
     ### denominator
-    denominator = numlib.Integrate(light, 1e-9, upper)
+    denominator = numlib.Integrate(light, lam, 1e-9, upper)
     
     return numerator_1, numerator_2, denominator
     
