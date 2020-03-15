@@ -87,7 +87,7 @@ the incident, reflected, transmitted, and thermally-emitted light.
 There are illustrative examples of using the features of the multilayer class contained in Jupyter notebooks within this repository, including:
 
 - [Validation of Basic Optical Properties](https://github.com/FoleyLab/wptherml/blob/master/example/Validate_Fresnel.ipynb)
-
+[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FoleyLab/wptherml/blob/master/example/Example1.ipynb)
 - [Examples of Computing Basic Optical Properties](https://github.com/FoleyLab/wptherml/blob/master/example/Example1.ipynb)
 
 - [Modeling Incandescent Sources](https://github.com/FoleyLab/wptherml/blob/master/example/Example2.ipynb)
