@@ -8,7 +8,7 @@ c=299792458
 h=6.626e-34
 k=1.38064852e-23
 
-supported_materials = ['Air', 'Al', 'Al2O3', 'AlN', 'Ag', 'Au', 'HfO2', 'Re', 'Rh', 'Ru', 'Pd', 'Pt', 'Si', 'SiO2', 'TiO2', 'TiN']
+supported_materials = ['Air', 'Al', 'Al2O3', 'AlN', 'Ag', 'Au', 'HfO2', 'Re', 'Rh', 'Ru', 'Pd', 'Pt', 'Si', 'SiO2', 'TiO2', 'TiN', 'Ta2O5', 'InGaAs', 'PS']
 
 ### get a string containing full path and current file name, datalib.py
 path_and_file = os.path.realpath(__file__)
@@ -56,11 +56,14 @@ def Material_RI(lam, arg):
         n = A/lam + 0j/lam + 1
     elif (arg=='TiN'):
         n = TiN_Drude_Lorentz(lam)
-    elif (arg=='W' or arg=='Re' or arg=='Rh' or arg=='Ru'):
+    elif (arg=='PS'):
+        n = polystyrene_ri(lam)
+    ### All materials with data files need a if-statement here!
+    elif (arg=='W' or arg=='Re' or arg=='Rh' or arg=='Ru' or arg=='Al'):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='Ag' or arg=='Au' or arg=='Pd' or arg=='Pt' or arg=='SiO2'):
         n = Read_RI_from_File(lam, arg)
-    elif (arg=='AlN' or arg=='Si' or arg=='TiO2'):
+    elif (arg=='AlN' or arg=='Si' or arg=='TiO2' or arg=='Ta2O5' or arg=='InGaAs'):
         n = Read_RI_from_File(lam, arg)
     elif (arg=='J-Agg'):
         n = TDBC(lam)
@@ -140,13 +143,6 @@ def read_validation_data(arg):
         
     return Valid
         
-    
-        
-        
-            
-        
-        
-        
         
         
 def TiN_Drude_Lorentz(lam):
@@ -174,6 +170,9 @@ def Read_RI_from_File(lam, matname):
         a = np.loadtxt(file_path)
     elif (matname=='TiO2'):  
         file_path = path + 'TiO2_Siefke.txt'
+        a = np.loadtxt(file_path)
+    elif (matname=='Al'):
+        file_path = path + 'Al_RI.txt'
         a = np.loadtxt(file_path)
     elif (matname=='Re'):
         file_path = path + 'Re_Palik_RI_f.txt'
@@ -216,6 +215,12 @@ def Read_RI_from_File(lam, matname):
         a = np.loadtxt(file_path)
     elif (matname=='Al'):
         file_path = path + 'Al_Rakic.txt'
+        a = np.loadtxt(file_path)
+    elif (matname=='Ta2O5'):
+        file_path = path + 'Ta2O5_vis_IR.txt'
+        a = np.loadtxt(file_path)
+    elif (matname=='InGaAs'):
+        file_path = path + 'InGaAs.txt'
         a = np.loadtxt(file_path)
     else:
         file_path = path + 'W_Palik_RI_f.txt'
@@ -485,6 +490,28 @@ def CIE(lam):
 
     return cie
 
+### Get reference absorbance of 15 nm J-agg layer
+def JAgg_Abs(lam):
+    file_path = path + 'J_Agg_15nm_Abs.txt'
+    a = np.loadtxt(file_path)
+    x = np.zeros(len(a))
+    y = np.zeros(len(a))
+    
+    for i in range(0,len(a)):
+        x[i] = a[i][0]
+        y[i] = a[i][1]
+        
+    datlam = x
+    databs = y
+    order = 1
+    s = InterpolatedUnivariateSpline(datlam, databs, k=order)
+    z = s(lam)
+    
+    return z
+
+### Get RI of cyanine-based J-aggregate dye embedded in PVA 
+### described by S.  Wang,Strong light-molecule coupling: 
+### routes to new hybridmaterials, Ph.D. thesis, Universite de Strasbourg (2015).
 def TDBC(lam):
     ### values of lambda along which SR is experimentally known
     datlamk = 1e-9*np.array([380, 390, 400, 425, 450, 475, 500, 525, 550, 575, 582, 600, 625, 650, 675, 700, 710, 720])
@@ -513,5 +540,59 @@ def TDBC(lam):
     #plt.plot(lam, yn, '-')
     ci = 0+1j
     return yn + ci*yk
+
+### Get transmission spectrum of polystyrene
+def poly_styrene_T(lam):
+    file_path = path + 'polystyrene_T_vs_wl.txt'
+    order = 1
+    a = np.loadtxt(file_path)
+    x = np.zeros(len(a))
+    y = np.zeros(len(a))
+    
+    for i in range(0,len(a)):
+        x[i] = a[i][0]*1e-9
+        y[i] = a[i][1]*1e-2
+        
+    datlam = x
+    databs = y
+    s = InterpolatedUnivariateSpline(datlam, databs, k=order)
+    z = s(lam)
+    #plt.plot(datlam, databs,'o')
+    #plt.plot(lam, z, 'r--')
+    #plt.show()
+    return z
+
+### function to read and interpolate the RI of polystyrene
+def polystyrene_ri(lam):
+    ### file path for real part
+    n_path = path + 'Polystyrene_Real_n.txt'
+    ### file path for imaginary part
+    k_path = path + 'Polystyrene_Imaginary_n.txt'
+    
+    ### load real data set into array called n
+    n = np.loadtxt(n_path)
+    ### load imaginary data set into array called n
+    k = np.loadtxt(k_path)
+    
+    ### get two lists to store the wavelengths and real RI values from
+    ### the files in!
+    n_x = np.flip(n[:,0])
+    n_y = np.flip(n[:,1])
+    
+    ### Fit a spline to the values in the list!
+    n_spline = InterpolatedUnivariateSpline(n_x, n_y, k=1)
+    
+    ### get two lists to store the wavelengths and imagniary RI values from
+    ### the files in!
+    k_x = np.flip(k[:,0])
+    k_y = np.flip(k[:,1])
+    
+    ### Fit a spline, called k_spline, to the list containing the imaginary RI values and corresponding wavelengths!
+    ''' For Laura, Jose, Alyssa to write! '''
+    k_spline = InterpolatedUnivariateSpline(k_x, k_y, k=1)
+    ### we will complete this function after the spline has been fit!
+    z = n_spline(lam) + 1j*k_spline(lam)
+    return z
+
 
     

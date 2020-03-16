@@ -11,6 +11,51 @@ h=6.626e-34
 k=1.38064852e-23
 
 
+''' An idealized efficiency figure of merit with a numerator 
+    that is proportional to short circuit current and a denominator proporitonal
+    to incident power... the light-source can be thermal emission or can be solar.  '''
+def multi_spectral_efficiency(lam, light, lbg1, lbg2):
+    ### upper-bound of light-source
+    upper = np.amax(lam)
+    ### integrand for PV 1
+    num_integrand_1 = light * lam/lbg1
+    ### integrand for PV 2
+    num_integrand_2 = light * lam/lbg2
+    ### numerator 1
+    numerator_1 = numlib.Integrate(num_integrand_1, lam, 1e-9, lbg1)
+    ### numerator 2 
+    numerator_2 = numlib.Integrate(num_integrand_2, lam, lbg1, lbg2)
+    ### denominator
+    denominator = numlib.Integrate(light, lam, 1e-9, upper)
+    
+    return numerator_1, numerator_2, denominator
+    
+### Trial objective function for multi-junction STPV with a single emitter!
+def jsc_multi(lam, TE, eps_pv1, eps_pv2, T_pv1):
+    upper = np.amax(lam)
+    ### get the spectral response of Silicon and store it to an array called sr1
+    sr1 = datalib.SR_Si(lam)
+    ### get the spectral response of GaSb and store it to an array called sr1
+    sr2 = datalib.SR_GaSb(lam)
+    
+    ### create integrand for jsc1
+    int_1 = sr1 * eps_pv1 * TE
+    
+    ### create integrand for jsc2
+    int_2 = sr2 * eps_pv2 * TE * T_pv1
+    
+    ### integrate the integrands!
+    jsc1 = numlib.Integrate(int_1, lam, 1e-9, upper )
+    
+    jsc2 = numlib.Integrate(int_2, lam, 1e-9, upper )
+    
+    plt.plot(lam, int_1, 'red', label='Integrand 1')
+    plt.plot(lam, int_2, 'blue', label='Integrand 2')
+
+    plt.legend()
+    plt.show()
+    return jsc1, jsc2
+
 ### computes spectral efficiency given no
 ### angular dependence of emissivity
 def SpectralEfficiency(TE,lam,lbg):
@@ -20,6 +65,59 @@ def SpectralEfficiency(TE,lam,lbg):
     den = numlib.Integrate(TE, lam, 1e-9, upper)
     SE = num/den
     return SE
+
+def stpv_pv_filter_fom(trans, ref, lam):
+    ### set lambda_bg to 750 nm
+    lbg = 750e-9
+    ### get AM1.5 spectrum
+    AM = datalib.AM(lam)
+    ### get BB spectrum at 440 K
+    BBs = datalib.BB(lam, 440)
+    
+    ### There are three different integrands for numerator 
+    num_integrand_1 = np.copy(AM * trans * lam/lbg)
+    num_integrand_2 = np.copy(AM * trans)
+    num_integrand_3 = np.copy(BBs * ref)
+    
+    num1 = numlib.Integrate(num_integrand_1, lam, 300e-9, lbg)
+    num2 = numlib.Integrate(num_integrand_2, lam, lbg, 3200e-9)
+    num3 = numlib.Integrate(num_integrand_3, lam, 3200e-9, 3700e-9)
+    
+    ### denominator 1 comes from lam/lbg * AM1.5
+    den_integrand_1 = np.copy(AM * lam/lbg)
+    den1 = numlib.Integrate(den_integrand_1, lam, 300e-9, lbg)
+    
+    ### denominator 2 comes from AM1.5
+    den2 = numlib.Integrate(AM, lam, lbg, 3200e-9)
+    
+    ### denominator 3 comes from BB spectrum
+    return 0.5*num1/den1+0.5*num2/den2+2*num2/den2
+
+
+def stpv_pv_filter_grad(dim, trans_prime, ref_prime, lam):
+    lbg = 750e-9
+    grad = np.zeros(dim)
+    AM = datalib.AM(lam)
+    BBs = datalib.BB(lam, 440)
+    
+    den_integrand_1 = np.copy(AM * lam/lbg)
+    den1 = numlib.Integrate(den_integrand_1, lam, 300e-9, lbg)
+    den2 = numlib.Integrate(AM, lam, lbg, 3200e-9)
+    den3 = numlib.Integrate(BBs, lam, 3200e-9, 3700e-9)
+    
+    
+    for i in range(0,dim):
+        integrand_1 = np.copy(trans_prime[i,:]*AM*lam/lbg)
+        integrand_2 = np.copy(trans_prime[i,:]*AM)
+        integrand_3 = np.copy(ref_prime[i,:]*BBs)
+        num_prime_1 = numlib.Integrate(integrand_1, lam, 300e-9, lbg)
+        num_prime_2 = numlib.Integrate(integrand_2, lam, lbg, 3200e-9)
+        num_prime_3 = numlib.Integrate(integrand_3, lam, 3200e-9, 3700e-9)
+
+        grad[i] = 0.5*num_prime_1/den1 + 0.5*num_prime_2/den2 + 2*num_prime_3/den3
+        
+    return grad
+
 
 ### Computes spectral efficiency explicitly
 ### taking angular dependence into account
@@ -300,4 +398,113 @@ def Abs_eff(lam, EM, solarconc, T):
     alpha = solarconc * (numlib.Integrate(AM*EM , lam, 100e-9, upper)) 
     beta = np.pi*numlib.Integrate(TE , lam,  100e-9, upper)
     return (alpha - beta)/(alpha)
+
+
+def ambient_jsc_grad(dim, eps_prime, lam, lbg):
+    ### allocate grad!
+    grad = np.zeros(dim)
+    ### get upper bound of integral
+    upper = np.amax(lam)
+    ### get the AM1.5 spectrum
+    AM = datalib.AM(lam)
+    ### get the spectral response of Si
+    SR = datalib.SR_Si(lam)
+    ### Loop over the layers in gradient_list... compute jsc_prime for each one and store in grad!
+    for i in range(0,dim):
+        integrand = AM * SR * eps_prime[i,:]
+        jsc_prime = numlib.Integrate(integrand, lam, 1e-9, upper)
+        #print(" just computed Jsc' ... is is ",jsc_prime)
+        grad[i] = jsc_prime
+    
+    return grad
+
+### This gradient function needs to be tested!
+def SpectralEfficiency_grad(dim, lam, lbg, emissivity, emissivity_prime, BBs):
+    ### ininitalize gradient vector
+    grad = np.zeros(dim)
+    TE = emissivity * BBs
+    ynum = TE*lam/lbg  
+    upper = np.amax(lam)
+    ### normal numerator (rho)
+    rho = numlib.Integrate(ynum, lam, 1e-9, lbg)
+    ### normal denomenator (P)
+    P = numlib.Integrate(TE, lam, 1e-9, upper)
+    
+    ### loop over degrees of freedom and get gradient elements
+    for i in range(0,dim):
+        ### derivative of thermal emission wrt layer thickness, also integrand for P_prime
+        TE_prime = BBs * emissivity_prime[i,:]
+        ### integrand for  rho_prime
+        num_prime = TE_prime * lam/lbg
+        ### rho_prime
+        rho_prime = numlib.Integrate(num_prime, lam, 1e-9, lbg)
+        ### P_prime
+        P_prime = numlib.Integrate(TE_prime, lam, 1e-9, upper)
+        ### compute gradient element
+        grad[i] = (rho_prime * P - P_prime * rho)/(P**2) 
+    ### return gradient
+    return grad
+
+
+
+
+def ambient_jsc_grad(dim, eps_prime, lam, lbg):
+    ### allocate grad!
+    grad = np.zeros(dim)
+    ### get upper bound of integral
+    upper = np.amax(lam)
+    ### get the AM1.5 spectrum
+    AM = datalib.AM(lam)
+    ### get the spectral response of Si
+    SR = datalib.SR_Si(lam)
+    ### Loop over the layers in gradient_list... compute jsc_prime for each one and store in grad!
+    for i in range(0,dim):
+        integrand = AM * SR * eps_prime[i,:]
+        jsc_prime = numlib.Integrate(integrand, lam, 1e-9, upper)
+        #print(" just computed Jsc' ... is is ",jsc_prime)
+        grad[i] = jsc_prime
+    
+    return grad
+
+
+
+def multi_junction_Jsc_1(lam, TE_1, TE_2, PV_1):
+    #PV device 1 choice
+    if (PV_1=='InGaAsSb'):
+        SR = datalib.SR_InGaAsSb(lam)
+    elif (PV_1=='GaSb'):
+        SR = datalib.SR_GaSb(lam)
+    else:
+        SR = datalib.SR_InGaAsSb(lam)
+   
+        
+ #start Integrals       
+    Integrand_1 = TE_1*SR
+    Integrand_2 = TE_2*SR
+    upper = np.amax(lam)
+    
+    a = numlib.integrate(Integrand_1, lam, 100e-9, upper)
+    b = numlib.integrate(Integrand_2, lam, 100e-9, upper)
+    Jsc_1 = a+b
+    return Jsc_1
+
+#def multi_junction_Jsc_2(lam, TE_1, TE_2, PV_2, T_pv2):
+    #PV device 2   choice
+ #   if (PV_2=='InGaAsSb'):
+  #      SR = datalib.SR_InGaAsSb(lam)
+   # elif (PV_2=='GaSb'):
+     #   SR = datalib.SR_GaSb(lam)
+    #else:
+      #  SR = datalib.SR_InGaAsSb(lam)
+   
+        
+ #start Integrals       
+#    Integrand_1 = TE_1*SR
+ #   Integrand_2 = TE_2*SR
+  #  upper = np.amax(lam)
+    
+#    a = numlib.integrate(Integrand_1, lam, 100e-9, upper)
+ #   b = numlib.integrate(Integrand_2, lam, 100e-9, upper)
+  #  Jsc_1 = a+b
+   # return Jsc_1
 
