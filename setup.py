@@ -16,7 +16,7 @@ setuptools.setup(
     #packages=setuptools.find_packages(),
     #package_dir={'wptherml': 'wptherml'},
     #package_data={'wptherml': ['datalib/*.txt', 'validation_data/*.txt']},
-    version="1.0.00",
+    version="1.11.b",
     author="Foley Lab",
     author_email="foleyj10@wpunj.edu",
     description="A Python package for the design of materials for harnessing heat.",
