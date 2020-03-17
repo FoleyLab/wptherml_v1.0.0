@@ -27,6 +27,16 @@ def BuildP(phil):
 
 ### this function will compute the derivative of the P matrix for a given
 ### layer l with respect to the thickness of layer l
+def Build_dP_ds(kzl, dl):
+    P = np.zeros((2,2),dtype=complex)
+    ci = 0+1j
+    a = -1*ci*kzl*dl
+    b = ci*kzl*dl
+    P[0][1] = 0+0j
+    P[1][0] = 0+0j
+    P[0][0] = -ci*kzl*np.exp(a)
+    P[1][1] = ci*kzl*np.exp(b)
+    return P
 
 def BuildD(nl, ctheta,pol):
     D = np.zeros((2,2),dtype=complex)
@@ -168,11 +178,6 @@ def tmm(k0, theta0, pol, nA, tA):
     return M
 
 
-
-### This function will take a thickness array
-### and a scalar thickness and will return
-### the index of the layer in which you are in
-### at that thickness
 ### analytically differentiates the transfer matrix
 ### with respect to the thickness of a layer li to be specified by 
 ### the user!
