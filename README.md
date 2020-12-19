@@ -102,10 +102,12 @@ There are illustrative examples of using the features of the multilayer class co
 
 More will be added in the near future!
 
-
 ## Playlist
 The developers of WPTherml compiled a thematic [Spotify Playlist called "Everything Thermal"](https://open.spotify.com/playlist/1Vb7MV4WwjOMMHLbrX4TNN); we hope it will inspire you to imagine new possibilities for 
 harnessing heat and thermal radiation!
+
+## Podcast
+One of the developers co-hosts a light-matter themed [podcast](https://open.spotify.com/show/7hh6eZ3TLxJFwuWnLAXM6L?si=qp-GQc4ZSXGgvbvyYtUi2w) called [The Goeppert Mayer Gauge](https://foleylab.github.io/gmgauge/) along with [Prof. Dugan Hayes](http://www.chm.uri.edu/hayesgroup/) at University of Rhode Island.  
 
 ## Features List
 1. Computes Reflectivity, Transmissivity, and Absorptivity/Emissivity spectrum of arbitrary multi-layered planar structures using the Transfer Matrix Method
