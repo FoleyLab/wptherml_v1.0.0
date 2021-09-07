@@ -14,6 +14,9 @@ of Materials for Harnessing Heat", J. F. Varner, N. Eldabagh, D. Volta, R. Eldab
 More details of the Transfer Matrix equations, along will the full mathematical formulation currently implemented in WPTherml, can be found in
 the [documentation](https://github.com/FoleyLab/wptherml/blob/master/docs/Equations.pdf).
 
+**Contributors** WPTherml is developed and maintained by students and faculty at William Paterson University's Department of Chemistry.  Contributors include:
+James Varner, Noor Eldabagh, Derek Volta, Reem Eldabagh, Dayanara Wert, Aya Matari, Raghad Nofal, Figen Suchanek, Alyssa Lakatos, Jose Bello, Jon McTague, and Jonathan J. Foley IV.
+
 ## Quick Start
 - WPTherml is written in Python 3 and requires the numpy, scipy, and matplotlib packages.  Current installation of the Anaconda Python 3 package should provide all you need 
 on Windows, Mac, or Linux platforms
