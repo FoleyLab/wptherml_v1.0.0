@@ -150,7 +150,7 @@ def tmm(k0, theta0, pol, nA, tA):
         t1 = np.matmul(M,Dl)
         t2 = np.matmul(t1,Pl)
         M  = np.matmul(t2,Dli)
-        
+
     ### M is now the product of D_1^-1 .... D_l-1^-1... just need to 
     ### compute D_L and multiply M*D_L
     kz[L-1] = np.sqrt((nA[L-1]*k0)**2 - kx**2)
@@ -266,6 +266,7 @@ def tmm_grad(k0, theta0, pol, nA, tA, layers):
         idx = idx+1
     
     M = {
+         "Plp": Plp,
          "Mp": Mp,   
          "M11": M[0,0], 
          "M12": M[0,1], 

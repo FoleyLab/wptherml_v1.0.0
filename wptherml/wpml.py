@@ -439,6 +439,17 @@ class multilayer:
             ### both the transfer matrix and its derivative with respect to 
             ### elements in the gradient_list
             M = tmm.tmm_grad(k0, self.theta, self.pol, nc, self.d, self.gradient_list)
+            print("Transfer Matrix Gradient for layers ", self.gradient_list)
+            print(M["Mp"])
+            print("Pl Grad for layser ", self.gradient_list)
+            print(M["Plp"])
+            print("kzl for layer ",self.gradient_list)
+            print(M["kz"])
+            print("phil for layer ",self.gradient_list)
+            print("k0 for layer ",k0)
+            print("ri matrix ",nc)
+            print("d matrix ",self.d)
+            print(M["phil"])
             #M = tmm.tmm(k0, self.theta, self.pol, nc, self.d)
             #dM_ds = tmm.d_tmm_dsi(layer_i, k0, self.theta, self.pol, nc, self.d)
             
